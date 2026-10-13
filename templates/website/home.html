@@ -1,0 +1,1134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B4936">
+
+    <title>FleetManager | Find Your Perfect Rental Car</title>
+    <meta name="description"
+          content="Explore available rental vehicles and find the right car for your next journey.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --forest: #0B4936;
+            --forest-dark: #073527;
+            --forest-light: #EAF2EE;
+            --cream: #F7F8F5;
+            --text: #202A25;
+            --muted: #737D76;
+            --border: #E4E9E5;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--white);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, .brand-name {
+            font-family: "Manrope", sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .site-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            min-height: 82px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--forest);
+        }
+
+        .brand:hover {
+            color: var(--forest-dark);
+        }
+
+        .brand-icon {
+            display: inline-flex;
+            width: 43px;
+            height: 43px;
+            align-items: center;
+            justify-content: center;
+            background: var(--forest);
+            border-radius: 13px;
+            color: white;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .brand-caption {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 1.4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 29px;
+        }
+
+        .main-nav a {
+            color: #455149;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color .2s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--forest);
+        }
+
+        .btn-forest {
+            background: var(--forest);
+            border: 1px solid var(--forest);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 19px;
+            font-weight: 700;
+            transition: background .2s ease;
+        }
+
+        .btn-forest:hover {
+            background: var(--forest-dark);
+            border-color: var(--forest-dark);
+            color: white;
+        }
+
+        .btn-outline-forest {
+            border: 1px solid var(--forest);
+            color: var(--forest);
+            background: white;
+            border-radius: 8px;
+            padding: 11px 18px;
+            font-weight: 700;
+        }
+
+        .btn-outline-forest:hover {
+            background: var(--forest-light);
+            color: var(--forest-dark);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: var(--forest-dark);
+            color: white;
+        }
+
+        .hero-background {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(5, 35, 25, .97) 0%,
+                    rgba(5, 35, 25, .86) 42%,
+                    rgba(5, 35, 25, .35) 100%
+                ),
+                url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=85")
+                center 55% / cover no-repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 100px;
+            padding-bottom: 125px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 13px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 30px;
+            background: rgba(255,255,255,.08);
+            color: #E5EEE8;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+        }
+
+        .hero-label i {
+            color: #A8D1B7;
+        }
+
+        .hero h1 {
+            max-width: 690px;
+            margin: 24px 0 19px;
+            font-size: clamp(40px, 5.4vw, 68px);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2.6px;
+        }
+
+        .hero h1 span {
+            color: #B6D8C1;
+        }
+
+        .hero-description {
+            max-width: 530px;
+            color: rgba(255,255,255,.79);
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .hero .btn-forest {
+            background: white;
+            border-color: white;
+            color: var(--forest);
+        }
+
+        .hero .btn-forest:hover {
+            background: #EAF2EE;
+        }
+
+        .hero .btn-outline-forest {
+            background: transparent;
+            border-color: rgba(255,255,255,.45);
+            color: white;
+        }
+
+        .hero .btn-outline-forest:hover {
+            background: rgba(255,255,255,.1);
+        }
+
+        .hero-trust {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 35px;
+            color: rgba(255,255,255,.83);
+            font-size: 13px;
+        }
+
+        .hero-trust i {
+            color: #B6D8C1;
+            margin-right: 6px;
+        }
+
+        .search-section {
+            position: relative;
+            z-index: 2;
+            margin-top: -55px;
+        }
+
+        .search-panel {
+            padding: 27px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 15px 45px rgba(20, 48, 33, .10);
+        }
+
+        .search-heading {
+            margin-bottom: 20px;
+        }
+
+        .search-heading h2 {
+            margin: 0 0 5px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .search-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #48544C;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .search-input {
+            min-height: 49px;
+            border-color: var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 3px rgba(11,73,54,.10);
+        }
+
+        .section {
+            padding: 88px 0;
+        }
+
+        .section-soft {
+            background: var(--cream);
+        }
+
+        .section-eyebrow {
+            margin-bottom: 12px;
+            color: var(--forest);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            margin-bottom: 12px;
+            font-size: clamp(29px, 3.5vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1.4px;
+        }
+
+        .section-description {
+            max-width: 610px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .vehicle-card {
+            height: 100%;
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(18, 53, 35, .09);
+        }
+
+        .vehicle-image-wrap {
+            position: relative;
+            display: flex;
+            height: 210px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #EDF1ED;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s ease;
+        }
+
+        .vehicle-card:hover .vehicle-image {
+            transform: scale(1.035);
+        }
+
+        .vehicle-image-placeholder {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            color: #728077;
+        }
+
+        .vehicle-image-placeholder i {
+            font-size: 43px;
+        }
+
+        .vehicle-image-placeholder span {
+            font-size: 12px;
+        }
+
+        .vehicle-badge {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 6px;
+            color: var(--forest);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .vehicle-details {
+            padding: 20px;
+        }
+
+        .vehicle-year {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .vehicle-title {
+            margin: 6px 0 10px;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .vehicle-description {
+            min-height: 39px;
+            margin-bottom: 15px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .vehicle-specs {
+            display: flex;
+            gap: 13px;
+            flex-wrap: wrap;
+            padding-bottom: 17px;
+            border-bottom: 1px solid var(--border);
+            color: #667169;
+            font-size: 12px;
+        }
+
+        .vehicle-specs i {
+            margin-right: 4px;
+            color: var(--forest);
+        }
+
+        .vehicle-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding-top: 17px;
+        }
+
+        .vehicle-price {
+            color: var(--forest);
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -.4px;
+        }
+
+        .vehicle-price small {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        .vehicle-book-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--forest);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .vehicle-book-link:hover {
+            color: var(--forest-dark);
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            border: 1px dashed #C8D3CB;
+            border-radius: 13px;
+            background: white;
+        }
+
+        .empty-state i {
+            display: block;
+            margin-bottom: 15px;
+            color: #829187;
+            font-size: 42px;
+        }
+
+        .empty-state h3 {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+        }
+
+        .benefit-card {
+            height: 100%;
+            padding: 26px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+        }
+
+        .benefit-icon {
+            display: flex;
+            width: 49px;
+            height: 49px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 19px;
+            border-radius: 12px;
+            background: var(--forest-light);
+            color: var(--forest);
+            font-size: 22px;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 10px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .benefit-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .cta-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 52px;
+            border-radius: 17px;
+            background: var(--forest);
+            color: white;
+        }
+
+        .cta-panel h2 {
+            max-width: 650px;
+            margin-bottom: 13px;
+            font-size: clamp(27px, 3vw, 38px);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .cta-panel p {
+            max-width: 590px;
+            margin-bottom: 23px;
+            color: rgba(255,255,255,.77);
+            line-height: 1.8;
+        }
+
+        .cta-panel .btn {
+            background: white;
+            border-color: white;
+            color: var(--forest);
+        }
+
+        .site-footer {
+            padding: 55px 0 25px;
+            background: #082D22;
+            color: white;
+        }
+
+        .footer-description {
+            max-width: 330px;
+            margin-top: 16px;
+            color: rgba(255,255,255,.65);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footer-heading {
+            margin-bottom: 17px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a,
+        .footer-links span {
+            color: rgba(255,255,255,.70);
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,.15);
+            color: rgba(255,255,255,.57);
+            font-size: 12px;
+        }
+
+        @media (max-width: 991px) {
+            .main-nav {
+                gap: 17px;
+            }
+
+            .hero-content {
+                padding-top: 75px;
+                padding-bottom: 95px;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+
+            .vehicle-image-wrap {
+                height: 190px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .header-inner {
+                min-height: 72px;
+            }
+
+            .brand-name {
+                font-size: 19px;
+            }
+
+            .main-nav {
+                gap: 14px;
+            }
+
+            .hero-background {
+                background:
+                    linear-gradient(
+                        90deg,
+                        rgba(5, 35, 25, .94),
+                        rgba(5, 35, 25, .72)
+                    ),
+                    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80")
+                    center / cover no-repeat;
+            }
+
+            .hero-content {
+                padding-top: 68px;
+                padding-bottom: 85px;
+            }
+
+            .hero h1 {
+                letter-spacing: -1.6px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .search-section {
+                margin-top: -32px;
+            }
+
+            .search-panel {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 55px 0;
+            }
+
+            .vehicle-image-wrap {
+                height: 220px;
+            }
+
+            .cta-panel {
+                padding: 32px 24px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .brand-caption {
+                font-size: 9px;
+            }
+
+            .hero-trust {
+                gap: 12px;
+            }
+
+            .vehicle-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<header class="site-header">
+    <div class="container">
+        <div class="header-inner d-flex align-items-center justify-content-between gap-3">
+
+            <a href="{% url 'website:home' %}" class="brand">
+                <span class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </span>
+                <span>
+                    <span class="brand-name">FleetManager</span>
+                    <span class="brand-caption">Your journey, our priority</span>
+                </span>
+            </a>
+
+            <nav class="main-nav d-none d-md-flex">
+                <a href="{% url 'website:home' %}" class="active">Home</a>
+                <a href="{% url 'website:vehicle_list' %}">Our Vehicles</a>
+                <a href="#why-us">Why Choose Us</a>
+            </nav>
+
+            <a href="{% url 'website:vehicle_list' %}"
+               class="btn btn-forest d-none d-sm-inline-flex align-items-center gap-2">
+                Explore Cars
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+            <a href="{% url 'website:vehicle_list' %}"
+               class="btn btn-forest btn-sm d-sm-none">
+                Browse
+            </a>
+
+        </div>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-background"></div>
+
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-lg-9 col-xl-8">
+
+                <div class="hero-label">
+                    <i class="bi bi-patch-check-fill"></i>
+                    A better way to travel
+                </div>
+
+                <h1>
+                    The right car for
+                    <span>every journey.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Discover a vehicle that fits your plans. Explore our available
+                    fleet, compare rental prices, and find the right car for your
+                    next trip.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{% url 'website:vehicle_list' %}"
+                       class="btn btn-forest d-inline-flex align-items-center gap-2">
+                        Find Your Car
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                    <a href="#available-vehicles"
+                       class="btn btn-outline-forest">
+                        Explore Our Fleet
+                    </a>
+                </div>
+
+                <div class="hero-trust">
+                    <span><i class="bi bi-check-circle-fill"></i> Clear rental prices</span>
+                    <span><i class="bi bi-car-front-fill"></i> Multiple vehicle options</span>
+                    <span><i class="bi bi-calendar-check-fill"></i> Booking requests online</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vehicle Search -->
+<section class="search-section">
+    <div class="container">
+
+        <div class="search-panel">
+            <div class="search-heading">
+                <h2>Find a vehicle</h2>
+                <p>Search our available fleet by make, model, or description.</p>
+            </div>
+
+            <form action="{% url 'website:vehicle_list' %}"
+                  method="get"
+                  class="row g-3 align-items-end">
+
+                <div class="col-lg-9 col-md-8">
+                    <label for="vehicle-search" class="field-label">
+                        VEHICLE MAKE OR MODEL
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-secondary"></i>
+                        </span>
+
+                        <input
+                            type="search"
+                            id="vehicle-search"
+                            name="q"
+                            class="form-control search-input border-start-0"
+                            placeholder="e.g. Toyota, SUV, or sedan"
+                        >
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4">
+                    <button type="submit"
+                            class="btn btn-forest w-100"
+                            style="min-height:49px;">
+                        Search Vehicles
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</section>
+
+<!-- Available Vehicles -->
+<section class="section" id="available-vehicles">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-end gap-3 flex-wrap mb-4">
+            <div>
+                <div class="section-eyebrow">OUR FLEET</div>
+                <h2 class="section-title mb-2">Explore our vehicles</h2>
+                <p class="text-secondary mb-0">
+                    Choose from the vehicles currently marked as available.
+                </p>
+            </div>
+
+            <a href="{% url 'website:vehicle_list' %}"
+               class="btn btn-outline-forest">
+                View All Vehicles
+                <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+
+            {% for vehicle in vehicles|slice:":6" %}
+                <div class="col-sm-6 col-lg-4">
+
+                    <article class="vehicle-card">
+
+                        <div class="vehicle-image-wrap">
+
+                            {% if vehicle.image %}
+                                <img
+                                    src="{{ vehicle.image.url }}"
+                                    alt="{{ vehicle.make }} {{ vehicle.model }}"
+                                    class="vehicle-image"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div class="vehicle-image-placeholder">
+                                    <i class="bi bi-car-front"></i>
+                                    <span>Vehicle image not available</span>
+                                </div>
+                            {% endif %}
+
+                            <span class="vehicle-badge">
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Available
+                            </span>
+
+                        </div>
+
+                        <div class="vehicle-details">
+
+                            <div class="vehicle-year">
+                                {{ vehicle.year }}
+                                {% if vehicle.color %}
+                                    <span class="mx-1">·</span>
+                                    {{ vehicle.color }}
+                                {% endif %}
+                            </div>
+
+                            <h3 class="vehicle-title">
+                                {{ vehicle.make }} {{ vehicle.model }}
+                            </h3>
+
+                            <p class="vehicle-description">
+                                {% if vehicle.description %}
+                                    {{ vehicle.description|truncatechars:100 }}
+                                {% else %}
+                                    Contact our team for more details about this vehicle.
+                                {% endif %}
+                            </p>
+
+                            <div class="vehicle-specs">
+                                <span>
+                                    <i class="bi bi-calendar3"></i>
+                                    {{ vehicle.year }}
+                                </span>
+                                <span>
+                                    <i class="bi bi-palette"></i>
+                                    {% if vehicle.color %}
+                                        {{ vehicle.color }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <div class="vehicle-bottom">
+                                <div class="vehicle-price">
+                                    RWF {{ vehicle.daily_rate|floatformat:0 }}
+                                    <small>per day</small>
+                                </div>
+
+                                <a href="{% url 'website:vehicle_list' %}"
+                                   class="vehicle-book-link">
+                                    View Details
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </article>
+
+                </div>
+
+            {% empty %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-car-front"></i>
+                        <h3>No vehicles available right now</h3>
+                        <p>
+                            Our available fleet will appear here when vehicles
+                            are marked as available in the management system.
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        {% if vehicles %}
+            <div class="text-center mt-5">
+                <a href="{% url 'website:vehicle_list' %}"
+                   class="btn btn-forest px-4">
+                    Browse All Vehicles
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section section-soft" id="why-us">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <div class="section-eyebrow">THE FLEETMANAGER DIFFERENCE</div>
+            <h2 class="section-title">A simpler way to rent a car</h2>
+            <p class="section-description">
+                Find the right vehicle with clear pricing and a straightforward
+                booking request process.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+                    <h3>Vehicles for your plans</h3>
+                    <p>
+                        Explore the vehicles listed in our fleet and choose an
+                        option that suits your journey.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <h3>Transparent daily rates</h3>
+                    <p>
+                        See the daily rental price in Rwandan francs before
+                        submitting a booking request.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-calendar2-check"></i>
+                    </div>
+                    <h3>Simple booking requests</h3>
+                    <p>
+                        Submit your rental request online. Our team reviews
+                        requests before confirming a booking.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section">
+    <div class="container">
+        <div class="cta-panel">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-9">
+                    <h2>Ready to find your next ride?</h2>
+                    <p>
+                        Explore our available vehicles and find an option
+                        that works for your next journey.
+                    </p>
+
+                    <a href="{% url 'website:vehicle_list' %}"
+                       class="btn btn-light fw-bold px-4 py-3">
+                        Explore Available Cars
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 text-lg-end d-none d-lg-block">
+                    <i class="bi bi-car-front-fill"
+                       style="font-size:100px; opacity:.16;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-5 col-md-6">
+                <a href="{% url 'website:home' %}" class="brand text-white">
+                    <span class="brand-icon"
+                          style="background:rgba(255,255,255,.13);">
+                        <i class="bi bi-car-front-fill"></i>
+                    </span>
+                    <span>
+                        <span class="brand-name text-white">FleetManager</span>
+                        <span class="brand-caption" style="color:#B8CCC0;">
+                            Your journey, our priority
+                        </span>
+                    </span>
+                </a>
+
+                <p class="footer-description">
+                    Find a vehicle for your next journey with our simple
+                    rental browsing and booking request experience.
+                </p>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h3 class="footer-heading">Explore</h3>
+                <div class="footer-links">
+                    <a href="{% url 'website:home' %}">Home</a>
+                    <a href="{% url 'website:vehicle_list' %}">Our Vehicles</a>
+                    <a href="#why-us">Why Choose Us</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h3 class="footer-heading">Rental Information</h3>
+                <div class="footer-links">
+                    <span>
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Prices displayed in Rwandan francs (RWF)
+                    </span>
+                    <span>
+                        <i class="bi bi-calendar-check me-2"></i>
+                        Booking requests require confirmation
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>
+                &copy; {% now "Y" %} FleetManager. All rights reserved.
+            </span>
+            <span>Fleet &amp; rental operations</span>
+        </div>
+
+    </div>
+</footer>
+
+</body>
+</html>

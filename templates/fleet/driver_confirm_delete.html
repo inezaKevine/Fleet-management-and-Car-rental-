@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+
+{% block title %}Delete Driver{% endblock %}
+{% block page_title %}Delete Driver{% endblock %}
+{% block page_description %}Review this action before proceeding.{% endblock %}
+{% block breadcrumb %}Fleet / Drivers{% endblock %}
+{% block page_overline %}FLEET OPERATIONS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-person-x display-3 text-danger"></i>
+                <h3 class="mt-3">Remove this driver?</h3>
+                <p class="text-secondary">
+                    You are about to remove
+                    <strong>{{ driver.first_name }} {{ driver.last_name }}</strong>.
+                </p>
+                <p class="text-secondary">
+                    Drivers linked to bookings cannot be deleted.
+                </p>
+                <form method="post" class="d-flex justify-content-center gap-2 mt-4">
+                    {% csrf_token %}
+                    <a href="{% url 'fleet:driver_list' %}"
+                       class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">
+                        Confirm Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

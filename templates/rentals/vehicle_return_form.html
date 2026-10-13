@@ -1,0 +1,230 @@
+
+{% extends "base.html" %}
+
+{% block title %}Record Vehicle Return{% endblock %}
+{% block breadcrumb %}Rental Business / Vehicle Returns / New Return{% endblock %}
+{% block page_overline %}RENTAL BUSINESS{% endblock %}
+{% block page_title %}Record Vehicle Return{% endblock %}
+{% block page_description %}
+    Record the returned vehicle's mileage, fuel level, condition, and additional charges.
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'rentals:vehicle_return_list' %}"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Vehicle Returns
+    </a>
+{% endblock %}
+
+{% block content %}
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            <div class="fw-semibold mb-1">
+                Please correct the following errors:
+            </div>
+
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row g-4">
+
+        <!-- Return Details -->
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-1">
+                        <i class="bi bi-clipboard-check text-success me-2"></i>
+                        Return Details
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Select the rental booking and record when the vehicle was returned.
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="mb-4">
+                        <label for="{{ form.booking.id_for_label }}"
+                               class="form-label fw-semibold">
+                            Rental Booking <span class="text-danger">*</span>
+                        </label>
+
+                        {{ form.booking }}
+
+                        {% for error in form.booking.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+
+                        <div class="form-text">
+                            Only confirmed or active bookings without an existing return are available.
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label for="{{ form.returned_at.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Return Date and Time
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            {{ form.returned_at }}
+
+                            {% for error in form.returned_at.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.mileage.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Odometer Reading (km)
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            {{ form.mileage }}
+
+                            {% for error in form.mileage.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                            <div class="form-text">
+                                Enter the vehicle's current odometer reading.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.fuel_level.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Fuel Level
+                            </label>
+
+                            {{ form.fuel_level }}
+
+                            {% for error in form.fuel_level.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.additional_charges.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Additional Charges (RWF)
+                            </label>
+
+                            {{ form.additional_charges }}
+
+                            {% for error in form.additional_charges.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                            <div class="form-text">
+                                Enter 0 if there are no additional charges.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Inspection Details -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-1">
+                        <i class="bi bi-shield-check text-success me-2"></i>
+                        Vehicle Inspection
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Record the vehicle's condition at return.
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="mb-4">
+                        <label for="{{ form.condition_notes.id_for_label }}"
+                               class="form-label fw-semibold">
+                            Condition Notes
+                        </label>
+
+                        {{ form.condition_notes }}
+
+                        {% for error in form.condition_notes.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+
+                        <div class="form-text">
+                            Describe any defects, damage, or other observations.
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded border">
+                        <div class="form-check">
+                            {{ form.damage_reported }}
+
+                            <label for="{{ form.damage_reported.id_for_label }}"
+                                   class="form-check-label fw-semibold">
+                                Damage reported
+                            </label>
+                        </div>
+
+                        {% for error in form.damage_reported.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+
+                        <p class="text-muted small mb-0 mt-2">
+                            If damage is reported, provide details in the condition notes.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Form Actions -->
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div class="text-muted small">
+                <i class="bi bi-info-circle me-1"></i>
+                Saving the return will mark the booking as completed.
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'rentals:vehicle_return_list' %}"
+                   class="btn btn-light border">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Save Vehicle Return
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}

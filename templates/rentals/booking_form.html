@@ -1,0 +1,677 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block page_overline %}RENTAL OPERATIONS{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_description %}
+Select a vehicle and rental period to calculate the rental cost automatically.
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">
+    <a href="{% url 'dashboard:home' %}">Home</a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'rentals:booking_list' %}">Bookings</a>
+</li>
+<li class="breadcrumb-item active">{{ page_title }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="card">
+            <div class="card-body p-4">
+
+                <form method="post" id="booking-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="alert alert-light border">
+                        <i class="bi bi-info-circle me-2"></i>
+                        New bookings are saved as <strong>Pending</strong>.
+                        Staff must approve a request before it becomes confirmed.
+                    </div>
+
+                    <!-- AVAILABILITY WARNING -->
+                    <div
+                        id="availability-warning"
+                        class="alert alert-light border"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-calendar-check fs-5"></i>
+                            <div>
+                                <strong id="availability-title">
+                                    Check availability
+                                </strong>
+
+                                <div
+                                    id="availability-message"
+                                    class="small mt-1"
+                                >
+                                    Select a vehicle and rental dates to check availability.
+                                </div>
+
+                                <ul
+                                    id="availability-conflicts"
+                                    class="small mt-2 mb-0"
+                                ></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <!-- CUSTOMER -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.customer.id_for_label }}"
+                                class="form-label"
+                            >
+                                Customer *
+                            </label>
+
+                            {{ form.customer }}
+
+                            {% for error in form.customer.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- VEHICLE -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.vehicle.id_for_label }}"
+                                class="form-label"
+                            >
+                                Vehicle *
+                            </label>
+
+                            <select
+                                name="{{ form.vehicle.html_name }}"
+                                id="{{ form.vehicle.id_for_label }}"
+                                class="form-select"
+                                required
+                            >
+                                <option value="">Select a vehicle</option>
+
+                                {% for vehicle in form.fields.vehicle.queryset %}
+                                <option
+                                    value="{{ vehicle.pk }}"
+                                    data-rate="{{ vehicle.daily_rate }}"
+                                    {% if form.vehicle.value|stringformat:"s" == vehicle.pk|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ vehicle.registration_number }} —
+                                    {{ vehicle.make }} {{ vehicle.model }}
+                                    {% if vehicle.status == "maintenance" %}
+                                        (Under Maintenance)
+                                    {% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                            {% for error in form.vehicle.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- DAILY RATE -->
+                        <div class="col-md-6">
+                            <label for="daily-rate-display" class="form-label">
+                                Daily Rental Rate (RWF)
+                            </label>
+
+                            <input
+                                type="text"
+                                id="daily-rate-display"
+                                class="form-control"
+                                value="—"
+                                readonly
+                            >
+                        </div>
+
+                        <!-- DURATION -->
+                        <div class="col-md-6">
+                            <label for="duration-display" class="form-label">
+                                Rental Duration
+                            </label>
+
+                            <input
+                                type="text"
+                                id="duration-display"
+                                class="form-control"
+                                value="—"
+                                readonly
+                            >
+                        </div>
+
+                        <!-- CHAUFFEUR -->
+                        <div class="col-12">
+                            <div class="form-check">
+                                {{ form.chauffeur_required }}
+
+                                <label
+                                    class="form-check-label"
+                                    for="{{ form.chauffeur_required.id_for_label }}"
+                                >
+                                    Chauffeur required
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- DRIVER -->
+                        <div class="col-md-6" id="driver-field">
+                            <label
+                                for="{{ form.driver.id_for_label }}"
+                                class="form-label"
+                            >
+                                Select Driver
+                            </label>
+
+                            {{ form.driver }}
+
+                            {% for error in form.driver.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+
+                            <div class="form-text">
+                                A driver is required only when a chauffeur is requested.
+                            </div>
+                        </div>
+
+                        <!-- PICKUP -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.start_at.id_for_label }}"
+                                class="form-label"
+                            >
+                                Pickup Date and Time *
+                            </label>
+
+                            {{ form.start_at }}
+
+                            {% for error in form.start_at.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- RETURN -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.end_at.id_for_label }}"
+                                class="form-label"
+                            >
+                                Return Date and Time *
+                            </label>
+
+                            {{ form.end_at }}
+
+                            {% for error in form.end_at.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- TOTAL -->
+                        <div class="col-12">
+                            <label class="form-label">
+                                Total Rental Cost (RWF)
+                            </label>
+
+                            <div class="p-3 rounded border">
+                                <div class="text-muted small">
+                                    Estimated rental total
+                                </div>
+
+                                <div
+                                    class="fs-3 fw-bold"
+                                    id="total-display"
+                                >
+                                    RWF 0
+                                </div>
+
+                                <div
+                                    class="text-muted small"
+                                    id="calculation-note"
+                                >
+                                    Select a vehicle and rental dates to calculate the total.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SPECIAL REQUESTS -->
+                        <div class="col-12">
+                            <label
+                                for="{{ form.special_requests.id_for_label }}"
+                                class="form-label"
+                            >
+                                Special Requests
+                            </label>
+
+                            {{ form.special_requests }}
+
+                            {% for error in form.special_requests.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    <!-- FORM ACTIONS -->
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a
+                            href="{% url 'rentals:booking_list' %}"
+                            class="btn btn-light"
+                        >
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check2-circle me-1"></i>
+                            Submit Booking Request
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+    "use strict";
+
+    // -----------------------------------------------
+    // 1. GET THE FORM ELEMENTS
+    // -----------------------------------------------
+
+    const vehicleSelect = document.getElementById(
+        "{{ form.vehicle.id_for_label }}"
+    );
+
+    const startInput = document.getElementById(
+        "{{ form.start_at.id_for_label }}"
+    );
+
+    const endInput = document.getElementById(
+        "{{ form.end_at.id_for_label }}"
+    );
+
+    const chauffeurCheckbox = document.getElementById(
+        "{{ form.chauffeur_required.id_for_label }}"
+    );
+
+    const driverField = document.getElementById("driver-field");
+
+    const driverSelect = document.getElementById(
+        "{{ form.driver.id_for_label }}"
+    );
+
+    const rateDisplay = document.getElementById("daily-rate-display");
+    const durationDisplay = document.getElementById("duration-display");
+    const totalDisplay = document.getElementById("total-display");
+    const calculationNote = document.getElementById("calculation-note");
+
+    const availabilityWarning = document.getElementById(
+        "availability-warning"
+    );
+
+    const availabilityTitle = document.getElementById(
+        "availability-title"
+    );
+
+    const availabilityMessage = document.getElementById(
+        "availability-message"
+    );
+
+    const availabilityConflicts = document.getElementById(
+        "availability-conflicts"
+    );
+
+    const bookingForm = document.getElementById("booking-form");
+
+    let dailyRate = 0;
+    let availabilityTimer = null;
+    let availabilityRequest = 0;
+    let knownConflict = false;
+
+
+    // -----------------------------------------------
+    // 2. FORMAT CURRENCY AS RWF 85,000
+    // -----------------------------------------------
+
+    function formatRWF(amount) {
+        return "RWF " + Math.round(amount).toLocaleString("en-US");
+    }
+
+
+    // -----------------------------------------------
+    // 3. UPDATE THE SELECTED VEHICLE'S DAILY RATE
+    // -----------------------------------------------
+
+    function updateRate() {
+        const selectedOption =
+            vehicleSelect.options[vehicleSelect.selectedIndex];
+
+        dailyRate = selectedOption && selectedOption.dataset.rate
+            ? Number(selectedOption.dataset.rate)
+            : 0;
+
+        rateDisplay.value = dailyRate > 0
+            ? formatRWF(dailyRate)
+            : "—";
+
+        updateTotal();
+    }
+
+
+    // -----------------------------------------------
+    // 4. CALCULATE THE ESTIMATED RENTAL TOTAL
+    // -----------------------------------------------
+
+    function updateTotal() {
+        const start = startInput.value
+            ? new Date(startInput.value)
+            : null;
+
+        const end = endInput.value
+            ? new Date(endInput.value)
+            : null;
+
+        if (
+            !start ||
+            !end ||
+            isNaN(start.getTime()) ||
+            isNaN(end.getTime()) ||
+            end <= start ||
+            dailyRate <= 0
+        ) {
+            durationDisplay.value = "—";
+            totalDisplay.textContent = "RWF 0";
+
+            calculationNote.textContent =
+                "Select a vehicle and valid rental dates to calculate the total.";
+
+            return;
+        }
+
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+        const durationMs = end.getTime() - start.getTime();
+
+        // Charge each started 24-hour period, with a minimum of one day.
+        const days = Math.max(
+            1,
+            Math.ceil(durationMs / millisecondsPerDay)
+        );
+
+        durationDisplay.value = days + (
+            days === 1 ? " day" : " days"
+        );
+
+        totalDisplay.textContent = formatRWF(dailyRate * days);
+
+        calculationNote.textContent =
+            formatRWF(dailyRate) + " × " + days + " rental day(s)";
+    }
+
+
+    // -----------------------------------------------
+    // 5. SHOW OR HIDE THE DRIVER FIELD
+    // -----------------------------------------------
+
+    function updateDriverVisibility() {
+        const required = chauffeurCheckbox.checked;
+
+        driverField.hidden = !required;
+        driverSelect.required = required;
+
+        if (!required) {
+            driverSelect.value = "";
+        }
+    }
+
+
+    // -----------------------------------------------
+    // 6. DISPLAY AVAILABILITY MESSAGES
+    // -----------------------------------------------
+
+    function showAvailabilityMessage(title, message, type) {
+        availabilityTitle.textContent = title;
+        availabilityMessage.textContent = message;
+        availabilityWarning.className = "alert " + type;
+        availabilityConflicts.replaceChildren();
+    }
+
+
+    // -----------------------------------------------
+    // 7. CHECK VEHICLE AND DRIVER AVAILABILITY
+    // -----------------------------------------------
+
+    async function checkAvailability() {
+        // Invalidate any older request before checking current inputs.
+        const requestId = ++availabilityRequest;
+
+        knownConflict = false;
+        availabilityConflicts.replaceChildren();
+
+        const vehicle = vehicleSelect.value;
+        const startAt = startInput.value;
+        const endAt = endInput.value;
+        const chauffeurRequired = chauffeurCheckbox.checked;
+        const driver = driverSelect.value;
+
+        if (!vehicle || !startAt || !endAt) {
+            showAvailabilityMessage(
+                "Check availability",
+                "Select a vehicle and both rental dates to check availability.",
+                "alert-light border"
+            );
+            return;
+        }
+
+        const start = new Date(startAt);
+        const end = new Date(endAt);
+
+        if (
+            isNaN(start.getTime()) ||
+            isNaN(end.getTime()) ||
+            end <= start
+        ) {
+            showAvailabilityMessage(
+                "Invalid rental period",
+                "The return date and time must be after pickup.",
+                "alert-warning"
+            );
+            return;
+        }
+
+        if (chauffeurRequired && !driver) {
+            showAvailabilityMessage(
+                "Driver required",
+                "Select a driver to check chauffeur availability.",
+                "alert-warning"
+            );
+            return;
+        }
+
+        showAvailabilityMessage(
+            "Checking availability",
+            "Checking the selected vehicle, driver and rental dates…",
+            "alert-light border"
+        );
+
+        const params = new URLSearchParams({
+            vehicle: vehicle,
+            start_at: startAt,
+            end_at: endAt,
+            chauffeur_required: chauffeurRequired ? "true" : "false",
+            driver: driver
+        });
+
+        try {
+            const response = await fetch(
+                "{% url 'rentals:booking_availability_check' %}?" +
+                    params.toString(),
+                {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Availability check failed.");
+            }
+
+            const data = await response.json();
+
+            // Ignore responses from older selections.
+            if (requestId !== availabilityRequest) {
+                return;
+            }
+
+            if (data.checked === false) {
+                showAvailabilityMessage(
+                    "Availability not checked",
+                    data.message || "Please review the rental details.",
+                    "alert-warning"
+                );
+                return;
+            }
+
+            knownConflict = data.available === false;
+
+            if (data.available === true) {
+                showAvailabilityMessage(
+                    "No scheduling conflicts found",
+                    "No overlapping bookings or maintenance conflicts were found for these details.",
+                    "alert-success"
+                );
+            } else {
+                showAvailabilityMessage(
+                    "Scheduling conflict found",
+                    data.message ||
+                        "Review the following conflicts before submitting.",
+                    "alert-danger"
+                );
+
+                (data.conflicts || []).forEach(function (conflict) {
+                    const item = document.createElement("li");
+                    item.textContent = conflict;
+                    availabilityConflicts.appendChild(item);
+                });
+            }
+
+        } catch (error) {
+            if (requestId !== availabilityRequest) {
+                return;
+            }
+
+            knownConflict = false;
+
+            showAvailabilityMessage(
+                "Availability could not be checked",
+                "The check failed. You can still submit the form, and the server will validate the booking.",
+                "alert-warning"
+            );
+        }
+    }
+
+
+    // -----------------------------------------------
+    // 8. DEBOUNCE AVAILABILITY CHECKS
+    // -----------------------------------------------
+
+    function scheduleAvailabilityCheck() {
+        // Invalidate previous results immediately after a field changes.
+        availabilityRequest++;
+        knownConflict = false;
+
+        clearTimeout(availabilityTimer);
+
+        availabilityTimer = setTimeout(
+            checkAvailability,
+            300
+        );
+    }
+
+
+    // -----------------------------------------------
+    // 9. CONNECT THE FORM EVENTS
+    // -----------------------------------------------
+
+    vehicleSelect.addEventListener("change", function () {
+        updateRate();
+        scheduleAvailabilityCheck();
+    });
+
+    startInput.addEventListener("change", function () {
+        updateTotal();
+        scheduleAvailabilityCheck();
+    });
+
+    endInput.addEventListener("change", function () {
+        updateTotal();
+        scheduleAvailabilityCheck();
+    });
+
+    startInput.addEventListener("input", updateTotal);
+    endInput.addEventListener("input", updateTotal);
+
+    chauffeurCheckbox.addEventListener("change", function () {
+        updateDriverVisibility();
+        scheduleAvailabilityCheck();
+    });
+
+    driverSelect.addEventListener(
+        "change",
+        scheduleAvailabilityCheck
+    );
+
+
+    // -----------------------------------------------
+    // 10. PREVENT SUBMISSION WHEN A CONFLICT IS KNOWN
+    // -----------------------------------------------
+
+    bookingForm.addEventListener("submit", function (event) {
+        if (knownConflict) {
+            event.preventDefault();
+
+            availabilityWarning.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            return;
+        }
+
+        // Server-side validation remains mandatory.
+        // A failed or incomplete availability check does not bypass it.
+    });
+
+
+    // -----------------------------------------------
+    // 11. INITIALIZE THE FORM
+    // -----------------------------------------------
+
+    updateRate();
+    updateDriverVisibility();
+    scheduleAvailabilityCheck();
+
+})();
+</script>
+{% endblock %}

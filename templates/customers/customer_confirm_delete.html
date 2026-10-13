@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block title %}Delete Customer{% endblock %}
+{% block page_overline %}CUSTOMER RELATIONSHIPS{% endblock %}
+{% block page_title %}Delete Customer{% endblock %}
+{% block page_description %}Review the customer record before confirming deletion.{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard:home' %}">Home</a></li>
+<li class="breadcrumb-item">
+    <a href="{% url 'customers:customer_list' %}">Customers</a>
+</li>
+<li class="breadcrumb-item active">Delete</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-danger">
+            <div class="card-body p-4">
+                <div class="text-danger fs-1 mb-3">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+
+                <h4>Delete this customer?</h4>
+                <p class="text-muted">
+                    You are about to delete the following customer record.
+                </p>
+
+                <div class="bg-light rounded p-3 mb-4">
+                    <p class="mb-1">
+                        <strong>Name:</strong>
+                        {{ customer.first_name }} {{ customer.last_name }}
+                    </p>
+                    <p class="mb-1"><strong>Email:</strong> {{ customer.email }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ customer.phone }}</p>
+                    <p class="mb-0">
+                        <strong>Type:</strong>
+                        {{ customer.get_customer_type_display }}
+                    </p>
+                </div>
+
+                <p class="text-danger small">
+                    Customers associated with bookings cannot be deleted.
+                </p>
+
+                <form method="post" class="d-flex gap-2 justify-content-end">
+                    {% csrf_token %}
+                    <a href="{% url 'customers:customer_list' %}"
+                       class="btn btn-light">Cancel</a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Confirm Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

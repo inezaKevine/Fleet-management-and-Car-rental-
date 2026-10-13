@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+
+{% block title %}Delete Vehicle{% endblock %}
+{% block page_title %}Delete Vehicle{% endblock %}
+{% block page_description %}Confirm this action before proceeding.{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="card border-danger">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-exclamation-triangle display-3 text-danger"></i>
+                <h4 class="mt-3">Delete this vehicle?</h4>
+                <p class="text-secondary">
+                    You are about to delete
+                    <strong>{{ vehicle.make }} {{ vehicle.model }}</strong>
+                    ({{ vehicle.registration_number }}).
+                </p>
+                <p class="text-secondary">
+                    This action cannot be undone. Vehicles linked to bookings
+                    or maintenance records may be protected from deletion.
+                </p>
+
+                <form method="post" class="d-flex justify-content-center gap-2 mt-4">
+                    {% csrf_token %}
+                    <a href="{% url 'fleet:vehicle_list' %}"
+                       class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Confirm Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

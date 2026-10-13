@@ -1,0 +1,388 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block page_overline %}RENTAL OPERATIONS{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_description %}
+Review the rental balance and record a payment against an existing booking.
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">
+    <a href="{% url 'dashboard:home' %}">Home</a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'rentals:payment_list' %}">Payments</a>
+</li>
+<li class="breadcrumb-item active">{{ page_title }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-9">
+
+        <div class="card">
+            <div class="card-body p-4">
+
+                <div class="alert alert-light border">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Select a booking to calculate its rental cost and outstanding
+                    balance. Only payments marked <strong>Paid</strong> count
+                    as money received.
+                </div>
+
+                <form method="post" id="payment-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-3">
+
+                        <!-- BOOKING -->
+                        <div class="col-12">
+                            <label
+                                for="{{ form.booking.id_for_label }}"
+                                class="form-label"
+                            >
+                                Booking *
+                            </label>
+
+                            {{ form.booking }}
+
+                            {% for error in form.booking.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+
+                            <div class="form-text">
+                                Select the booking for which the customer is paying.
+                            </div>
+                        </div>
+
+                        <!-- PAYMENT SUMMARY -->
+                        <div class="col-12">
+                            <div class="border rounded p-3" id="payment-summary">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <i class="bi bi-calculator fs-5"></i>
+                                    <h6 class="mb-0">Rental Payment Summary</h6>
+                                </div>
+
+                                <div id="summary-message" class="text-muted small">
+                                    Select a booking to calculate the amount due.
+                                </div>
+
+                                <div id="summary-details" hidden>
+                                    <div class="d-flex justify-content-between gap-3 py-2">
+                                        <span class="text-muted">Rental duration</span>
+                                        <strong id="summary-days">—</strong>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 py-2">
+                                        <span class="text-muted">Total rental cost</span>
+                                        <strong id="summary-total">RWF 0</strong>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 py-2">
+                                        <span class="text-muted">Previous payments received</span>
+                                        <strong id="summary-paid">RWF 0</strong>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="d-flex justify-content-between align-items-center gap-3">
+                                        <span class="fw-semibold">Outstanding balance</span>
+                                        <strong
+                                            id="summary-balance"
+                                            class="fs-5"
+                                        >
+                                            RWF 0
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AMOUNT -->
+                        <div class="col-12">
+                            <label
+                                for="{{ form.amount.id_for_label }}"
+                                class="form-label"
+                            >
+                                Amount (RWF) *
+                            </label>
+
+                            {{ form.amount }}
+
+                            <div class="form-text">
+                                Automatically filled with the outstanding balance.
+                            </div>
+
+                            {% for error in form.amount.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- METHOD -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.method.id_for_label }}"
+                                class="form-label"
+                            >
+                                Payment Method *
+                            </label>
+
+                            {{ form.method }}
+
+                            {% for error in form.method.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- STATUS -->
+                        <div class="col-md-6">
+                            <label
+                                for="{{ form.status.id_for_label }}"
+                                class="form-label"
+                            >
+                                Payment Status *
+                            </label>
+
+                            {{ form.status }}
+
+                            {% for error in form.status.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+
+                            <div class="form-text">
+                                Mark as Paid only after confirming receipt.
+                            </div>
+                        </div>
+
+                        <!-- TRANSACTION REFERENCE -->
+                        <div class="col-12">
+                            <label
+                                for="{{ form.transaction_reference.id_for_label }}"
+                                class="form-label"
+                            >
+                                Transaction Reference
+                            </label>
+
+                            {{ form.transaction_reference }}
+
+                            <div class="form-text">
+                                For example, a bank transaction ID or mobile money reference.
+                            </div>
+
+                            {% for error in form.transaction_reference.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- PAYMENT DATE -->
+                        <div class="col-12">
+                            <label
+                                for="{{ form.payment_date.id_for_label }}"
+                                class="form-label"
+                            >
+                                Payment Date and Time
+                            </label>
+
+                            {{ form.payment_date }}
+
+                            <div class="form-text">
+                                Leave blank to use the current time when a payment is marked Paid.
+                            </div>
+
+                            {% for error in form.payment_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a
+                            href="{% url 'rentals:payment_list' %}"
+                            class="btn btn-light"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            id="save-payment"
+                            class="btn btn-success"
+                            disabled
+                        >
+                            <i class="bi bi-check2-circle me-1"></i>
+                            Save Payment
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+    "use strict";
+
+    const bookingSelect = document.getElementById("id_booking");
+    const amountInput = document.getElementById("id_amount");
+    const paymentForm = document.getElementById("payment-form");
+    const saveButton = document.getElementById("save-payment");
+
+    const summaryMessage = document.getElementById("summary-message");
+    const summaryDetails = document.getElementById("summary-details");
+    const summaryDays = document.getElementById("summary-days");
+    const summaryTotal = document.getElementById("summary-total");
+    const summaryPaid = document.getElementById("summary-paid");
+    const summaryBalance = document.getElementById("summary-balance");
+    const summaryBox = document.getElementById("payment-summary");
+
+    let requestNumber = 0;
+    let balanceAvailable = false;
+
+    function formatRWF(value) {
+        return "RWF " + Number(value).toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function resetSummary(message) {
+        balanceAvailable = false;
+        saveButton.disabled = true;
+        amountInput.value = "";
+
+        summaryDetails.hidden = true;
+        summaryMessage.hidden = false;
+        summaryMessage.textContent = message;
+        summaryBox.className = "border rounded p-3";
+    }
+
+    async function loadSummary() {
+        const currentRequest = ++requestNumber;
+        const bookingId = bookingSelect.value;
+
+        resetSummary(
+            bookingId
+                ? "Calculating the booking balance…"
+                : "Select a booking to calculate the amount due."
+        );
+
+        if (!bookingId) {
+            return;
+        }
+
+        try {
+            const url = new URL(
+                "{% url 'rentals:payment_booking_summary' %}",
+                window.location.origin
+            );
+
+            url.searchParams.set("booking", bookingId);
+
+            const response = await fetch(url, {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve the booking balance.");
+            }
+
+            const data = await response.json();
+
+            if (currentRequest !== requestNumber) {
+                return;
+            }
+
+            if (!data.selected) {
+                resetSummary(data.message || "Select a valid booking.");
+                return;
+            }
+
+            const balance = Number(data.outstanding);
+
+            summaryMessage.hidden = true;
+            summaryDetails.hidden = false;
+
+            summaryDays.textContent =
+                data.rental_days +
+                (Number(data.rental_days) === 1 ? " day" : " days");
+
+            summaryTotal.textContent = formatRWF(data.rental_total);
+            summaryPaid.textContent = formatRWF(data.paid_total);
+            summaryBalance.textContent = formatRWF(balance);
+
+            amountInput.value = balance > 0
+                ? Number(balance).toFixed(2)
+                : "";
+
+            if (balance > 0) {
+                summaryMessage.hidden = false;
+                summaryMessage.textContent =
+                    "The outstanding balance has been filled into the payment amount.";
+                balanceAvailable = true;
+                saveButton.disabled = false;
+                summaryBox.className = "border rounded p-3";
+            } else {
+                summaryMessage.hidden = false;
+                summaryMessage.textContent =
+                    "This booking has no outstanding balance.";
+                balanceAvailable = false;
+                saveButton.disabled = true;
+                summaryBox.className = "border rounded p-3 bg-light";
+            }
+
+        } catch (error) {
+            if (currentRequest !== requestNumber) {
+                return;
+            }
+
+            resetSummary(
+                "The booking balance could not be loaded. Please try again."
+            );
+        }
+    }
+
+    bookingSelect.addEventListener("change", loadSummary);
+
+    paymentForm.addEventListener("submit", function (event) {
+        if (!balanceAvailable || !bookingSelect.value) {
+            event.preventDefault();
+            summaryBox.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    });
+
+    loadSummary();
+})();
+</script>
+{% endblock %}

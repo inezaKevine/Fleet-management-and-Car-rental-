@@ -1,0 +1,785 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B4936">
+
+    <title>Our Vehicles | FleetManager</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --forest: #0B4936;
+            --forest-dark: #073527;
+            --forest-light: #EAF2EE;
+            --cream: #F7F8F5;
+            --text: #202A25;
+            --muted: #737D76;
+            --border: #E4E9E5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: #fff;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        h1, h2, h3, h4, .brand-name {
+            font-family: "Manrope", sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            min-height: 82px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--forest);
+        }
+
+        .brand:hover {
+            color: var(--forest-dark);
+        }
+
+        .brand-icon {
+            display: inline-flex;
+            width: 43px;
+            height: 43px;
+            align-items: center;
+            justify-content: center;
+            background: var(--forest);
+            border-radius: 13px;
+            color: white;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            display: block;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .brand-caption {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .main-nav a {
+            color: #455149;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--forest);
+        }
+
+        .btn-forest {
+            padding: 12px 19px;
+            border: 1px solid var(--forest);
+            border-radius: 8px;
+            background: var(--forest);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-forest:hover {
+            border-color: var(--forest-dark);
+            background: var(--forest-dark);
+            color: white;
+        }
+
+        .btn-outline-forest {
+            padding: 11px 18px;
+            border: 1px solid var(--forest);
+            border-radius: 8px;
+            background: white;
+            color: var(--forest);
+            font-weight: 700;
+        }
+
+        .btn-outline-forest:hover {
+            background: var(--forest-light);
+            color: var(--forest-dark);
+        }
+
+        .catalogue-hero {
+            padding: 65px 0 58px;
+            background: var(--forest-dark);
+            color: white;
+        }
+
+        .eyebrow {
+            margin-bottom: 12px;
+            color: #B6D8C1;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+
+        .catalogue-hero h1 {
+            margin-bottom: 16px;
+            font-size: clamp(34px, 4.5vw, 53px);
+            font-weight: 800;
+            letter-spacing: -1.8px;
+        }
+
+        .catalogue-hero p {
+            max-width: 620px;
+            margin: 0;
+            color: rgba(255,255,255,.78);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .catalogue-section {
+            padding: 55px 0 85px;
+            background: var(--cream);
+            min-height: 55vh;
+        }
+
+        .search-panel {
+            margin-bottom: 35px;
+            padding: 23px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: white;
+            box-shadow: 0 8px 25px rgba(20,48,33,.04);
+        }
+
+        .search-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #48544C;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .search-input {
+            min-height: 48px;
+            border-color: var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 3px rgba(11,73,54,.1);
+        }
+
+        .results-heading {
+            margin-bottom: 23px;
+        }
+
+        .results-heading h2 {
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -.6px;
+        }
+
+        .results-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .vehicle-card {
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: white;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(18,53,35,.09);
+        }
+
+        .vehicle-image-wrap {
+            position: relative;
+            display: flex;
+            height: 220px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #EDF1ED;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s ease;
+        }
+
+        .vehicle-card:hover .vehicle-image {
+            transform: scale(1.035);
+        }
+
+        .image-placeholder {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            color: #728077;
+        }
+
+        .image-placeholder i {
+            font-size: 43px;
+        }
+
+        .image-placeholder span {
+            font-size: 12px;
+        }
+
+        .available-badge {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: white;
+            color: var(--forest);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .vehicle-details {
+            padding: 20px;
+        }
+
+        .vehicle-year {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .vehicle-title {
+            margin: 6px 0 10px;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .vehicle-description {
+            min-height: 39px;
+            margin-bottom: 15px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .vehicle-specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            padding-bottom: 17px;
+            border-bottom: 1px solid var(--border);
+            color: #667169;
+            font-size: 12px;
+        }
+
+        .vehicle-specs i {
+            margin-right: 4px;
+            color: var(--forest);
+        }
+
+        .vehicle-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 17px;
+        }
+
+        .vehicle-price {
+            color: var(--forest);
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .vehicle-price small {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .vehicle-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--forest);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .vehicle-link:hover {
+            color: var(--forest-dark);
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            border: 1px dashed #C8D3CB;
+            border-radius: 13px;
+            background: white;
+            text-align: center;
+        }
+
+        .empty-state i {
+            display: block;
+            margin-bottom: 15px;
+            color: #829187;
+            font-size: 43px;
+        }
+
+        .empty-state h3 {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+        }
+
+        .site-footer {
+            padding: 45px 0 22px;
+            background: #082D22;
+            color: white;
+        }
+
+        .footer-description {
+            max-width: 350px;
+            margin-top: 15px;
+            color: rgba(255,255,255,.65);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footer-heading {
+            margin-bottom: 15px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a,
+        .footer-links span {
+            color: rgba(255,255,255,.7);
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,.15);
+            color: rgba(255,255,255,.57);
+            font-size: 12px;
+        }
+
+        @media (max-width: 767px) {
+            .header-inner {
+                min-height: 72px;
+            }
+
+            .brand-name {
+                font-size: 19px;
+            }
+
+            .catalogue-hero {
+                padding: 48px 0;
+            }
+
+            .catalogue-section {
+                padding: 38px 0 60px;
+            }
+
+            .vehicle-image-wrap {
+                height: 210px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .vehicle-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="header-inner d-flex align-items-center justify-content-between gap-3">
+
+            <a href="{% url 'website:home' %}" class="brand">
+                <span class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </span>
+
+                <span>
+                    <span class="brand-name">FleetManager</span>
+                    <span class="brand-caption">Your journey, our priority</span>
+                </span>
+            </a>
+
+            <nav class="main-nav d-none d-md-flex">
+                <a href="{% url 'website:home' %}">Home</a>
+                <a href="{% url 'website:vehicle_list' %}" class="active">Our Vehicles</a>
+                <a href="{% url 'website:home' %}#why-us">Why Choose Us</a>
+            </nav>
+
+            <a href="{% url 'website:home' %}"
+               class="btn btn-outline-forest d-none d-sm-inline-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left"></i>
+                Home
+            </a>
+
+            <a href="{% url 'website:home' %}"
+               class="btn btn-forest btn-sm d-sm-none">
+                Home
+            </a>
+
+        </div>
+    </div>
+</header>
+
+<section class="catalogue-hero">
+    <div class="container">
+        <div class="eyebrow">OUR VEHICLE COLLECTION</div>
+
+        <h1>Find the right car for your journey.</h1>
+
+        <p>
+            Explore the vehicles currently available in our fleet.
+            Compare daily rental prices and choose the vehicle that suits your plans.
+        </p>
+    </div>
+</section>
+
+<section class="catalogue-section">
+    <div class="container">
+
+        <div class="search-panel">
+            <form method="get"
+                  action="{% url 'website:vehicle_list' %}"
+                  class="row g-3 align-items-end">
+
+                <div class="col-lg-9 col-md-8">
+                    <label for="vehicle-search" class="search-label">
+                        SEARCH OUR VEHICLES
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-secondary"></i>
+                        </span>
+
+                        <input
+                            type="search"
+                            id="vehicle-search"
+                            name="q"
+                            value="{{ search_query }}"
+                            class="form-control search-input border-start-0"
+                            placeholder="Search by make, model, or description"
+                        >
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-forest flex-grow-1">
+                        Search
+                    </button>
+
+                    {% if search_query %}
+                        <a href="{% url 'website:vehicle_list' %}"
+                           class="btn btn-outline-forest">
+                            Clear
+                        </a>
+                    {% endif %}
+                </div>
+
+            </form>
+        </div>
+
+        <div class="results-heading d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h2>
+                    {% if search_query %}
+                        Search Results
+                    {% else %}
+                        Available Vehicles
+                    {% endif %}
+                </h2>
+
+                <p>
+                    {% if search_query %}
+                        Results for "{{ search_query }}"
+                    {% else %}
+                        Vehicles currently marked as available in our system.
+                    {% endif %}
+                </p>
+            </div>
+
+            <span class="text-secondary small">
+                {{ vehicles|length }} vehicle{{ vehicles|length|pluralize }}
+            </span>
+        </div>
+
+        <div class="row g-4">
+
+            {% for vehicle in vehicles %}
+                <div class="col-sm-6 col-lg-4">
+
+                    <article class="vehicle-card">
+
+                        <div class="vehicle-image-wrap">
+                            {% if vehicle.image %}
+                                <img
+                                    src="{{ vehicle.image.url }}"
+                                    alt="{{ vehicle.make }} {{ vehicle.model }}"
+                                    class="vehicle-image"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div class="image-placeholder">
+                                    <i class="bi bi-car-front"></i>
+                                    <span>Vehicle image not available</span>
+                                </div>
+                            {% endif %}
+
+                            <span class="available-badge">
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Available
+                            </span>
+                        </div>
+
+                        <div class="vehicle-details">
+
+                            <div class="vehicle-year">
+                                {{ vehicle.year }}
+                                {% if vehicle.color %}
+                                    <span class="mx-1">·</span>
+                                    {{ vehicle.color }}
+                                {% endif %}
+                            </div>
+
+                            <h3 class="vehicle-title">
+                                {{ vehicle.make }} {{ vehicle.model }}
+                            </h3>
+
+                            <p class="vehicle-description">
+                                {% if vehicle.description %}
+                                    {{ vehicle.description|truncatechars:100 }}
+                                {% else %}
+                                    Contact our team for more information about this vehicle.
+                                {% endif %}
+                            </p>
+
+                            <div class="vehicle-specs">
+                                <span>
+                                    <i class="bi bi-calendar3"></i>
+                                    {{ vehicle.year }}
+                                </span>
+
+                                <span>
+                                    <i class="bi bi-palette"></i>
+                                    {% if vehicle.color %}
+                                        {{ vehicle.color }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <div class="vehicle-bottom">
+                                <div class="vehicle-price">
+                                    RWF {{ vehicle.daily_rate|floatformat:0 }}
+                                    <small>per day</small>
+                                </div>
+
+                                <a href="{% url 'rentals:booking_create' %}"
+                                   class="vehicle-link">
+                                    Request Booking
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </article>
+
+                </div>
+
+            {% empty %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-car-front"></i>
+
+                        <h3>
+                            {% if search_query %}
+                                No matching vehicles found
+                            {% else %}
+                                No vehicles available right now
+                            {% endif %}
+                        </h3>
+
+                        <p>
+                            {% if search_query %}
+                                Try a different search term to find a vehicle.
+                            {% else %}
+                                Available vehicles will appear here when they are
+                                marked as available in our management system.
+                            {% endif %}
+                        </p>
+
+                        {% if search_query %}
+                            <a href="{% url 'website:vehicle_list' %}"
+                               class="btn btn-forest">
+                                View All Vehicles
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="mt-5">
+            <a href="{% url 'website:home' %}"
+               class="btn btn-outline-forest">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Homepage
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-5 col-md-6">
+                <a href="{% url 'website:home' %}" class="brand text-white">
+                    <span class="brand-icon"
+                          style="background:rgba(255,255,255,.13);">
+                        <i class="bi bi-car-front-fill"></i>
+                    </span>
+
+                    <span>
+                        <span class="brand-name text-white">FleetManager</span>
+                        <span class="brand-caption" style="color:#B8CCC0;">
+                            Your journey, our priority
+                        </span>
+                    </span>
+                </a>
+
+                <p class="footer-description">
+                    Explore our vehicle collection and submit a rental booking
+                    request online.
+                </p>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h3 class="footer-heading">Explore</h3>
+
+                <div class="footer-links">
+                    <a href="{% url 'website:home' %}">Home</a>
+                    <a href="{% url 'website:vehicle_list' %}">Our Vehicles</a>
+                    <a href="{% url 'website:home' %}#why-us">Why Choose Us</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h3 class="footer-heading">Rental Information</h3>
+
+                <div class="footer-links">
+                    <span>
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Prices displayed in Rwandan francs (RWF)
+                    </span>
+
+                    <span>
+                        <i class="bi bi-calendar-check me-2"></i>
+                        Booking requests require confirmation
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; {% now "Y" %} FleetManager. All rights reserved.</span>
+            <span>Fleet &amp; rental operations</span>
+        </div>
+
+    </div>
+</footer>
+
+</body>
+</html>

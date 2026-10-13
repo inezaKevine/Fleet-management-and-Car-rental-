@@ -1,0 +1,90 @@
+
+{% extends "base.html" %}
+
+{% block title %}Drivers{% endblock %}
+{% block page_title %}Drivers{% endblock %}
+{% block page_description %}Manage chauffeurs and their driving licence details.{% endblock %}
+{% block breadcrumb %}Fleet / Drivers{% endblock %}
+{% block page_overline %}FLEET OPERATIONS{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'fleet:driver_create' %}" class="btn btn-success">
+    <i class="bi bi-person-plus me-1"></i> Add Driver
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <h3 class="card-title">Driver Directory</h3>
+        <form method="get" class="d-flex gap-2">
+            <input type="search" name="q" value="{{ query }}"
+                   class="form-control"
+                   placeholder="Search name, phone or licence">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Driver</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Licence Number</th>
+                    <th>Licence Expiry</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in drivers %}
+                <tr>
+                    <td>
+                        <strong>{{ driver.first_name }} {{ driver.last_name }}</strong>
+                    </td>
+                    <td>{{ driver.phone }}</td>
+                    <td>{{ driver.email|default:"—" }}</td>
+                    <td>{{ driver.licence_number }}</td>
+                    <td>{{ driver.licence_expiry|date:"d M Y" }}</td>
+                    <td>
+                        {% if driver.status == "available" %}
+                        <span class="badge text-bg-success">Available</span>
+                        {% elif driver.status == "unavailable" %}
+                        <span class="badge text-bg-warning">Unavailable</span>
+                        {% else %}
+                        <span class="badge text-bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a href="{% url 'fleet:driver_update' driver.pk %}"
+                           class="btn btn-sm btn-outline-primary" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'fleet:driver_delete' driver.pk %}"
+                           class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <i class="bi bi-person-badge display-5 text-secondary"></i>
+                        <h5 class="mt-3">No drivers registered</h5>
+                        <p class="text-secondary">Add a driver to manage chauffeur bookings.</p>
+                        <a href="{% url 'fleet:driver_create' %}"
+                           class="btn btn-success">Add First Driver</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer text-secondary">
+        {{ drivers|length }} driver{{ drivers|length|pluralize }} displayed
+    </div>
+</div>
+{% endblock %}

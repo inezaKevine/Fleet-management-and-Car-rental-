@@ -1,0 +1,53 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_description %}Enter the driver's contact and licence information.{% endblock %}
+{% block breadcrumb %}Fleet / Drivers{% endblock %}
+{% block page_overline %}FLEET OPERATIONS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-9">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Driver Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for field in form %}
+                        <div class="col-md-6">
+                            <label class="form-label" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <a href="{% url 'fleet:driver_list' %}"
+                       class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg me-1"></i> Save Driver
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

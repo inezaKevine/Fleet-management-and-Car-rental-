@@ -1,0 +1,209 @@
+
+{% extends "base.html" %}
+
+{% block title %}Vehicle Returns{% endblock %}
+{% block breadcrumb %}Rental Business / Vehicle Returns{% endblock %}
+{% block page_overline %}RENTAL BUSINESS{% endblock %}
+{% block page_title %}Vehicle Returns{% endblock %}
+{% block page_description %}
+    Review returned vehicles, inspect their condition, and track additional charges.
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'rentals:vehicle_return_create' %}"
+       class="btn btn-success">
+        <i class="bi bi-plus-lg me-1"></i>
+        Record Vehicle Return
+    </a>
+{% endblock %}
+
+{% block content %}
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white border-bottom py-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h5 class="mb-1">Return Records</h5>
+                <p class="text-muted small mb-0">
+                    A history of vehicles returned from rental bookings.
+                </p>
+            </div>
+
+            <span class="badge rounded-pill text-bg-light border px-3 py-2">
+                {{ returns|length }} record{{ returns|length|pluralize }}
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body border-bottom">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-8 col-lg-9">
+                <label for="return-search" class="visually-hidden">
+                    Search vehicle returns
+                </label>
+
+                <div class="input-group">
+                    <span class="input-group-text bg-light">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input
+                        type="search"
+                        id="return-search"
+                        name="q"
+                        value="{{ query }}"
+                        class="form-control"
+                        placeholder="Search by customer, registration, make or model..."
+                    >
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-success flex-grow-1">
+                    Search
+                </button>
+
+                {% if query %}
+                    <a href="{% url 'rentals:vehicle_return_list' %}"
+                       class="btn btn-outline-secondary">
+                        Clear
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3">#</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Return Date</th>
+                    <th>Odometer (km)</th>
+                    <th>Fuel Level</th>
+                    <th>Condition</th>
+                    <th>Damage</th>
+                    <th class="text-end pe-3">Additional Charges (RWF)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for record in returns %}
+                    <tr>
+                        <td class="ps-3 text-muted">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold">
+                                {{ record.booking.customer }}
+                            </div>
+                            <div class="text-muted small">
+                                Booking #{{ record.booking.pk }}
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold">
+                                {{ record.booking.vehicle.make }}
+                                {{ record.booking.vehicle.model }}
+                            </div>
+                            <div class="text-muted small">
+                                {{ record.booking.vehicle.registration_number }}
+                            </div>
+                        </td>
+
+                        <td>
+                            {{ record.returned_at|date:"d M Y" }}
+                            <div class="text-muted small">
+                                {{ record.returned_at|date:"H:i" }}
+                            </div>
+                        </td>
+
+                        <td>{{ record.mileage|floatformat:0 }}</td>
+
+                        <td>
+                            {% if record.fuel_level %}
+                                <span class="badge text-bg-light border">
+                                    {{ record.fuel_level }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">Not recorded</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if record.condition_notes %}
+                                <span title="{{ record.condition_notes }}">
+                                    {{ record.condition_notes|truncatechars:55 }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">No notes</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if record.damage_reported %}
+                                <span class="badge text-bg-danger">
+                                    Reported
+                                </span>
+                            {% else %}
+                                <span class="badge text-bg-success">
+                                    None reported
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end pe-3 fw-semibold">
+                            RWF {{ record.additional_charges|floatformat:2 }}
+                        </td>
+                    </tr>
+
+                {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="bi bi-arrow-return-left display-5 text-muted"></i>
+                            </div>
+
+                            <h6 class="fw-semibold">No vehicle returns found</h6>
+
+                            {% if query %}
+                                <p class="text-muted mb-3">
+                                    No return records match "{{ query }}".
+                                </p>
+
+                                <a href="{% url 'rentals:vehicle_return_list' %}"
+                                   class="btn btn-outline-secondary btn-sm">
+                                    Clear Search
+                                </a>
+                            {% else %}
+                                <p class="text-muted mb-3">
+                                    Returned vehicles will appear here after a return is recorded.
+                                </p>
+
+                                <a href="{% url 'rentals:vehicle_return_create' %}"
+                                   class="btn btn-success btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i>
+                                    Record First Return
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if returns %}
+        <div class="card-footer bg-white text-muted small">
+            Showing {{ returns|length }} return record{{ returns|length|pluralize }}.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

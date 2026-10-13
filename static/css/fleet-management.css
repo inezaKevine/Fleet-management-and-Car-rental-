@@ -1,0 +1,1288 @@
+
+/* =========================================================
+   FLEETMANAGER — PREMIUM DESIGN SYSTEM
+   Forest green · Ivory · White · Muted gold
+   ========================================================= */
+
+/* ---------- 1. Design tokens ---------- */
+
+:root {
+    --fm-green: #0B4936;
+    --fm-green-dark: #073727;
+    --fm-green-light: #17664D;
+    --fm-green-soft: #E8F1EB;
+
+    --fm-ivory: #F5F5F0;
+    --fm-white: #FFFFFF;
+    --fm-gold: #B89B65;
+
+    --fm-text: #222B25;
+    --fm-text-soft: #46534A;
+    --fm-muted: #788279;
+
+    --fm-border: #E4E8E1;
+    --fm-border-dark: #D6DDD5;
+
+    --fm-success-bg: #E7F3EA;
+    --fm-success: #286743;
+    --fm-warning-bg: #FBF1DA;
+    --fm-warning: #8B681B;
+    --fm-danger-bg: #FBE9E7;
+    --fm-danger: #A23E36;
+    --fm-info-bg: #E8EFF8;
+    --fm-info: #355F91;
+
+    --fm-radius-sm: 7px;
+    --fm-radius: 12px;
+    --fm-radius-lg: 18px;
+
+    --fm-shadow-sm: 0 3px 12px rgba(28, 48, 35, 0.04);
+    --fm-shadow: 0 8px 26px rgba(28, 48, 35, 0.055);
+    --fm-shadow-hover: 0 15px 34px rgba(28, 48, 35, 0.10);
+
+    --fm-transition: 180ms ease;
+}
+
+
+/* ---------- 2. Base and typography ---------- */
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body,
+.app-wrapper {
+    min-height: 100vh;
+    font-family: "DM Sans", Arial, sans-serif !important;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--fm-text);
+    background: var(--fm-ivory);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6,
+.page-heading,
+.card-title {
+    font-family: "Manrope", "DM Sans", Arial, sans-serif !important;
+    color: var(--fm-text);
+    letter-spacing: -0.035em;
+}
+
+h1 { font-size: 32px; font-weight: 800; }
+h2 { font-size: 27px; font-weight: 800; }
+h3 { font-size: 22px; font-weight: 700; }
+h4 { font-size: 19px; font-weight: 700; }
+h5 { font-size: 16px; font-weight: 700; }
+
+p {
+    line-height: 1.75;
+}
+
+a {
+    color: var(--fm-green);
+    text-decoration: none;
+    transition: color var(--fm-transition);
+}
+
+a:hover {
+    color: var(--fm-green-light);
+}
+
+::selection {
+    color: var(--fm-white);
+    background: var(--fm-green);
+}
+
+.text-secondary {
+    color: var(--fm-muted) !important;
+}
+
+
+/* ---------- 3. Main application shell ---------- */
+
+.app-wrapper {
+    background: var(--fm-ivory);
+}
+
+.app-main {
+    background: var(--fm-ivory);
+    min-width: 0;
+}
+
+.app-content {
+    padding: 14px 34px 42px !important;
+}
+
+.app-content > .container-fluid {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+
+.app-content-header {
+    padding: 32px 34px 14px !important;
+    background: transparent;
+}
+
+.app-content-header > .container-fluid {
+    padding: 0;
+}
+
+.page-heading-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.page-heading-copy {
+    min-width: 0;
+}
+
+.page-overline {
+    margin-bottom: 8px;
+    color: var(--fm-muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    line-height: 1.5;
+}
+
+.page-heading,
+.app-content-header h1 {
+    margin: 0;
+    color: var(--fm-text);
+    font-size: clamp(27px, 2.2vw, 35px);
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.page-description {
+    max-width: 700px;
+    margin: 9px 0 0;
+    color: var(--fm-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.page-heading-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+
+/* ---------- 4. Top navigation ---------- */
+
+.app-header {
+    min-height: 66px;
+    padding: 0 27px;
+    background: var(--fm-white) !important;
+    border-bottom: 1px solid var(--fm-border);
+    box-shadow: none;
+}
+
+.app-header .navbar-nav {
+    align-items: center;
+}
+
+.app-header .nav-link {
+    color: var(--fm-text-soft);
+    font-size: 14px;
+}
+
+.app-header .nav-link:hover {
+    color: var(--fm-green);
+}
+
+.sidebar-toggle {
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+}
+
+.sidebar-toggle i {
+    font-size: 23px;
+}
+
+.sidebar-toggle:hover {
+    background: var(--fm-green-soft);
+}
+
+.topbar-section {
+    font-weight: 600;
+}
+
+.topbar-label {
+    color: var(--fm-muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.user-avatar {
+    display: inline-flex;
+    width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #DDE8DF;
+    border-radius: 50%;
+    background: var(--fm-green-soft);
+    color: var(--fm-green);
+}
+
+.user-name {
+    font-size: 13px !important;
+    font-weight: 600;
+}
+
+
+/* ---------- 5. Sidebar ---------- */
+
+.app-sidebar {
+    background: var(--fm-green) !important;
+    box-shadow: 5px 0 24px rgba(7, 55, 39, 0.07);
+}
+
+.sidebar-brand {
+    min-height: 76px;
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    background: var(--fm-green-dark);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.sidebar-brand .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    color: var(--fm-white) !important;
+    white-space: nowrap;
+}
+
+.brand-symbol {
+    display: inline-flex;
+    width: 37px;
+    height: 37px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.23);
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.brand-text {
+    font-family: "Manrope", sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.brand-accent {
+    color: #D6C29A;
+}
+
+.sidebar-intro {
+    padding: 26px 23px 14px;
+}
+
+.sidebar-eyebrow {
+    color: #BCD2C5;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+}
+
+.sidebar-intro p {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.70);
+    font-size: 12px;
+}
+
+.sidebar-navigation {
+    padding: 0 12px;
+}
+
+.app-sidebar .nav-header {
+    padding: 22px 11px 9px;
+    color: #BCD2C5 !important;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+}
+
+.app-sidebar .nav-link {
+    display: flex;
+    min-height: 45px;
+    align-items: center;
+    gap: 12px;
+    margin: 3px 0;
+    padding: 11px 13px;
+    border-radius: 9px;
+    color: rgba(255, 255, 255, 0.80) !important;
+    transition: background var(--fm-transition),
+                color var(--fm-transition);
+}
+
+.app-sidebar .nav-link p {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.app-sidebar .nav-icon {
+    width: 20px;
+    margin: 0 !important;
+    font-size: 16px;
+    text-align: center;
+}
+
+.app-sidebar .nav-link:hover {
+    color: var(--fm-white) !important;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.app-sidebar .nav-link.active {
+    color: var(--fm-white) !important;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 3px 0 0 var(--fm-gold);
+}
+
+.nav-soon {
+    color: #D8C9A8;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.sidebar-bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 30px 20px 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.sidebar-status-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #B7D6A4;
+}
+
+.sidebar-status-title,
+.sidebar-status-caption {
+    display: block;
+}
+
+.sidebar-status-title {
+    color: var(--fm-white);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.sidebar-status-caption {
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 11px;
+}
+
+
+/* ---------- 6. Cards and panels ---------- */
+
+.card {
+    overflow: hidden;
+    margin-bottom: 24px;
+    border: 1px solid var(--fm-border);
+    border-radius: var(--fm-radius);
+    background: var(--fm-white);
+    box-shadow: var(--fm-shadow-sm);
+}
+
+.card-header {
+    padding: 21px 24px;
+    background: var(--fm-white);
+    border-bottom: 1px solid var(--fm-border);
+}
+
+.card-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+.card-footer {
+    padding: 16px 24px;
+    background: #FCFCFA;
+    border-top: 1px solid var(--fm-border);
+}
+
+.card-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* ---------- 7. Tables ---------- */
+
+.table-responsive {
+    width: 100%;
+    border-radius: 0 0 var(--fm-radius) var(--fm-radius);
+}
+
+.table {
+    margin-bottom: 0;
+    color: var(--fm-text);
+    vertical-align: middle;
+}
+
+.table thead th {
+    padding: 16px 18px;
+    color: #6F7A70;
+    background: #FAFBF8;
+    border-bottom: 1px solid var(--fm-border);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.085em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 18px;
+    color: #354138;
+    border-color: #EDF0EA;
+    font-size: 14px;
+}
+
+.table tbody tr {
+    transition: background var(--fm-transition);
+}
+
+.table tbody tr:hover {
+    background: #FAFBF8;
+}
+
+.table tbody td strong {
+    color: var(--fm-text);
+    font-weight: 700;
+}
+
+.table tbody img {
+    max-width: 100%;
+    border: 1px solid var(--fm-border);
+    border-radius: 9px;
+}
+
+.table .btn {
+    min-width: 36px;
+}
+
+
+/* ---------- 8. Buttons ---------- */
+
+.btn {
+    display: inline-flex;
+    min-height: 39px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 15px;
+    border-radius: 8px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background var(--fm-transition),
+                color var(--fm-transition),
+                border-color var(--fm-transition),
+                box-shadow var(--fm-transition),
+                transform var(--fm-transition);
+}
+
+.btn-success {
+    color: #FFFFFF;
+    background: var(--fm-green);
+    border-color: var(--fm-green);
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    color: #FFFFFF;
+    background: var(--fm-green-dark);
+    border-color: var(--fm-green-dark);
+    box-shadow: 0 5px 14px rgba(11, 73, 54, 0.15);
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    color: var(--fm-text-soft);
+    background: #FFFFFF;
+    border-color: var(--fm-border-dark);
+}
+
+.btn-outline-secondary:hover {
+    color: var(--fm-green);
+    background: var(--fm-green-soft);
+    border-color: #B7CDBD;
+}
+
+.btn-outline-primary {
+    color: var(--fm-info);
+    border-color: #C9D8E9;
+}
+
+.btn-outline-danger {
+    color: var(--fm-danger);
+    border-color: #E9C9C6;
+}
+
+.btn:focus-visible,
+a:focus-visible,
+.form-control:focus-visible {
+    outline: 3px solid rgba(184, 155, 101, 0.48);
+    outline-offset: 2px;
+}
+
+
+/* ---------- 9. Forms and validation ---------- */
+
+.form-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #354139;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-control,
+.form-select {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--fm-border-dark);
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: var(--fm-text);
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    transition: border-color var(--fm-transition),
+                box-shadow var(--fm-transition);
+}
+
+.form-control::placeholder {
+    color: #9AA39B;
+    opacity: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #4F8A70;
+    box-shadow: 0 0 0 3px rgba(11, 73, 54, 0.09);
+}
+
+textarea.form-control {
+    min-height: 105px;
+    resize: vertical;
+}
+
+input[type="file"].form-control {
+    min-height: 47px;
+    padding: 8px;
+}
+
+.form-text {
+    color: var(--fm-muted);
+    font-size: 12px;
+}
+
+.invalid-feedback,
+.text-danger.small {
+    margin-top: 5px;
+    color: var(--fm-danger) !important;
+    font-size: 12px;
+}
+
+.is-invalid,
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #C45C52;
+}
+
+.alert {
+    margin-bottom: 20px;
+    border: 1px solid var(--fm-border);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.alert-success {
+    color: var(--fm-success);
+    background: var(--fm-success-bg);
+    border-color: #CBE2D0;
+}
+
+.alert-danger {
+    color: var(--fm-danger);
+    background: var(--fm-danger-bg);
+    border-color: #EBCBC8;
+}
+
+.alert-warning {
+    color: var(--fm-warning);
+    background: var(--fm-warning-bg);
+    border-color: #EBDCB8;
+}
+
+
+/* ---------- 10. Status badges ---------- */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.badge.text-bg-success {
+    color: var(--fm-success) !important;
+    background: var(--fm-success-bg) !important;
+}
+
+.badge.text-bg-warning {
+    color: var(--fm-warning) !important;
+    background: var(--fm-warning-bg) !important;
+}
+
+.badge.text-bg-danger {
+    color: var(--fm-danger) !important;
+    background: var(--fm-danger-bg) !important;
+}
+
+.badge.text-bg-primary,
+.badge.text-bg-info {
+    color: var(--fm-info) !important;
+    background: var(--fm-info-bg) !important;
+}
+
+.badge.text-bg-secondary {
+    color: #5F685F !important;
+    background: #EDF0EA !important;
+}
+
+
+/* ---------- 11. Fleet vehicle presentation ---------- */
+
+.vehicle-image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    background: #ECEFE9;
+}
+
+.vehicle-card {
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--fm-border);
+    border-radius: var(--fm-radius-lg);
+    background: var(--fm-white);
+    box-shadow: var(--fm-shadow-sm);
+    transition: transform 220ms ease,
+                box-shadow 220ms ease,
+                border-color 220ms ease;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-4px);
+    border-color: #D1DDD2;
+    box-shadow: var(--fm-shadow-hover);
+}
+
+.vehicle-card-image-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #ECEFE9;
+    aspect-ratio: 16 / 10;
+}
+
+.vehicle-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms ease;
+}
+
+.vehicle-card:hover .vehicle-card-image {
+    transform: scale(1.035);
+}
+
+.vehicle-card-body {
+    padding: 21px;
+}
+
+.vehicle-card-title {
+    margin: 0;
+    font-family: "Manrope", sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+.vehicle-registration {
+    color: var(--fm-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.035em;
+}
+
+.vehicle-price {
+    color: var(--fm-green);
+    font-family: "Manrope", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.vehicle-price-unit {
+    color: var(--fm-muted);
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.vehicle-detail-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--fm-muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+}
+
+.vehicle-detail-value {
+    color: var(--fm-text);
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.vehicle-detail-row {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--fm-border);
+}
+
+.vehicle-detail-row:last-child {
+    border-bottom: 0;
+}
+
+.vehicle-photo-large {
+    width: 100%;
+    max-height: 430px;
+    object-fit: cover;
+    border-radius: var(--fm-radius);
+    background: #ECEFE9;
+}
+
+.vehicle-placeholder {
+    display: flex;
+    width: 100%;
+    min-height: 180px;
+    align-items: center;
+    justify-content: center;
+    background: #ECEFE9;
+    color: #879488;
+    font-size: 48px;
+}
+
+
+/* ---------- 12. Dashboard summary cards ---------- */
+
+.summary-card {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    padding: 23px;
+    border: 1px solid var(--fm-border);
+    border-radius: var(--fm-radius);
+    background: #FFFFFF;
+    box-shadow: var(--fm-shadow-sm);
+    transition: transform 200ms ease,
+                box-shadow 200ms ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--fm-shadow);
+}
+
+.summary-card-label {
+    color: var(--fm-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.summary-card-value {
+    margin-top: 10px;
+    color: var(--fm-text);
+    font-family: "Manrope", sans-serif;
+    font-size: clamp(24px, 2vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    overflow-wrap: anywhere;
+}
+
+.summary-card-icon {
+    display: inline-flex;
+    width: 43px;
+    height: 43px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--fm-green);
+    background: var(--fm-green-soft);
+    font-size: 19px;
+}
+
+.summary-card-note {
+    margin-top: 7px;
+    color: var(--fm-muted);
+    font-size: 12px;
+}
+
+
+/* ---------- 13. Booking and reservation UI ---------- */
+
+/* Reusable booking progress indicator */
+
+.booking-progress {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    gap: 0;
+    margin: 10px 0 30px;
+}
+
+.booking-step {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.booking-step:not(:last-child)::after {
+    position: absolute;
+    z-index: 0;
+    top: 19px;
+    left: calc(50% + 22px);
+    width: calc(100% - 44px);
+    height: 2px;
+    background: var(--fm-border-dark);
+    content: "";
+}
+
+.booking-step.is-complete:not(:last-child)::after {
+    background: var(--fm-green);
+}
+
+.booking-step-number {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 39px;
+    height: 39px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--fm-border-dark);
+    border-radius: 50%;
+    color: var(--fm-muted);
+    background: #FFFFFF;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.booking-step.is-active .booking-step-number,
+.booking-step.is-complete .booking-step-number {
+    color: #FFFFFF;
+    background: var(--fm-green);
+    border-color: var(--fm-green);
+}
+
+.booking-step-label {
+    margin-top: 9px;
+    color: var(--fm-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.booking-step.is-active .booking-step-label {
+    color: var(--fm-green);
+    font-weight: 800;
+}
+
+/* Selectable vehicle cards in the booking flow */
+
+.booking-vehicle-option {
+    position: relative;
+    height: 100%;
+    cursor: pointer;
+}
+
+.booking-vehicle-option input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.booking-vehicle-option .vehicle-card {
+    height: 100%;
+}
+
+.booking-vehicle-option input[type="radio"]:checked + .vehicle-card {
+    border: 2px solid var(--fm-green);
+    box-shadow: 0 0 0 3px rgba(11, 73, 54, 0.08);
+}
+
+.booking-vehicle-option input[type="radio"]:focus-visible + .vehicle-card {
+    outline: 3px solid rgba(184, 155, 101, 0.55);
+    outline-offset: 3px;
+}
+
+/* Booking date, time and price summary */
+
+.booking-summary {
+    padding: 23px;
+    border: 1px solid var(--fm-border);
+    border-radius: var(--fm-radius);
+    background: #FFFFFF;
+    box-shadow: var(--fm-shadow-sm);
+}
+
+.booking-summary-title {
+    margin: 0 0 17px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.booking-summary-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--fm-border);
+    font-size: 13px;
+}
+
+.booking-summary-row:last-child {
+    border-bottom: 0;
+}
+
+.booking-summary-total {
+    margin-top: 10px;
+    padding-top: 17px;
+    border-top: 1px solid var(--fm-border-dark);
+    font-family: "Manrope", sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.booking-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 17px;
+    border: 1px solid var(--fm-border);
+    border-radius: var(--fm-radius);
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: border-color var(--fm-transition),
+                background var(--fm-transition);
+}
+
+.booking-option:hover {
+    border-color: #AFC6B6;
+    background: #FBFCFA;
+}
+
+.booking-option input {
+    margin-top: 5px;
+    accent-color: var(--fm-green);
+}
+
+.booking-option-title {
+    display: block;
+    color: var(--fm-text);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.booking-option-description {
+    display: block;
+    margin-top: 4px;
+    color: var(--fm-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+
+/* ---------- 14. Deliberate animations ---------- */
+
+/* Use this class on elements that should enter once on page load. */
+
+.fm-enter {
+    animation: fm-fade-up 420ms ease both;
+}
+
+.fm-enter-delay-1 {
+    animation: fm-fade-up 420ms 70ms ease both;
+}
+
+.fm-enter-delay-2 {
+    animation: fm-fade-up 420ms 140ms ease both;
+}
+
+.fm-enter-delay-3 {
+    animation: fm-fade-up 420ms 210ms ease both;
+}
+
+@keyframes fm-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Use on the customer booking progress content when changing steps. */
+
+.fm-step-enter {
+    animation: fm-step-enter 260ms ease both;
+}
+
+@keyframes fm-step-enter {
+    from {
+        opacity: 0;
+        transform: translateX(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Loading indicator for real async work only. */
+
+.fm-spinner {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: fm-spin 650ms linear infinite;
+}
+
+@keyframes fm-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Respect visitors who prefer reduced motion. */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* ---------- 15. Footer ---------- */
+
+.app-footer {
+    padding: 0 28px;
+    background: #FFFFFF;
+    border-top: 1px solid var(--fm-border);
+    color: var(--fm-muted);
+    font-size: 12px;
+}
+
+.footer-inner {
+    display: flex;
+    min-height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.footer-inner strong {
+    color: var(--fm-text-soft);
+    font-weight: 800;
+}
+
+.footer-note {
+    color: #899188;
+}
+
+
+/* ---------- 16. Responsive layouts ---------- */
+
+@media (max-width: 991.98px) {
+    .app-content-header {
+        padding: 27px 22px 12px !important;
+    }
+
+    .app-content {
+        padding: 12px 22px 32px !important;
+    }
+
+    .app-header {
+        padding: 0 17px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body,
+    .app-wrapper {
+        font-size: 14px;
+    }
+
+    .app-header {
+        min-height: 59px;
+        padding: 0 10px;
+    }
+
+    .app-content-header {
+        padding: 24px 16px 10px !important;
+    }
+
+    .page-heading-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .page-heading {
+        font-size: 27px;
+    }
+
+    .page-description {
+        font-size: 13px;
+    }
+
+    .page-heading-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .app-content {
+        padding: 12px 14px 28px !important;
+    }
+
+    .card-header {
+        padding: 17px;
+    }
+
+    .card-body {
+        padding: 18px;
+    }
+
+    .card-footer {
+        padding: 14px 17px;
+    }
+
+    .card-tools {
+        width: 100%;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .card-tools form {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .card-tools .form-control {
+        min-width: 0;
+        flex: 1 1 180px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 13px;
+    }
+
+    .booking-progress {
+        margin-bottom: 22px;
+    }
+
+    .booking-step-label {
+        font-size: 10px;
+    }
+
+    .booking-step-number {
+        width: 34px;
+        height: 34px;
+    }
+
+    .booking-step:not(:last-child)::after {
+        top: 16px;
+        left: calc(50% + 19px);
+        width: calc(100% - 38px);
+    }
+
+    .footer-inner {
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
+        padding: 12px 0;
+        gap: 3px;
+    }
+}

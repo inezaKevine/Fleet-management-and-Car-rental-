@@ -1,0 +1,120 @@
+
+{% extends "base.html" %}
+
+{% block title %}Fleet Vehicles{% endblock %}
+{% block page_title %}Fleet Vehicles{% endblock %}
+{% block page_description %}Register and manage your vehicle fleet.{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'fleet:vehicle_create' %}" class="btn btn-success">
+    <i class="bi bi-plus-lg me-1"></i> Register Vehicle
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Registered Vehicles</h3>
+        <div class="card-tools">
+            <form method="get" class="d-flex gap-2">
+                <input type="search" name="q" value="{{ query }}"
+                       class="form-control form-control-sm"
+                       placeholder="Search registration, make or model">
+                <button class="btn btn-sm btn-outline-secondary" type="submit">
+                    Search
+                </button>
+                {% if query %}
+                <a href="{% url 'fleet:vehicle_list' %}"
+                   class="btn btn-sm btn-outline-secondary">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Registration</th>
+                        <th>Vehicle</th>
+                        <th>Year</th>
+                        <th>Daily Rate</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vehicle in vehicles %}
+                    <tr>
+                        <td>
+                            {% if vehicle.image %}
+                            <img src="{{ vehicle.image.url }}"
+                                 alt="{{ vehicle.make }} {{ vehicle.model }}"
+                                 style="width:75px;height:52px;object-fit:cover;border-radius:6px;">
+                            {% else %}
+                            <div class="bg-body-secondary rounded d-flex align-items-center justify-content-center"
+                                 style="width:75px;height:52px;">
+                                <i class="bi bi-car-front fs-3"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ vehicle.registration_number }}</strong></td>
+                        <td>{{ vehicle.make }} {{ vehicle.model }}</td>
+                        <td>{{ vehicle.year }}</td>
+                        <td>RWF {{ vehicle.daily_rate|floatformat:0 }}</td>
+                        <td>
+                            {% if vehicle.status == "available" %}
+                            <span class="badge text-bg-success">Available</span>
+                            {% elif vehicle.status == "rented" %}
+                            <span class="badge text-bg-primary">Rented</span>
+                            {% elif vehicle.status == "maintenance" %}
+                            <span class="badge text-bg-warning">Maintenance</span>
+                            {% else %}
+                            <span class="badge text-bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a href="{% url 'fleet:vehicle_detail' vehicle.pk %}"
+                               class="btn btn-sm btn-outline-secondary" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'fleet:vehicle_update' vehicle.pk %}"
+                               class="btn btn-sm btn-outline-primary" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'fleet:vehicle_delete' vehicle.pk %}"
+                               class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-car-front display-5 text-secondary"></i>
+                            <h5 class="mt-3">No vehicles found</h5>
+                            <p class="text-secondary">
+                                {% if query %}
+                                Try another search term.
+                                {% else %}
+                                Register your first vehicle to get started.
+                                {% endif %}
+                            </p>
+                            {% if not query %}
+                            <a href="{% url 'fleet:vehicle_create' %}"
+                               class="btn btn-success">Register Vehicle</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer text-secondary">
+        {{ vehicles|length }} vehicle{{ vehicles|length|pluralize }} displayed
+    </div>
+</div>
+{% endblock %}

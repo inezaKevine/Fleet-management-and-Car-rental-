@@ -1,0 +1,249 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Payments{% endblock %}
+
+{% block page_overline %}RENTAL OPERATIONS{% endblock %}
+{% block page_title %}Payments{% endblock %}
+{% block page_description %}
+Track individual transactions and monitor each booking's outstanding rental balance.
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">
+    <a href="{% url 'dashboard:home' %}">Home</a>
+</li>
+<li class="breadcrumb-item active">Payments</li>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h5 class="mb-1">Payment Records</h5>
+                <p class="text-muted mb-0">
+                    Review payments, rental costs, and outstanding balances.
+                </p>
+            </div>
+
+            <a href="{% url 'rentals:payment_create' %}"
+               class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i>
+                Record Payment
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">All Payments</h5>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-nowrap">Payment ID</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th class="text-nowrap">Payment Amount</th>
+                            <th class="text-nowrap">Rental Total</th>
+                            <th class="text-nowrap">Total Paid</th>
+                            <th class="text-nowrap">Outstanding</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th class="text-nowrap">Rental Payment Status</th>
+                            <th class="text-nowrap">Payment Date</th>
+                            <th>Reference</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td class="text-nowrap">
+                                    <span class="fw-semibold">
+                                        #{{ payment.pk }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {% if payment.booking.customer %}
+                                        <div class="fw-semibold">
+                                            {{ payment.booking.customer.first_name }}
+                                            {{ payment.booking.customer.last_name }}
+                                        </div>
+                                        <small class="text-muted">
+                                            Booking #{{ payment.booking_id }}
+                                        </small>
+                                    {% else %}
+                                        <span class="text-muted">No customer</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if payment.booking.vehicle %}
+                                        <div class="fw-semibold">
+                                            {{ payment.booking.vehicle.make }}
+                                            {{ payment.booking.vehicle.model }}
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ payment.booking.vehicle.registration_number }}
+                                        </small>
+                                    {% else %}
+                                        <span class="text-muted">No vehicle</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-nowrap fw-semibold">
+                                    RWF {{ payment.amount|floatformat:0 }}
+                                </td>
+
+                                <td class="text-nowrap">
+                                    RWF {{ payment.booking_summary.rental_total|floatformat:0 }}
+                                </td>
+
+                                <td class="text-nowrap text-success fw-semibold">
+                                    RWF {{ payment.booking_summary.paid_total|floatformat:0 }}
+                                </td>
+
+                                <td class="text-nowrap fw-semibold">
+                                    {% if payment.booking_summary.outstanding <= 0 %}
+                                        <span class="text-success">RWF 0</span>
+                                    {% else %}
+                                        <span class="text-danger">
+                                            RWF {{ payment.booking_summary.outstanding|floatformat:0 }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ payment.get_method_display|default:"—" }}
+                                </td>
+
+                                <td>
+                                    {% if payment.status == "paid" %}
+                                        <span class="badge bg-success">
+                                            {{ payment.get_status_display }}
+                                        </span>
+                                    {% elif payment.status == "pending" %}
+                                        <span class="badge bg-warning text-dark">
+                                            {{ payment.get_status_display }}
+                                        </span>
+                                    {% elif payment.status == "refunded" %}
+                                        <span class="badge bg-info text-dark">
+                                            {{ payment.get_status_display }}
+                                        </span>
+                                    {% elif payment.status == "failed" %}
+                                        <span class="badge bg-danger">
+                                            {{ payment.get_status_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {{ payment.get_status_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if payment.booking_summary.payment_status == "Fully Paid" %}
+                                        <span class="badge bg-success">
+                                            Fully Paid
+                                        </span>
+                                    {% elif payment.booking_summary.payment_status == "Partially Paid" %}
+                                        <span class="badge bg-warning text-dark">
+                                            Partially Paid
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            Unpaid
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-nowrap">
+                                    {% if payment.payment_date %}
+                                        {{ payment.payment_date|date:"d M Y" }}
+                                    {% else %}
+                                        <span class="text-muted">Not recorded</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if payment.transaction_reference %}
+                                        <span class="text-break">
+                                            {{ payment.transaction_reference }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-end">
+                                    <form method="post"
+                                          action="{% url 'rentals:payment_delete' payment.pk %}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete payment #{{ payment.pk }}? This will change the booking balance. Continue only if this is a test record.');">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Delete test payment">
+                                            <i class="bi bi-trash"></i>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="13" class="text-center py-5">
+                                    <i class="bi bi-receipt display-6 text-muted"></i>
+                                    <h6 class="mt-3">No payments recorded</h6>
+                                    <p class="text-muted mb-3">
+                                        Payment records will appear here after they are created.
+                                    </p>
+                                    <a href="{% url 'rentals:payment_create' %}"
+                                       class="btn btn-success btn-sm">
+                                        Record First Payment
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if payments %}
+            <div class="card-footer bg-white">
+                <small class="text-muted">
+                    Rental balances are calculated from the booking's daily rate and rental period.
+                    Only payments with a status of Paid count toward the amount paid.
+                </small>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
