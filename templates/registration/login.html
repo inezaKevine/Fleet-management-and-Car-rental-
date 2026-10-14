@@ -1,0 +1,806 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B4936">
+<title>Sign In | Fleet Management &amp; Car Rental</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --forest: #0B4936;
+    --forest-deep: #031a12;
+    --forest-dark: #041f16;
+    --emerald: #16865f;
+    --mint: #61e3ad;
+    --white: #ffffff;
+    --muted: #a4bbb0;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--white);
+    background: var(--forest-deep);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+}
+
+button, input { font: inherit; }
+
+.scene {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 72% 50%, #0e5c403f 0, transparent 43%),
+        radial-gradient(ellipse at 15% 8%, #1c76502b 0, transparent 38%),
+        linear-gradient(115deg, #03170f 0%, #06271b 50%, #020f0a 100%);
+}
+
+.scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, #03170ff2 0%, #03170fc9 31%, #03170f25 65%, #03170f28 100%),
+        linear-gradient(0deg, #020b07d9 0%, transparent 34%, #02160d35 100%);
+}
+
+/* Futuristic tunnel */
+.tunnel {
+    position: absolute;
+    inset: -22% -10% -5%;
+    z-index: -2;
+    overflow: hidden;
+    perspective: 700px;
+    pointer-events: none;
+}
+
+.tunnel-rib {
+    position: absolute;
+    left: 17%;
+    top: -5%;
+    width: 78%;
+    height: 112%;
+    border: 1px solid #55bc8b18;
+    border-radius: 50% 50% 0 0;
+    transform: rotateX(8deg);
+    box-shadow: inset 0 0 52px #2dd48b09;
+}
+
+.tunnel-rib:nth-child(2) {
+    left: 24%;
+    width: 65%;
+    border-color: #68e6ad14;
+}
+
+.tunnel-rib:nth-child(3) {
+    left: 31%;
+    width: 51%;
+    border-color: #68e6ad12;
+}
+
+.tunnel-light {
+    position: absolute;
+    top: -25%;
+    width: 3px;
+    height: 19vh;
+    opacity: .8;
+    background: linear-gradient(180deg, transparent, #8effcd, #e6fff3, transparent);
+    box-shadow: 0 0 14px #52f5ac70;
+    animation: lightsPass 1.65s linear infinite;
+}
+
+.tunnel-light:nth-of-type(4) {
+    left: 42%;
+    animation-delay: -.5s;
+}
+
+.tunnel-light:nth-of-type(5) {
+    left: 57%;
+    animation-delay: -1.3s;
+}
+
+.tunnel-light:nth-of-type(6) {
+    left: 74%;
+    animation-delay: -.9s;
+}
+
+.tunnel-light:nth-of-type(7) {
+    left: 91%;
+    animation-delay: -.2s;
+}
+
+@keyframes lightsPass {
+    0% {
+        transform: translateY(-10vh) scaleY(.45);
+        opacity: 0;
+    }
+    15% { opacity: .75; }
+    100% {
+        transform: translateY(140vh) scaleY(1.65);
+        opacity: 0;
+    }
+}
+
+/* Wet road */
+.road {
+    position: absolute;
+    z-index: -1;
+    left: 26%;
+    right: -15%;
+    bottom: -28%;
+    height: 68%;
+    transform: perspective(420px) rotateX(53deg);
+    transform-origin: center top;
+    background: linear-gradient(180deg, #0d3627, #020805 80%);
+    border-top: 1px solid #4dc28a2a;
+    box-shadow: 0 -15px 60px #16865f13;
+    pointer-events: none;
+}
+
+.road::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0 44px,
+        #64eab21a 46px 49px,
+        transparent 52px 94px
+    );
+    animation: roadRush .55s linear infinite;
+}
+
+.road::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 12%,
+        #45c58a13 12.2% 12.5%,
+        transparent 13% 25%
+    );
+    animation: roadRush .7s linear infinite;
+}
+
+@keyframes roadRush {
+    from { background-position: 0 0; }
+    to { background-position: 0 150px; }
+}
+
+/* Speed lines */
+.speed-streak {
+    position: absolute;
+    z-index: 0;
+    left: 32%;
+    height: 2px;
+    width: clamp(90px, 16vw, 250px);
+    background: linear-gradient(90deg, transparent, #71ffbd95, transparent);
+    filter: drop-shadow(0 0 5px #39e99e70);
+    animation: streakMove 1.15s linear infinite;
+    pointer-events: none;
+}
+
+.speed-streak.s1 { top: 35%; animation-delay: -.1s; }
+.speed-streak.s2 { top: 54%; left: 48%; animation-delay: -.85s; }
+.speed-streak.s3 { top: 73%; left: 38%; animation-delay: -.5s; }
+.speed-streak.s4 { top: 81%; left: 68%; animation-delay: -1.05s; }
+
+@keyframes streakMove {
+    0% {
+        transform: translateX(45vw);
+        opacity: 0;
+    }
+    20% { opacity: .8; }
+    100% {
+        transform: translateX(-65vw);
+        opacity: 0;
+    }
+}
+
+/* THE CAR: moves independently from the login panel */
+.car-scene {
+    position: absolute;
+    z-index: 1;
+    width: min(73vw, 1120px);
+    right: -7%;
+    bottom: 1%;
+    pointer-events: none;
+    transform-origin: 58% 72%;
+    animation: carCruise 9s linear infinite;
+    will-change: transform, opacity;
+}
+
+.car-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: brightness(.82) contrast(1.12) saturate(1.02);
+    -webkit-mask-image: linear-gradient(
+        90deg, transparent 0%, #000 13%, #000 91%, transparent 100%
+    );
+    mask-image: linear-gradient(
+        90deg, transparent 0%, #000 13%, #000 91%, transparent 100%
+    );
+    mix-blend-mode: screen;
+    animation: carPhotoSpeed 9s linear infinite;
+    will-change: filter;
+}
+
+/*
+   The vehicle enters from the right, drives across the scene,
+   grows slightly as it approaches, and exits to the left.
+   The form does not move.
+*/
+@keyframes carCruise {
+    0% {
+        opacity: 0;
+        transform: translate3d(23vw, 2vh, 0) scale(.88);
+    }
+
+    7% {
+        opacity: 1;
+        transform: translate3d(17vw, 1vh, 0) scale(.92);
+    }
+
+    24% {
+        opacity: 1;
+        transform: translate3d(8vw, 0, 0) scale(.98);
+    }
+
+    48% {
+        opacity: 1;
+        transform: translate3d(-2vw, -1vh, 0) scale(1.04);
+    }
+
+    68% {
+        opacity: 1;
+        transform: translate3d(-12vw, 0, 0) scale(1.08);
+    }
+
+    84% {
+        opacity: .85;
+        transform: translate3d(-20vw, 1vh, 0) scale(1.11);
+    }
+
+    94% {
+        opacity: 0;
+        transform: translate3d(-27vw, 2vh, 0) scale(1.13);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(23vw, 2vh, 0) scale(.88);
+    }
+}
+
+/* Subtle motion blur gives the car a stronger sense of speed */
+@keyframes carPhotoSpeed {
+    0%, 4%, 96%, 100% {
+        filter: brightness(.82) contrast(1.12) saturate(1.02) blur(0);
+    }
+
+    24%, 48% {
+        filter: brightness(.84) contrast(1.14) saturate(1.06) blur(.25px);
+    }
+
+    68%, 84% {
+        filter: brightness(.86) contrast(1.15) saturate(1.08) blur(.75px);
+    }
+}
+
+/* Emerald road glow */
+.car-glow {
+    position: absolute;
+    z-index: 0;
+    right: 6%;
+    bottom: 13%;
+    width: 48%;
+    height: 20%;
+    border-radius: 50%;
+    background: #1acb7d1f;
+    filter: blur(50px);
+    animation: glowPulse 2.8s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes glowPulse {
+    from {
+        opacity: .4;
+        transform: scale(.88);
+    }
+    to {
+        opacity: .9;
+        transform: scale(1.08);
+    }
+}
+
+/* Header */
+.top-label {
+    position: absolute;
+    top: 25px;
+    left: 34px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #c1d9cd;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.top-label::before {
+    content: "";
+    width: 25px;
+    height: 2px;
+    background: var(--mint);
+    box-shadow: 0 0 10px #61e3ad80;
+}
+
+/* Login panel stays fixed while the car drives behind it */
+.login-wrap {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding: 65px 7%;
+}
+
+.login-card {
+    width: 425px;
+    max-width: 100%;
+    padding: 38px 34px 27px;
+    border: 1px solid #7cc5a04a;
+    border-radius: 21px;
+    background: linear-gradient(145deg, #061e16ec, #03160ff2);
+    box-shadow:
+        0 28px 80px #0007,
+        inset 0 1px 0 #ffffff0b,
+        0 0 36px #16865f12;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    animation: cardAppear .85s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brand-icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    margin-bottom: 23px;
+    border: 1px solid #51c9975c;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #16865f, #073b2a);
+    box-shadow: 0 7px 22px #0005, 0 0 22px #16865f25;
+}
+
+.brand-icon svg {
+    width: 29px;
+    height: 29px;
+}
+
+h1 {
+    margin: 0 0 9px;
+    font-size: clamp(25px, 2.1vw, 31px);
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+    font-weight: 800;
+}
+
+h1 span { color: var(--mint); }
+
+.subtitle {
+    margin: 0 0 30px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.field { margin-bottom: 19px; }
+
+.field label {
+    display: block;
+    margin-bottom: 9px;
+    color: #deebe4;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .65px;
+}
+
+.input-wrap { position: relative; }
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    display: flex;
+    transform: translateY(-50%);
+    color: #82a895;
+    pointer-events: none;
+}
+
+.input-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.field input {
+    display: block;
+    width: 100%;
+    height: 49px;
+    padding: 0 49px 0 42px;
+    border: 1px solid #53766366;
+    border-radius: 9px;
+    outline: none;
+    color: #fff;
+    background: #ffffff08;
+    font-size: 13px;
+    transition: border-color .22s, box-shadow .22s, background .22s;
+}
+
+.field input::placeholder { color: #81988c; }
+
+.field input:focus {
+    border-color: #49d49a;
+    background: #ffffff0c;
+    box-shadow: 0 0 0 3px #43d6a11c, 0 0 20px #43d6a110;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    padding: 5px 0 5px 5px;
+    border: 0;
+    transform: translateY(-50%);
+    color: #94b6a4;
+    background: transparent;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.toggle-password:hover { color: var(--mint); }
+
+.error-box {
+    margin: 0 0 17px;
+    padding: 11px 12px;
+    border: 1px solid #e28d7a75;
+    border-radius: 8px;
+    color: #ffc2b2;
+    background: #a83a2918;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.login-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 51px;
+    margin-top: 6px;
+    overflow: hidden;
+    border: 1px solid #3bb888;
+    border-radius: 9px;
+    color: #fff;
+    background: linear-gradient(110deg, #0b4936, #16865f, #0b4936);
+    background-size: 200% 100%;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .45px;
+    cursor: pointer;
+    transition: transform .22s, box-shadow .22s, background-position .4s;
+}
+
+.login-button::before {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -40%;
+    width: 28%;
+    height: 220%;
+    transform: rotate(25deg);
+    background: #ffffff24;
+    transition: left .55s ease;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    background-position: 100% 0;
+    box-shadow: 0 9px 28px #16865f45;
+}
+
+.login-button:hover::before { left: 125%; }
+
+.login-button:active { transform: translateY(0) scale(.99); }
+
+.button-arrow {
+    display: inline-block;
+    transition: transform .22s;
+}
+
+.login-button:hover .button-arrow { transform: translateX(4px); }
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #ffffff10;
+    color: #819b8d;
+    font-size: 10px;
+    text-align: center;
+}
+
+.footer svg {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    color: var(--mint);
+}
+
+.bottom-note {
+    position: absolute;
+    z-index: 3;
+    right: 30px;
+    bottom: 23px;
+    color: #a9c7b7a3;
+    font-size: 9px;
+    letter-spacing: 2.3px;
+    text-transform: uppercase;
+}
+
+@media (min-width: 1500px) {
+    .login-wrap { padding-left: 8%; }
+    .login-card { width: 445px; }
+    .car-scene { right: -4%; bottom: 2%; width: 70vw; }
+}
+
+@media (max-width: 900px) {
+    .scene::before {
+        background:
+            linear-gradient(90deg, #03170fef, #03170fc9 66%, #03170f75),
+            linear-gradient(0deg, #020b07c9, transparent 60%);
+    }
+
+    .login-wrap { justify-content: center; padding: 75px 22px 45px; }
+    .login-card { width: 420px; background: #041b13ef; }
+
+    .car-scene {
+        width: 105vw;
+        right: -35%;
+        bottom: -2%;
+        opacity: .42;
+    }
+
+    .car-glow { opacity: .4; }
+    .bottom-note { display: none; }
+}
+
+@media (max-width: 480px) {
+    body { overflow-y: auto; }
+    .scene { min-height: 100svh; }
+    .login-wrap { min-height: 100svh; padding: 75px 18px 28px; }
+    .login-card { padding: 30px 23px 23px; border-radius: 17px; }
+
+    .top-label {
+        top: 23px;
+        left: 20px;
+        font-size: 8px;
+        letter-spacing: 1.7px;
+    }
+
+    .car-scene {
+        width: 145vw;
+        right: -58%;
+        bottom: -3%;
+        opacity: .24;
+    }
+
+    .tunnel { opacity: .65; }
+    .road { left: 0; }
+}
+</style>
+</head>
+
+<body>
+<div class="scene">
+
+    <div class="tunnel" aria-hidden="true">
+        <div class="tunnel-rib"></div>
+        <div class="tunnel-rib"></div>
+        <div class="tunnel-rib"></div>
+        <div class="tunnel-light"></div>
+        <div class="tunnel-light"></div>
+        <div class="tunnel-light"></div>
+        <div class="tunnel-light"></div>
+    </div>
+
+    <div class="road" aria-hidden="true"></div>
+
+    <div class="speed-streak s1" aria-hidden="true"></div>
+    <div class="speed-streak s2" aria-hidden="true"></div>
+    <div class="speed-streak s3" aria-hidden="true"></div>
+    <div class="speed-streak s4" aria-hidden="true"></div>
+
+    <div class="car-glow" aria-hidden="true"></div>
+
+    <!-- Moving car image. The form below stays stationary. -->
+    <div class="car-scene" aria-hidden="true">
+        <img
+            class="car-photo"
+            src="{% static 'images/login-car.png' %}"
+            alt=""
+            fetchpriority="high">
+    </div>
+
+    <div class="top-label">Fleet Management &amp; Car Rental System</div>
+    <div class="bottom-note">Drive · Explore · Rent</div>
+
+    <main class="login-wrap">
+        <section class="login-card" aria-labelledby="login-title">
+
+            <div class="brand-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white"
+                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 14l2-6a2 2 0 0 1 2-1.5h10A2 2 0 0 1 19 8l2 6"/>
+                    <path d="M2 14h20v4H2z"/>
+                    <circle cx="6.5" cy="18" r="1.5"/>
+                    <circle cx="17.5" cy="18" r="1.5"/>
+                    <path d="M7 7l-1 7m11-7l1 7M9 7l1 7m5-7l-1 7"/>
+                </svg>
+            </div>
+
+            <h1 id="login-title">Start your <span>engine.</span></h1>
+            <p class="subtitle">Welcome back. Your fleet is ready when you are.</p>
+
+            {% if form.errors %}
+            <div class="error-box" role="alert">
+                Your username or password wasn't recognized. Please try again.
+            </div>
+            {% endif %}
+
+            {% if next and user.is_authenticated %}
+            <div class="error-box" role="alert">
+                Your account does not have access to that page.
+            </div>
+            {% endif %}
+
+            <!-- Submit to the current URL to support both login routes. -->
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next|default:'/dashboard/' }}">
+
+                <div class="field">
+                    <label for="id_username">USERNAME</label>
+                    <div class="input-wrap">
+                        <span class="input-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+                            </svg>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                            autofocus>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="id_password">PASSWORD</label>
+                    <div class="input-wrap">
+                        <span class="input-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round">
+                                <rect x="4" y="10" width="16" height="11" rx="2"/>
+                                <path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/>
+                            </svg>
+                        </span>
+
+                        <input
+                            type="password"
+                            name="password"
+                            id="id_password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            class="toggle-password"
+                            type="button"
+                            id="togglePassword"
+                            aria-label="Show password"
+                            aria-pressed="false">SHOW</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    SIGN IN TO YOUR DASHBOARD
+                    <span class="button-arrow" aria-hidden="true">→</span>
+                </button>
+            </form>
+
+            <div class="footer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M12 3l8 3v5c0 5-3.4 8-8 10-4.6-2-8-5-8-10V6z"/>
+                    <path d="M8 12l2.5 2.5L16 9"/>
+                </svg>
+                Fleet Management &amp; Car Rental System
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<script>
+(() => {
+    const passwordInput = document.getElementById("id_password");
+    const toggleButton = document.getElementById("togglePassword");
+
+    if (!passwordInput || !toggleButton) return;
+
+    toggleButton.addEventListener("click", () => {
+        const reveal = passwordInput.type === "password";
+
+        passwordInput.type = reveal ? "text" : "password";
+        toggleButton.textContent = reveal ? "HIDE" : "SHOW";
+        toggleButton.setAttribute(
+            "aria-label",
+            reveal ? "Hide password" : "Show password"
+        );
+        toggleButton.setAttribute("aria-pressed", String(reveal));
+
+        passwordInput.focus();
+    });
+})();
+</script>
+</body>
+</html>
