@@ -1,371 +1,447 @@
+{% extends "base.html" %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Vehicles | FleetDrive</title>
+{% block title %}Our Vehicles | FleetDrive{% endblock %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+{% block extra_css %}
+<style>
+    .vehicles-page {
+        background: #F7F6F0;
+        color: #26352E;
+        min-height: 70vh;
+        padding-bottom: 48px;
+    }
 
-    <style>
-        :root {
-            --brand-green: #0B4936;
-            --brand-green-dark: #073629;
-            --warm-white: #FAF9F6;
-            --text-dark: #252A27;
-            --muted: #747B76;
+    .vehicles-hero {
+        background: #0B4936;
+        color: #FFFFFF;
+        padding: 64px 0 72px;
+    }
+
+    .vehicles-hero h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: -1.5px;
+        line-height: 1.2;
+    }
+
+    .vehicles-hero p {
+        max-width: 650px;
+        margin: 18px 0 0;
+        color: #E1ECE5;
+        font-size: 0.98rem;
+        line-height: 1.8;
+    }
+
+    .vehicles-content {
+        max-width: 1200px;
+    }
+
+    .vehicles-search {
+        position: relative;
+        margin-top: -28px;
+        padding: 24px;
+        background: #FFFFFF;
+        border: 1px solid #E3E9E3;
+        border-radius: 12px;
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.05);
+    }
+
+    .vehicles-search .form-label {
+        color: #26352E;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 9px;
+    }
+
+    .vehicles-search .form-control {
+        min-height: 48px;
+        border: 1px solid #D9E1DA;
+        border-radius: 7px;
+        font-size: 0.925rem;
+    }
+
+    .vehicles-search .form-control:focus {
+        border-color: #0B4936;
+        box-shadow: 0 0 0 3px rgba(11, 73, 54, 0.10);
+    }
+
+    .vehicles-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 11px 18px;
+        border: 1px solid #0B4936;
+        border-radius: 7px;
+        background: #0B4936;
+        color: #FFFFFF;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .vehicles-button:hover {
+        background: #073629;
+        border-color: #073629;
+        color: #FFFFFF;
+    }
+
+    .vehicles-button-outline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 10px 16px;
+        border: 1px solid #C8D5CB;
+        border-radius: 7px;
+        background: #FFFFFF;
+        color: #0B4936;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .vehicles-button-outline:hover {
+        background: #EFF4F0;
+        color: #073629;
+    }
+
+    .vehicles-listing {
+        padding-top: 52px;
+    }
+
+    .vehicles-section-heading {
+        margin: 0 0 9px;
+        color: #0B4936;
+        font-size: clamp(1.45rem, 3vw, 1.8rem);
+        font-weight: 700;
+        letter-spacing: -0.6px;
+    }
+
+    .vehicles-section-description {
+        margin: 0;
+        color: #737D76;
+        font-size: 0.93rem;
+        line-height: 1.7;
+    }
+
+    .vehicle-card {
+        height: 100%;
+        overflow: hidden;
+        background: #FFFFFF;
+        border: 1px solid #E5E9E4;
+        border-radius: 12px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .vehicle-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(20, 45, 31, 0.09);
+    }
+
+    .vehicle-image,
+    .vehicle-placeholder {
+        width: 100%;
+        height: 225px;
+    }
+
+    .vehicle-image {
+        display: block;
+        object-fit: cover;
+        background: #EDF1ED;
+    }
+
+    .vehicle-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #EDF1ED;
+        color: #0B4936;
+        font-size: 3rem;
+    }
+
+    .vehicle-card-body {
+        display: flex;
+        flex-direction: column;
+        padding: 22px;
+        height: calc(100% - 225px);
+    }
+
+    .vehicle-name {
+        margin: 0 0 10px;
+        color: #24332A;
+        font-size: 1.1rem;
+        font-weight: 650;
+        line-height: 1.45;
+    }
+
+    .vehicle-description {
+        min-height: 46px;
+        margin-bottom: 20px;
+        color: #737D76;
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .vehicle-price-area {
+        margin-top: auto;
+        margin-bottom: 19px;
+        padding-top: 16px;
+        border-top: 1px solid #EDF0EC;
+    }
+
+    .vehicle-price-label {
+        margin-bottom: 4px;
+        color: #737D76;
+        font-size: 0.8rem;
+    }
+
+    .vehicle-price {
+        color: #0B4936;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+    }
+
+    .vehicle-price-period {
+        color: #737D76;
+        font-size: 0.82rem;
+        font-weight: 400;
+        letter-spacing: 0;
+    }
+
+    .empty-state {
+        padding: 54px 24px;
+        background: #FFFFFF;
+        border: 1px dashed #C8D5CB;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .empty-state h3 {
+        color: #0B4936;
+        font-weight: 650;
+    }
+
+    .empty-state p {
+        max-width: 520px;
+        margin: 12px auto 24px;
+        color: #737D76;
+        font-size: 0.93rem;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 767.98px) {
+        .vehicles-hero {
+            padding: 48px 0 56px;
         }
 
-        body {
-            background: var(--warm-white);
-            color: var(--text-dark);
-            font-family: Arial, sans-serif;
+        .vehicles-hero h1 {
+            letter-spacing: -0.8px;
         }
 
-        .navbar {
-            background: #fff;
-            border-bottom: 1px solid #e8e9e5;
+        .vehicles-search {
+            padding: 18px;
         }
 
-        .navbar-brand {
-            color: var(--brand-green);
-            font-weight: 800;
-            letter-spacing: .5px;
+        .vehicles-listing {
+            padding-top: 38px;
         }
 
-        .navbar-brand:hover {
-            color: var(--brand-green-dark);
+        .vehicle-image,
+        .vehicle-placeholder {
+            height: 210px;
         }
 
-        .nav-link {
-            color: #343a36;
-            font-weight: 500;
+        .vehicle-card-body {
+            height: auto;
+            min-height: 260px;
         }
+    }
 
-        .nav-link:hover {
-            color: var(--brand-green);
-        }
-
-        .hero {
-            background: var(--brand-green);
-            color: #fff;
-            padding: 65px 0;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 800;
-        }
-
-        .hero p {
-            color: #e0eae5;
-            max-width: 650px;
-        }
-
-        .search-panel {
-            background: #fff;
-            padding: 22px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
-            margin-top: -28px;
-            position: relative;
-        }
-
-        .form-control {
-            min-height: 48px;
-            border-color: #dfe4df;
-        }
-
-        .form-control:focus {
-            border-color: var(--brand-green);
-            box-shadow: 0 0 0 .2rem rgba(11, 73, 54, .12);
-        }
-
-        .btn-brand {
-            background: var(--brand-green);
-            border: 1px solid var(--brand-green);
-            color: #fff;
-            font-weight: 600;
-            padding: 11px 18px;
-        }
-
-        .btn-brand:hover {
-            background: var(--brand-green-dark);
-            border-color: var(--brand-green-dark);
-            color: #fff;
-        }
-
-        .btn-outline-brand {
-            color: var(--brand-green);
-            border: 1px solid var(--brand-green);
-            font-weight: 600;
-            padding: 11px 18px;
-        }
-
-        .btn-outline-brand:hover {
-            background: var(--brand-green);
-            color: #fff;
-        }
-
-        .section-heading {
-            font-weight: 800;
-            color: var(--brand-green);
-        }
-
-        .vehicle-card {
-            height: 100%;
-            background: #fff;
-            border: 1px solid #e8eae6;
-            border-radius: 14px;
-            overflow: hidden;
-            transition: transform .2s ease, box-shadow .2s ease;
+    @media (prefers-reduced-motion: reduce) {
+        .vehicle-card,
+        .vehicles-button,
+        .vehicles-button-outline {
+            transition: none;
         }
 
         .vehicle-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+            transform: none;
         }
+    }
+</style>
+{% endblock %}
 
-        .vehicle-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background: #e9ece8;
-        }
+{% block content %}
+<div class="vehicles-page">
 
-        .vehicle-placeholder {
-            height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #edf1ed;
-            color: var(--brand-green);
-            font-size: 3rem;
-        }
-
-        .vehicle-card .card-body {
-            padding: 22px;
-        }
-
-        .vehicle-name {
-            font-weight: 750;
-            color: #202923;
-        }
-
-        .vehicle-description {
-            color: var(--muted);
-            font-size: .93rem;
-            min-height: 42px;
-        }
-
-        .vehicle-price {
-            color: var(--brand-green);
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-
-        .price-label {
-            color: var(--muted);
-            font-size: .85rem;
-        }
-
-        .empty-state {
-            background: #fff;
-            border: 1px dashed #ccd5ce;
-            border-radius: 14px;
-            padding: 55px 20px;
-            text-align: center;
-        }
-
-        footer {
-            background: #073629;
-            color: #e5eee8;
-            margin-top: 70px;
-            padding: 30px 0;
-        }
-
-        footer a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-
-<body>
-
-<nav class="navbar navbar-expand-lg">
-    <div class="container py-2">
-        <a class="navbar-brand fs-4" href="{% url 'website:home' %}">
-            FleetDrive
-        </a>
-
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                aria-controls="mainNavbar" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <div class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
-                <a class="nav-link" href="{% url 'website:home' %}">Home</a>
-                <a class="nav-link active" href="{% url 'website:vehicle_list' %}">
-                    Our Vehicles
-                </a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<section class="hero">
-    <div class="container">
-        <h1>Find the Right Vehicle for Your Journey</h1>
-        <p class="mb-0 mt-3">
-            Explore our available vehicles, compare daily rates, and submit
-            a booking request that our team can review.
-        </p>
-    </div>
-</section>
-
-<main class="container">
-
-    <form method="get" action="{% url 'website:vehicle_list' %}"
-          class="search-panel">
-        <div class="row g-3 align-items-center">
-            <div class="col-md-9">
-                <label for="vehicleSearch" class="form-label fw-semibold">
-                    Search vehicles
-                </label>
-                <input
-                    type="search"
-                    class="form-control"
-                    id="vehicleSearch"
-                    name="q"
-                    value="{{ search_query }}"
-                    placeholder="Search by make, model, or description"
-                >
-            </div>
-
-            <div class="col-md-3 d-grid">
-                <button type="submit" class="btn btn-brand mt-md-4">
-                    Search Vehicles
-                </button>
-            </div>
-        </div>
-    </form>
-
-    <section class="py-5">
-        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-            <div>
-                <h2 class="section-heading mb-2">Available Vehicles</h2>
-                <p class="text-secondary mb-0">
-                    Choose a vehicle and send us your booking request.
-                </p>
-            </div>
-
-            {% if search_query %}
-                <a href="{% url 'website:vehicle_list' %}"
-                   class="btn btn-outline-brand">
-                    Clear Search
-                </a>
-            {% endif %}
-        </div>
-
-        <div class="row g-4">
-            {% for vehicle in vehicles %}
-                <div class="col-sm-6 col-lg-4">
-                    <article class="vehicle-card">
-                        {% if vehicle.image %}
-                            <img
-                                src="{{ vehicle.image.url }}"
-                                alt="{{ vehicle.make }} {{ vehicle.model }}"
-                                class="vehicle-image"
-                            >
-                        {% else %}
-                            <div class="vehicle-placeholder" aria-hidden="true">
-                                &#128663;
-                            </div>
-                        {% endif %}
-
-                        <div class="card-body">
-                            <h3 class="h5 vehicle-name">
-                                {{ vehicle.make }} {{ vehicle.model }}
-                            </h3>
-
-                            {% if vehicle.description %}
-                                <p class="vehicle-description">
-                                    {{ vehicle.description|truncatewords:18 }}
-                                </p>
-                            {% else %}
-                                <p class="vehicle-description">
-                                    A vehicle available for your next journey.
-                                </p>
-                            {% endif %}
-
-                            <div class="mb-3">
-                                <div class="price-label">Daily rental rate</div>
-                                <div class="vehicle-price">
-                                    RWF {{ vehicle.daily_rate|floatformat:0 }}
-                                </div>
-                            </div>
-
-                            <a
-                                href="{% url 'website:public_booking' vehicle.id %}"
-                                class="btn btn-brand w-100"
-                            >
-                                Request Booking
-                            </a>
-                        </div>
-                    </article>
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <div class="empty-state">
-                        <h3 class="h5 fw-bold">No vehicles found</h3>
-
-                        <p class="text-secondary mt-2 mb-4">
-                            {% if search_query %}
-                                We couldn't find an available vehicle matching
-                                "{{ search_query }}". Try another search.
-                            {% else %}
-                                There are currently no vehicles available for
-                                booking. Please check again later.
-                            {% endif %}
-                        </p>
-
-                        {% if search_query %}
-                            <a href="{% url 'website:vehicle_list' %}"
-                               class="btn btn-brand">
-                                View All Vehicles
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+    <section class="vehicles-hero">
+        <div class="container vehicles-content">
+            <h1>Find the Right Vehicle for Your Journey</h1>
+            <p>
+                Explore our vehicles, compare daily rental rates, and submit
+                a booking request for our team to review.
+            </p>
         </div>
     </section>
 
-</main>
+    <main class="container vehicles-content">
 
-<footer>
-    <div class="container d-flex flex-wrap justify-content-between gap-3">
-        <div>
-            <strong>FleetDrive</strong>
-            <div class="small mt-1">A simpler way to plan your journey.</div>
-        </div>
+        <form
+            method="get"
+            action="{% url 'website:vehicle_list' %}"
+            class="vehicles-search"
+        >
+            <div class="row g-3 align-items-end">
+                <div class="col-md-9">
+                    <label for="vehicleSearch" class="form-label">
+                        Search vehicles
+                    </label>
 
-        <div class="small align-self-center">
-            &copy; {% now "Y" %} FleetDrive. All rights reserved.
-        </div>
-    </div>
-</footer>
+                    <input
+                        type="search"
+                        class="form-control"
+                        id="vehicleSearch"
+                        name="q"
+                        value="{{ search_query|default:'' }}"
+                        placeholder="Search by make, model, or description"
+                        aria-label="Search vehicles by make, model, or description"
+                    >
+                </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="vehicles-button">
+                        Search Vehicles
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <section class="vehicles-listing">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                <div>
+                    <h2 class="vehicles-section-heading">
+                        Available Vehicles
+                    </h2>
+
+                    <p class="vehicles-section-description">
+                        Choose a vehicle and send us your booking request.
+                    </p>
+                </div>
+
+                {% if search_query %}
+                    <a
+                        href="{% url 'website:vehicle_list' %}"
+                        class="vehicles-button-outline"
+                    >
+                        Clear Search
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="row g-4">
+
+                {% for vehicle in vehicles %}
+                    <div class="col-sm-6 col-lg-4">
+
+                        <article class="vehicle-card">
+
+                            {% if vehicle.image %}
+                                <img
+                                    src="{{ vehicle.image.url }}"
+                                    alt="{{ vehicle.make }} {{ vehicle.model }}"
+                                    class="vehicle-image"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div
+                                    class="vehicle-placeholder"
+                                    role="img"
+                                    aria-label="No vehicle image available"
+                                >
+                                    &#128663;
+                                </div>
+                            {% endif %}
+
+                            <div class="vehicle-card-body">
+
+                                <h3 class="vehicle-name">
+                                    {{ vehicle.make }} {{ vehicle.model }}
+                                </h3>
+
+                                {% if vehicle.description %}
+                                    <p class="vehicle-description">
+                                        {{ vehicle.description|truncatewords:18 }}
+                                    </p>
+                                {% else %}
+                                    <p class="vehicle-description">
+                                        A vehicle available for your next journey.
+                                    </p>
+                                {% endif %}
+
+                                <div class="vehicle-price-area">
+                                    <div class="vehicle-price-label">
+                                        Daily rental rate
+                                    </div>
+
+                                    <div class="vehicle-price">
+                                        RWF {{ vehicle.daily_rate|floatformat:0 }}
+                                        <span class="vehicle-price-period">/ day</span>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href="{% url 'website:public_booking' vehicle.id %}"
+                                    class="vehicles-button w-100"
+                                >
+                                    Request Booking
+                                </a>
+
+                            </div>
+                        </article>
+
+                    </div>
+
+                {% empty %}
+                    <div class="col-12">
+                        <div class="empty-state">
+
+                            <h3>No vehicles found</h3>
+
+                            <p>
+                                {% if search_query %}
+                                    We couldn't find an available vehicle matching
+                                    "{{ search_query }}". Try a different search.
+                                {% else %}
+                                    There are currently no vehicles available
+                                    for booking. Please check again later.
+                                {% endif %}
+                            </p>
+
+                            {% if search_query %}
+                                <a
+                                    href="{% url 'website:vehicle_list' %}"
+                                    class="vehicles-button"
+                                >
+                                    View All Vehicles
+                                </a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}

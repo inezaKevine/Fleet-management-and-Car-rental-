@@ -1,12 +1,13 @@
 
 /* =========================================================
    FLEETMANAGER — PREMIUM DESIGN SYSTEM
-   Forest green · Ivory · White · Muted gold
+   Inter · Forest green · Ivory · White · Muted gold
    ========================================================= */
 
 /* ---------- 1. Design tokens ---------- */
-
 :root {
+    --fm-font: "Inter", Arial, sans-serif;
+
     --fm-green: #0B4936;
     --fm-green-dark: #073727;
     --fm-green-light: #17664D;
@@ -45,7 +46,6 @@
 
 
 /* ---------- 2. Base and typography ---------- */
-
 html {
     min-height: 100%;
     scroll-behavior: smooth;
@@ -55,9 +55,9 @@ html {
 body,
 .app-wrapper {
     min-height: 100vh;
-    font-family: "DM Sans", Arial, sans-serif !important;
-    font-size: 15px;
-    line-height: 1.65;
+    font-family: var(--fm-font) !important;
+    font-size: 13px;
+    line-height: 1.6;
     color: var(--fm-text);
     background: var(--fm-ivory);
 }
@@ -66,22 +66,112 @@ body {
     overflow-x: hidden;
 }
 
+/* Global typography: Inter throughout the internal interface */
+body,
+.app-wrapper,
+.app-main,
+.app-content,
+.app-content-header,
+.app-header,
+.app-sidebar,
+.sidebar-wrapper,
+.sidebar-navigation,
+.sidebar-menu,
+.sidebar-brand,
+.brand-link,
+.brand-text,
+.sidebar-intro,
+.sidebar-bottom,
+.app-footer,
+.topbar-section,
+.topbar-label,
+.user-name,
+.page-heading,
+.page-description,
+.page-overline,
+.card,
+.card-header,
+.card-title,
+.card-body,
+.card-footer,
+.table,
+.table th,
+.table td,
+.btn,
+.form-label,
+.form-control,
+.form-select,
+.form-text,
+.invalid-feedback,
+.alert,
+.badge,
+.vehicle-card-title,
+.vehicle-price,
+.vehicle-price-unit,
+.vehicle-detail-label,
+.vehicle-detail-value,
+.summary-card-label,
+.summary-card-value,
+.summary-card-note,
+.booking-summary-title,
+.booking-summary-row,
+.booking-summary-total,
+.booking-option-title,
+.booking-option-description {
+    font-family: var(--fm-font) !important;
+}
+
+/* Preserve Bootstrap Icons */
+i.bi,
+i.bi::before,
+.bi,
+.bi::before,
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+    font-family: "bootstrap-icons" !important;
+    font-style: normal !important;
+}
+
 h1, h2, h3, h4, h5, h6,
 .page-heading,
 .card-title {
-    font-family: "Manrope", "DM Sans", Arial, sans-serif !important;
+    font-family: var(--fm-font) !important;
     color: var(--fm-text);
-    letter-spacing: -0.035em;
+    letter-spacing: -0.025em;
 }
 
-h1 { font-size: 32px; font-weight: 800; }
-h2 { font-size: 27px; font-weight: 800; }
-h3 { font-size: 22px; font-weight: 700; }
-h4 { font-size: 19px; font-weight: 700; }
-h5 { font-size: 16px; font-weight: 700; }
+h1 {
+    font-size: 28px;
+    font-weight: 650;
+}
+
+h2 {
+    font-size: 21px;
+    font-weight: 650;
+}
+
+h3 {
+    font-size: 17px;
+    font-weight: 650;
+}
+
+h4 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+h5 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+h6 {
+    font-size: 13px;
+    font-weight: 600;
+}
 
 p {
-    line-height: 1.75;
+    line-height: 1.7;
 }
 
 a {
@@ -105,14 +195,13 @@ a:hover {
 
 
 /* ---------- 3. Main application shell ---------- */
-
 .app-wrapper {
     background: var(--fm-ivory);
 }
 
 .app-main {
-    background: var(--fm-ivory);
     min-width: 0;
+    background: var(--fm-ivory);
 }
 
 .app-content {
@@ -126,7 +215,7 @@ a:hover {
 }
 
 .app-content-header {
-    padding: 32px 34px 14px !important;
+    padding: 30px 34px 14px !important;
     background: transparent;
 }
 
@@ -146,10 +235,10 @@ a:hover {
 }
 
 .page-overline {
-    margin-bottom: 8px;
+    margin-bottom: 7px;
     color: var(--fm-muted);
-    font-size: 10px;
-    font-weight: 800;
+    font-size: 9px !important;
+    font-weight: 600 !important;
     letter-spacing: 0.15em;
     line-height: 1.5;
 }
@@ -158,17 +247,20 @@ a:hover {
 .app-content-header h1 {
     margin: 0;
     color: var(--fm-text);
-    font-size: clamp(27px, 2.2vw, 35px);
-    font-weight: 800;
-    line-height: 1.25;
+    font-family: var(--fm-font) !important;
+    font-size: clamp(24px, 2vw, 30px) !important;
+    font-weight: 650 !important;
+    line-height: 1.3;
+    letter-spacing: -0.025em !important;
 }
 
 .page-description {
     max-width: 700px;
-    margin: 9px 0 0;
+    margin: 8px 0 0;
     color: var(--fm-muted);
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.65;
 }
 
 .page-heading-actions {
@@ -181,13 +273,13 @@ a:hover {
 
 
 /* ---------- 4. Top navigation ---------- */
-
 .app-header {
-    min-height: 66px;
-    padding: 0 27px;
+    min-height: 62px;
+    padding: 0 25px;
     background: var(--fm-white) !important;
     border-bottom: 1px solid var(--fm-border);
     box-shadow: none;
+    font-family: var(--fm-font) !important;
 }
 
 .app-header .navbar-nav {
@@ -196,7 +288,9 @@ a:hover {
 
 .app-header .nav-link {
     color: var(--fm-text-soft);
-    font-size: 14px;
+    font-family: var(--fm-font) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 .app-header .nav-link:hover {
@@ -205,15 +299,15 @@ a:hover {
 
 .sidebar-toggle {
     display: flex;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
     border-radius: 9px;
 }
 
 .sidebar-toggle i {
-    font-size: 23px;
+    font-size: 21px;
 }
 
 .sidebar-toggle:hover {
@@ -221,13 +315,15 @@ a:hover {
 }
 
 .topbar-section {
-    font-weight: 600;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 .topbar-label {
     color: var(--fm-muted);
-    font-size: 10px;
-    font-weight: 800;
+    font-family: var(--fm-font) !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
     letter-spacing: 0.12em;
 }
 
@@ -244,21 +340,21 @@ a:hover {
 }
 
 .user-name {
-    font-size: 13px !important;
-    font-weight: 600;
+    font-family: var(--fm-font) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
 }
 
 
 /* ---------- 5. Sidebar ---------- */
-
 .app-sidebar {
     background: var(--fm-green) !important;
     box-shadow: 5px 0 24px rgba(7, 55, 39, 0.07);
 }
 
 .sidebar-brand {
-    min-height: 76px;
-    padding: 0 22px;
+    min-height: 66px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     background: var(--fm-green-dark);
@@ -268,7 +364,7 @@ a:hover {
 .sidebar-brand .brand-link {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 11px;
     padding: 0;
     color: var(--fm-white) !important;
     white-space: nowrap;
@@ -282,14 +378,14 @@ a:hover {
     justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.23);
     border-radius: 10px;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .brand-text {
-    font-family: "Manrope", sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-family: var(--fm-font) !important;
+    font-size: 14px !important;
+    font-weight: 650 !important;
+    letter-spacing: -0.025em;
 }
 
 .brand-accent {
@@ -297,20 +393,20 @@ a:hover {
 }
 
 .sidebar-intro {
-    padding: 26px 23px 14px;
+    padding: 24px 23px 14px;
 }
 
 .sidebar-eyebrow {
     color: #BCD2C5;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.13em;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
 }
 
 .sidebar-intro p {
     margin: 6px 0 0;
     color: rgba(255, 255, 255, 0.70);
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .sidebar-navigation {
@@ -318,23 +414,27 @@ a:hover {
 }
 
 .app-sidebar .nav-header {
-    padding: 22px 11px 9px;
+    padding: 19px 11px 8px;
     color: #BCD2C5 !important;
-    font-size: 10px;
-    font-weight: 800;
+    font-family: var(--fm-font) !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
     letter-spacing: 0.12em;
     white-space: nowrap;
 }
 
 .app-sidebar .nav-link {
     display: flex;
-    min-height: 45px;
+    min-height: 41px;
     align-items: center;
     gap: 12px;
     margin: 3px 0;
-    padding: 11px 13px;
+    padding: 10px 13px;
     border-radius: 9px;
     color: rgba(255, 255, 255, 0.80) !important;
+    font-family: var(--fm-font) !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
     transition: background var(--fm-transition),
                 color var(--fm-transition);
 }
@@ -342,15 +442,16 @@ a:hover {
 .app-sidebar .nav-link p {
     flex: 1;
     margin: 0;
-    font-size: 14px;
-    font-weight: 500;
+    font-family: var(--fm-font) !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
     white-space: nowrap;
 }
 
 .app-sidebar .nav-icon {
     width: 20px;
     margin: 0 !important;
-    font-size: 16px;
+    font-size: 15px;
     text-align: center;
 }
 
@@ -368,7 +469,7 @@ a:hover {
 .nav-soon {
     color: #D8C9A8;
     font-size: 9px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: 0.06em;
 }
 
@@ -376,8 +477,8 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 30px 20px 22px;
-    padding-top: 16px;
+    margin: 26px 20px 20px;
+    padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.13);
 }
 
@@ -396,22 +497,22 @@ a:hover {
 
 .sidebar-status-title {
     color: var(--fm-white);
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
 }
 
 .sidebar-status-caption {
     margin-top: 2px;
     color: rgba(255, 255, 255, 0.62);
-    font-size: 11px;
+    font-size: 9.5px !important;
+    font-weight: 400 !important;
 }
 
 
 /* ---------- 6. Cards and panels ---------- */
-
 .card {
     overflow: hidden;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     border: 1px solid var(--fm-border);
     border-radius: var(--fm-radius);
     background: var(--fm-white);
@@ -419,23 +520,26 @@ a:hover {
 }
 
 .card-header {
-    padding: 21px 24px;
+    padding: 17px 20px;
     background: var(--fm-white);
     border-bottom: 1px solid var(--fm-border);
 }
 
 .card-title {
     margin: 0;
-    font-size: 16px;
-    font-weight: 800;
+    color: var(--fm-text);
+    font-family: var(--fm-font) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.015em;
 }
 
 .card-body {
-    padding: 24px;
+    padding: 20px;
 }
 
 .card-footer {
-    padding: 16px 24px;
+    padding: 14px 20px;
     background: #FCFCFA;
     border-top: 1px solid var(--fm-border);
 }
@@ -448,7 +552,6 @@ a:hover {
 
 
 /* ---------- 7. Tables ---------- */
-
 .table-responsive {
     width: 100%;
     border-radius: 0 0 var(--fm-radius) var(--fm-radius);
@@ -457,26 +560,32 @@ a:hover {
 .table {
     margin-bottom: 0;
     color: var(--fm-text);
+    font-family: var(--fm-font) !important;
+    font-size: 12px !important;
     vertical-align: middle;
 }
 
 .table thead th {
-    padding: 16px 18px;
+    padding: 12px 15px;
     color: #6F7A70;
     background: #FAFBF8;
     border-bottom: 1px solid var(--fm-border);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.085em;
+    font-family: var(--fm-font) !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
 .table tbody td {
-    padding: 18px;
+    padding: 13px 15px;
     color: #354138;
     border-color: #EDF0EA;
-    font-size: 14px;
+    font-family: var(--fm-font) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.6;
 }
 
 .table tbody tr {
@@ -489,7 +598,7 @@ a:hover {
 
 .table tbody td strong {
     color: var(--fm-text);
-    font-weight: 700;
+    font-weight: 600 !important;
 }
 
 .table tbody img {
@@ -499,23 +608,23 @@ a:hover {
 }
 
 .table .btn {
-    min-width: 36px;
+    min-width: 34px;
 }
 
 
 /* ---------- 8. Buttons ---------- */
-
 .btn {
     display: inline-flex;
-    min-height: 39px;
+    min-height: 36px;
     align-items: center;
     justify-content: center;
     gap: 7px;
-    padding: 9px 15px;
+    padding: 8px 13px;
     border-radius: 8px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 13px;
-    font-weight: 700;
+    font-family: var(--fm-font) !important;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.45;
     transition: background var(--fm-transition),
                 color var(--fm-transition),
                 border-color var(--fm-transition),
@@ -569,25 +678,26 @@ a:focus-visible,
 
 
 /* ---------- 9. Forms and validation ---------- */
-
 .form-label {
     display: block;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     color: #354139;
-    font-size: 13px;
-    font-weight: 700;
+    font-family: var(--fm-font) !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
 }
 
 .form-control,
 .form-select {
-    min-height: 44px;
-    padding: 10px 12px;
+    min-height: 41px;
+    padding: 9px 12px;
     border: 1px solid var(--fm-border-dark);
     border-radius: 8px;
     background-color: #FFFFFF;
     color: var(--fm-text);
-    font-family: "DM Sans", sans-serif;
-    font-size: 14px;
+    font-family: var(--fm-font) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
     transition: border-color var(--fm-transition),
                 box-shadow var(--fm-transition);
 }
@@ -609,20 +719,21 @@ textarea.form-control {
 }
 
 input[type="file"].form-control {
-    min-height: 47px;
+    min-height: 44px;
     padding: 8px;
 }
 
 .form-text {
     color: var(--fm-muted);
-    font-size: 12px;
+    font-family: var(--fm-font) !important;
+    font-size: 10.5px !important;
 }
 
 .invalid-feedback,
 .text-danger.small {
     margin-top: 5px;
     color: var(--fm-danger) !important;
-    font-size: 12px;
+    font-size: 11px !important;
 }
 
 .is-invalid,
@@ -632,10 +743,12 @@ input[type="file"].form-control {
 }
 
 .alert {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     border: 1px solid var(--fm-border);
     border-radius: 10px;
-    font-size: 14px;
+    font-family: var(--fm-font) !important;
+    font-size: 12px !important;
+    line-height: 1.6;
 }
 
 .alert-success {
@@ -658,16 +771,16 @@ input[type="file"].form-control {
 
 
 /* ---------- 10. Status badges ---------- */
-
 .badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
+    padding: 5px 9px;
     border-radius: 30px;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.3;
+    font-family: var(--fm-font) !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.4;
 }
 
 .badge.text-bg-success {
@@ -698,7 +811,6 @@ input[type="file"].form-control {
 
 
 /* ---------- 11. Fleet vehicle presentation ---------- */
-
 .vehicle-image {
     display: block;
     width: 100%;
@@ -744,37 +856,38 @@ input[type="file"].form-control {
 }
 
 .vehicle-card-body {
-    padding: 21px;
+    padding: 19px;
 }
 
 .vehicle-card-title {
     margin: 0;
-    font-family: "Manrope", sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.035em;
+    color: var(--fm-text);
+    font-family: var(--fm-font) !important;
+    font-size: 17px !important;
+    font-weight: 650 !important;
+    letter-spacing: -0.02em;
 }
 
 .vehicle-registration {
     color: var(--fm-muted);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.035em;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 .vehicle-price {
     color: var(--fm-green);
-    font-family: "Manrope", sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-family: var(--fm-font) !important;
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em;
 }
 
 .vehicle-price-unit {
     color: var(--fm-muted);
-    font-family: "DM Sans", sans-serif;
-    font-size: 12px;
-    font-weight: 500;
+    font-family: var(--fm-font) !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
     letter-spacing: 0;
 }
 
@@ -782,21 +895,21 @@ input[type="file"].form-control {
     display: block;
     margin-bottom: 4px;
     color: var(--fm-muted);
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.055em;
     text-transform: uppercase;
 }
 
 .vehicle-detail-value {
     color: var(--fm-text);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     overflow-wrap: anywhere;
 }
 
 .vehicle-detail-row {
-    padding: 15px 0;
+    padding: 14px 0;
     border-bottom: 1px solid var(--fm-border);
 }
 
@@ -820,17 +933,16 @@ input[type="file"].form-control {
     justify-content: center;
     background: #ECEFE9;
     color: #879488;
-    font-size: 48px;
+    font-size: 42px;
 }
 
 
 /* ---------- 12. Dashboard summary cards ---------- */
-
 .summary-card {
     position: relative;
     height: 100%;
     overflow: hidden;
-    padding: 23px;
+    padding: 20px;
     border: 1px solid var(--fm-border);
     border-radius: var(--fm-radius);
     background: #FFFFFF;
@@ -846,49 +958,46 @@ input[type="file"].form-control {
 
 .summary-card-label {
     color: var(--fm-muted);
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 500;
 }
 
 .summary-card-value {
     margin-top: 10px;
     color: var(--fm-text);
-    font-family: "Manrope", sans-serif;
-    font-size: clamp(24px, 2vw, 32px);
-    font-weight: 800;
-    letter-spacing: -0.045em;
+    font-family: var(--fm-font) !important;
+    font-size: clamp(23px, 1.8vw, 28px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.03em;
     overflow-wrap: anywhere;
 }
 
 .summary-card-icon {
     display: inline-flex;
-    width: 43px;
-    height: 43px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 11px;
     color: var(--fm-green);
     background: var(--fm-green-soft);
-    font-size: 19px;
+    font-size: 18px;
 }
 
 .summary-card-note {
     margin-top: 7px;
     color: var(--fm-muted);
-    font-size: 12px;
+    font-size: 10.5px;
 }
 
 
 /* ---------- 13. Booking and reservation UI ---------- */
-
-/* Reusable booking progress indicator */
-
 .booking-progress {
     display: flex;
     align-items: flex-start;
     width: 100%;
     gap: 0;
-    margin: 10px 0 30px;
+    margin: 10px 0 26px;
 }
 
 .booking-step {
@@ -903,7 +1012,7 @@ input[type="file"].form-control {
 .booking-step:not(:last-child)::after {
     position: absolute;
     z-index: 0;
-    top: 19px;
+    top: 18px;
     left: calc(50% + 22px);
     width: calc(100% - 44px);
     height: 2px;
@@ -919,16 +1028,16 @@ input[type="file"].form-control {
     position: relative;
     z-index: 1;
     display: flex;
-    width: 39px;
-    height: 39px;
+    width: 37px;
+    height: 37px;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--fm-border-dark);
     border-radius: 50%;
     color: var(--fm-muted);
     background: #FFFFFF;
-    font-size: 13px;
-    font-weight: 800;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .booking-step.is-active .booking-step-number,
@@ -939,19 +1048,18 @@ input[type="file"].form-control {
 }
 
 .booking-step-label {
-    margin-top: 9px;
+    margin-top: 8px;
     color: var(--fm-muted);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
 }
 
 .booking-step.is-active .booking-step-label {
     color: var(--fm-green);
-    font-weight: 800;
+    font-weight: 600;
 }
 
-/* Selectable vehicle cards in the booking flow */
-
+/* Selectable vehicle cards */
 .booking-vehicle-option {
     position: relative;
     height: 100%;
@@ -980,9 +1088,8 @@ input[type="file"].form-control {
 }
 
 /* Booking date, time and price summary */
-
 .booking-summary {
-    padding: 23px;
+    padding: 21px;
     border: 1px solid var(--fm-border);
     border-radius: var(--fm-radius);
     background: #FFFFFF;
@@ -990,9 +1097,10 @@ input[type="file"].form-control {
 }
 
 .booking-summary-title {
-    margin: 0 0 17px;
-    font-size: 16px;
-    font-weight: 800;
+    margin: 0 0 15px;
+    font-family: var(--fm-font) !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
 }
 
 .booking-summary-row {
@@ -1000,9 +1108,9 @@ input[type="file"].form-control {
     align-items: flex-start;
     justify-content: space-between;
     gap: 18px;
-    padding: 11px 0;
+    padding: 10px 0;
     border-bottom: 1px solid var(--fm-border);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .booking-summary-row:last-child {
@@ -1011,18 +1119,18 @@ input[type="file"].form-control {
 
 .booking-summary-total {
     margin-top: 10px;
-    padding-top: 17px;
+    padding-top: 16px;
     border-top: 1px solid var(--fm-border-dark);
-    font-family: "Manrope", sans-serif;
-    font-size: 19px;
-    font-weight: 800;
+    font-family: var(--fm-font) !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
 }
 
 .booking-option {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 17px;
+    padding: 15px;
     border: 1px solid var(--fm-border);
     border-radius: var(--fm-radius);
     background: #FFFFFF;
@@ -1044,23 +1152,21 @@ input[type="file"].form-control {
 .booking-option-title {
     display: block;
     color: var(--fm-text);
-    font-size: 14px;
-    font-weight: 800;
+    font-family: var(--fm-font) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
 }
 
 .booking-option-description {
     display: block;
     margin-top: 4px;
     color: var(--fm-muted);
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.6;
 }
 
 
 /* ---------- 14. Deliberate animations ---------- */
-
-/* Use this class on elements that should enter once on page load. */
-
 .fm-enter {
     animation: fm-fade-up 420ms ease both;
 }
@@ -1089,8 +1195,6 @@ input[type="file"].form-control {
     }
 }
 
-/* Use on the customer booking progress content when changing steps. */
-
 .fm-step-enter {
     animation: fm-step-enter 260ms ease both;
 }
@@ -1107,8 +1211,6 @@ input[type="file"].form-control {
     }
 }
 
-/* Loading indicator for real async work only. */
-
 .fm-spinner {
     display: inline-block;
     width: 17px;
@@ -1120,10 +1222,10 @@ input[type="file"].form-control {
 }
 
 @keyframes fm-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
-
-/* Respect visitors who prefer reduced motion. */
 
 @media (prefers-reduced-motion: reduce) {
     html {
@@ -1142,13 +1244,12 @@ input[type="file"].form-control {
 
 
 /* ---------- 15. Footer ---------- */
-
 .app-footer {
     padding: 0 28px;
     background: #FFFFFF;
     border-top: 1px solid var(--fm-border);
     color: var(--fm-muted);
-    font-size: 12px;
+    font-size: 10px !important;
 }
 
 .footer-inner {
@@ -1161,7 +1262,7 @@ input[type="file"].form-control {
 
 .footer-inner strong {
     color: var(--fm-text-soft);
-    font-weight: 800;
+    font-weight: 600 !important;
 }
 
 .footer-note {
@@ -1169,11 +1270,64 @@ input[type="file"].form-control {
 }
 
 
-/* ---------- 16. Responsive layouts ---------- */
+/* ---------- 16. Consistent typography across components ---------- */
 
+/* Prevent old font declarations from overriding Inter */
+body,
+body *,
+.app-wrapper,
+.app-wrapper *,
+.app-header *,
+.app-sidebar *,
+.app-content *,
+.app-footer * {
+    font-family: var(--fm-font) !important;
+}
+
+/* Reassert icon font after the global font rule */
+i.bi,
+i.bi::before,
+.bi,
+.bi::before,
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+    font-family: "bootstrap-icons" !important;
+}
+
+/* Normalize heading weights so they look professional, not oversized */
+.app-content h1:not(.page-heading),
+.app-content-header h1,
+.page-heading {
+    font-size: clamp(24px, 2vw, 30px) !important;
+    font-weight: 650 !important;
+    letter-spacing: -0.025em !important;
+}
+
+.app-content h2 {
+    font-size: 21px;
+    font-weight: 650;
+}
+
+.app-content h3 {
+    font-size: 17px;
+    font-weight: 650;
+}
+
+.app-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.app-content h5,
+.app-content h6 {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ---------- 17. Responsive layouts ---------- */
 @media (max-width: 991.98px) {
     .app-content-header {
-        padding: 27px 22px 12px !important;
+        padding: 25px 22px 12px !important;
     }
 
     .app-content {
@@ -1188,7 +1342,7 @@ input[type="file"].form-control {
 @media (max-width: 767.98px) {
     body,
     .app-wrapper {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .app-header {
@@ -1197,21 +1351,22 @@ input[type="file"].form-control {
     }
 
     .app-content-header {
-        padding: 24px 16px 10px !important;
+        padding: 23px 16px 10px !important;
     }
 
     .page-heading-row {
         align-items: flex-start;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
     }
 
-    .page-heading {
-        font-size: 27px;
+    .page-heading,
+    .app-content-header h1 {
+        font-size: 22px !important;
     }
 
     .page-description {
-        font-size: 13px;
+        font-size: 11px !important;
     }
 
     .page-heading-actions {
@@ -1225,15 +1380,15 @@ input[type="file"].form-control {
     }
 
     .card-header {
-        padding: 17px;
+        padding: 15px;
     }
 
     .card-body {
-        padding: 18px;
+        padding: 15px;
     }
 
     .card-footer {
-        padding: 14px 17px;
+        padding: 13px 15px;
     }
 
     .card-tools {
@@ -1256,7 +1411,7 @@ input[type="file"].form-control {
 
     .table thead th,
     .table tbody td {
-        padding: 13px;
+        padding: 12px;
     }
 
     .booking-progress {

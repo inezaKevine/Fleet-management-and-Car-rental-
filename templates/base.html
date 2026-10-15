@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -7,279 +6,895 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0B4936">
 
-    <title>{% block title %}Dashboard{% endblock %} | FleetManager</title>
+    <title>{% block title %}FleetManager{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="{% static 'dist/css/adminlte.css' %}">
+    {% if request.resolver_match.namespace == 'website' or not request.resolver_match.namespace and request.resolver_match.url_name == 'home' or not request.resolver_match.namespace and request.resolver_match.url_name == 'vehicle_list' or not request.resolver_match.namespace and request.resolver_match.url_name == 'public_booking' or not request.resolver_match.namespace and request.resolver_match.url_name == 'booking_success' %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+              rel="stylesheet">
+    {% else %}
+        <link rel="stylesheet" href="{% static 'dist/css/adminlte.css' %}">
+    {% endif %}
+
     <link rel="stylesheet" href="{% static 'css/fleet-management.css' %}">
+
+    <style>
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        html body,
+        html body *,
+        html body .app-wrapper * {
+            font-family: "Inter", system-ui, -apple-system,
+                         BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        }
+
+        .bi,
+        [class^="bi-"],
+        [class*=" bi-"] {
+            font-family: "bootstrap-icons" !important;
+            font-style: normal;
+        }
+
+        /* Public website */
+        .site-header {
+            position: relative;
+            z-index: 100;
+            background: #fff;
+            border-bottom: 1px solid #e9eee9;
+        }
+
+        .site-header .container {
+            max-width: 1240px;
+        }
+
+        .header-inner {
+            min-height: 82px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: #0B4936;
+            text-decoration: none;
+        }
+
+        .brand:hover {
+            color: #073629;
+        }
+
+        .brand-icon {
+            display: grid;
+            flex: 0 0 auto;
+            width: 43px;
+            height: 43px;
+            place-items: center;
+            border-radius: 11px;
+            background: #0B4936;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .brand-name {
+            display: block;
+            font-size: 17px;
+            line-height: 1.35;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-caption {
+            display: block;
+            margin-top: 2px;
+            color: #75847b;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            color: #45564b;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #0B4936;
+        }
+
+        .public-header-action,
+        .public-menu-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 43px;
+            padding: 10px 17px;
+            border: 1px solid #0B4936;
+            border-radius: 7px;
+            background: #0B4936;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .public-header-action:hover,
+        .public-menu-button:hover {
+            background: #073629;
+            border-color: #073629;
+            color: #fff;
+        }
+
+        .public-menu-button {
+            display: none;
+        }
+
+        .public-mobile-nav {
+            display: none;
+            padding: 10px 24px 18px;
+            background: #fff;
+            border-top: 1px solid #e9eee9;
+        }
+
+        .public-mobile-nav.open {
+            display: grid;
+            gap: 15px;
+        }
+
+        .public-mobile-nav a {
+            color: #26352e;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .public-main {
+            min-height: 55vh;
+        }
+
+        .site-footer {
+            margin-top: 0;
+            padding: 42px 0 20px;
+            background: #073629;
+            color: #e5eee8;
+        }
+
+        .site-footer .container {
+            max-width: 1200px;
+        }
+
+        .footer-description {
+            max-width: 380px;
+            margin: 18px 0 0;
+            color: #b8ccc0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footer-heading {
+            margin: 0 0 15px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 12px;
+        }
+
+        .footer-links a,
+        .footer-links span {
+            color: #c4d7cc;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid #ffffff1c;
+            color: #b8ccc0;
+            font-size: 11px;
+        }
+
+        /* Internal workspace */
+        .app-wrapper {
+            min-height: 100vh;
+        }
+
+        .app-header .container-fluid {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-label {
+            color: #62786c;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+        }
+
+        .user-avatar {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 50%;
+            background: #e6f0e9;
+            color: #0B4936;
+        }
+
+        .user-name {
+            color: #26352e;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 34px;
+            padding: 7px 11px;
+            border: 1px solid #d8e1db;
+            border-radius: 7px;
+            background: #fff;
+            color: #0B4936;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .logout-button:hover {
+            background: #0B4936;
+            border-color: #0B4936;
+            color: #fff;
+        }
+
+        .sidebar-brand {
+            min-height: 63px;
+        }
+
+        .brand-symbol {
+            display: inline-grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 9px;
+            background: #ffffff12;
+            color: #fff;
+        }
+
+        .brand-accent {
+            color: #b5dfc5;
+        }
+
+        .sidebar-status-dot {
+            width: 7px;
+            height: 7px;
+            flex: 0 0 auto;
+            border-radius: 50%;
+            background: #8ac99a;
+        }
+
+        .sidebar-bottom {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-status-title,
+        .sidebar-status-caption {
+            display: block;
+        }
+
+        .sidebar-status-title {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .sidebar-status-caption {
+            margin-top: 3px;
+            color: #a8c0b4;
+            font-size: 10px;
+        }
+
+        .app-main {
+            min-width: 0;
+        }
+
+        .app-content-header {
+            padding: 25px 30px 12px;
+        }
+
+        .app-content-header > .container-fluid,
+        .app-content > .container-fluid {
+            padding: 0;
+        }
+
+        .page-heading-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .page-heading-copy {
+            min-width: 0;
+        }
+
+        .page-overline {
+            margin-bottom: 8px;
+            color: #7a8a80;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+        }
+
+        .page-heading {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .page-description {
+            margin: 8px 0 0;
+            color: #75847b;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .page-heading-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .app-content {
+            padding: 16px 30px 36px;
+        }
+
+        .app-footer {
+            padding: 15px 30px;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .footer-note {
+            color: #75847b;
+            font-size: 11px;
+        }
+
+        @media (max-width: 767.98px) {
+            .header-inner {
+                min-height: 72px;
+                flex-wrap: wrap;
+            }
+
+            .main-nav,
+            .public-header-action {
+                display: none;
+            }
+
+            .public-menu-button {
+                display: inline-flex;
+            }
+
+            .app-content-header {
+                padding: 22px 18px 10px;
+            }
+
+            .app-content {
+                padding: 15px 18px 28px;
+            }
+
+            .page-heading-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .app-footer {
+                padding: 15px 18px;
+            }
+
+            .footer-inner,
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .logout-button {
+                padding: 7px 9px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
 
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="layout-fixed sidebar-expand-lg">
+<body class="{% if request.resolver_match.namespace == 'website' or not request.resolver_match.namespace and request.resolver_match.url_name == 'home' or not request.resolver_match.namespace and request.resolver_match.url_name == 'vehicle_list' or not request.resolver_match.namespace and request.resolver_match.url_name == 'public_booking' or not request.resolver_match.namespace and request.resolver_match.url_name == 'booking_success' %}public-site{% else %}layout-fixed sidebar-expand-lg{% endif %}">
 
-<div class="app-wrapper">
+{% if request.resolver_match.namespace == 'website' or not request.resolver_match.namespace and request.resolver_match.url_name == 'home' or not request.resolver_match.namespace and request.resolver_match.url_name == 'vehicle_list' or not request.resolver_match.namespace and request.resolver_match.url_name == 'public_booking' or not request.resolver_match.namespace and request.resolver_match.url_name == 'booking_success' %}
 
-    <!-- Top Navigation -->
-    <nav class="app-header navbar navbar-expand">
-        <div class="container-fluid">
+    <!-- Public website header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-inner d-flex align-items-center justify-content-between gap-3">
 
-            <ul class="navbar-nav align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link sidebar-toggle"
-                       data-lte-toggle="sidebar"
-                       href="#"
-                       role="button"
-                       aria-label="Toggle sidebar">
-                        <i class="bi bi-list"></i>
+                <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}{% else %}{% url 'home' %}{% endif %}"
+                   class="brand">
+                    <span class="brand-icon">
+                        <i class="bi bi-car-front-fill"></i>
+                    </span>
+                    <span>
+                        <span class="brand-name">FleetManager</span>
+                        <span class="brand-caption">Your journey, our priority</span>
+                    </span>
+                </a>
+
+                <nav class="main-nav" aria-label="Main navigation">
+                    <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}{% else %}{% url 'home' %}{% endif %}"
+                       class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        Home
                     </a>
-                </li>
 
-                <li class="nav-item">
-                    <span class="nav-link topbar-section">
-                        {% block breadcrumb %}Overview{% endblock %}
-                    </span>
-                </li>
-            </ul>
+                    <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:vehicle_list' %}{% else %}{% url 'vehicle_list' %}{% endif %}"
+                       class="{% if request.resolver_match.url_name == 'vehicle_list' %}active{% endif %}">
+                        Our Vehicles
+                    </a>
 
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item">
-                    <span class="topbar-label d-none d-md-inline">
-                        FLEET OPERATIONS
-                    </span>
-                </li>
+                    <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}#why-choose-us{% else %}{% url 'home' %}#why-choose-us{% endif %}">
+                        Why Choose Us
+                    </a>
+                </nav>
 
-                <li class="nav-item ms-3">
-                    <span class="user-avatar">
-                        <i class="bi bi-person-fill"></i>
-                    </span>
-                </li>
+                <div class="d-flex align-items-center gap-2">
+                    {% block public_header_action %}
+                        <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:vehicle_list' %}{% else %}{% url 'vehicle_list' %}{% endif %}"
+                           class="public-header-action">
+                            Explore Cars
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    {% endblock %}
 
-                <li class="nav-item">
-                    <span class="nav-link user-name">
-                        {% if request.user.is_authenticated %}
-                            {{ request.user.username }}
-                        {% else %}
-                            Guest
-                        {% endif %}
-                    </span>
-                </li>
-            </ul>
+                    <button type="button"
+                            class="public-menu-button"
+                            id="publicMenuToggle"
+                            aria-controls="publicMobileNav"
+                            aria-expanded="false"
+                            aria-label="Open navigation menu">
+                        <i class="bi bi-list"></i>
+                        Menu
+                    </button>
+                </div>
 
-        </div>
-    </nav>
-
-    <!-- Sidebar -->
-    <aside class="app-sidebar" data-bs-theme="dark">
-
-        <div class="sidebar-brand">
-            <a href="{% url 'dashboard:home' %}"
-               class="brand-link text-decoration-none">
-                <span class="brand-symbol">
-                    <i class="bi bi-car-front-fill"></i>
-                </span>
-
-                <span class="brand-text">
-                    Fleet<span class="brand-accent">Manager</span>
-                </span>
-            </a>
+            </div>
         </div>
 
-        <div class="sidebar-wrapper">
+        <nav class="public-mobile-nav" id="publicMobileNav" aria-label="Mobile navigation">
+            <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}{% else %}{% url 'home' %}{% endif %}">Home</a>
+            <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:vehicle_list' %}{% else %}{% url 'vehicle_list' %}{% endif %}">Our Vehicles</a>
+            <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}#why-choose-us{% else %}{% url 'home' %}#why-choose-us{% endif %}">Why Choose Us</a>
+        </nav>
+    </header>
 
-        
-            <nav class="sidebar-navigation">
-                <ul class="nav sidebar-menu flex-column"
-                    data-lte-toggle="treeview"
-                    role="menu">
+    <main class="public-main">
 
-                    <!-- Overview -->
-                    <li class="nav-header">OVERVIEW</li>
+        {% if messages %}
+            <div class="container pt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                         role="alert">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
+{% else %}
+
+    <!-- Internal management application -->
+    <div class="app-wrapper">
+
+        <nav class="app-header navbar navbar-expand">
+            <div class="container-fluid">
+
+                <ul class="navbar-nav align-items-center">
                     <li class="nav-item">
-                        <a href="{% url 'dashboard:home' %}"
-                           class="nav-link {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}">
-                            <i class="nav-icon bi bi-grid-1x2"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-
-                    <!-- Fleet Management -->
-                    <li class="nav-header">FLEET MANAGEMENT</li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'fleet:vehicle_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'vehicle_list' %}active{% endif %}">
-                            <i class="nav-icon bi bi-car-front"></i>
-                            <p>Vehicles</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'fleet:driver_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'driver_list' %}active{% endif %}">
-                            <i class="nav-icon bi bi-person-badge"></i>
-                            <p>Drivers</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'fleet:maintenance_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'maintenance_list' %}active{% endif %}">
-                            <i class="nav-icon bi bi-wrench-adjustable"></i>
-                            <p>Maintenance</p>
-                        </a>
-                    </li>
-
-                    <!-- Rental Business -->
-                    <li class="nav-header">RENTAL BUSINESS</li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'rentals:booking_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'booking_list' or request.resolver_match.url_name == 'booking_create' or request.resolver_match.url_name == 'booking_approve' or request.resolver_match.url_name == 'booking_reject' %}active{% endif %}">
-                            <i class="nav-icon bi bi-calendar2-check"></i>
-                            <p>Bookings</p>
+                        <a class="nav-link sidebar-toggle"
+                           data-lte-toggle="sidebar"
+                           href="#"
+                           role="button"
+                           aria-label="Toggle sidebar">
+                            <i class="bi bi-list"></i>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{% url 'customers:customer_list' %}"
-                           class="nav-link {% if request.resolver_match.namespace == 'customers' %}active{% endif %}">
-                            <i class="nav-icon bi bi-people"></i>
-                            <p>Customers</p>
-                        </a>
+                        <span class="nav-link topbar-section">
+                            {% block breadcrumb %}Overview{% endblock %}
+                        </span>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+                    <li class="nav-item">
+                        <span class="topbar-label d-none d-md-inline">
+                            FLEET OPERATIONS
+                        </span>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <span class="user-avatar">
+                            <i class="bi bi-person-fill"></i>
+                        </span>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{% url 'rentals:agreement_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'agreement_list' or request.resolver_match.url_name == 'agreement_create' %}active{% endif %}">
-                            <i class="nav-icon bi bi-file-earmark-text"></i>
-                            <p>Rental Agreements</p>
-                        </a>
+                        <span class="nav-link user-name">
+                            {% if request.user.is_authenticated %}
+                                {{ request.user.username }}
+                            {% else %}
+                                Guest
+                            {% endif %}
+                        </span>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{% url 'rentals:payment_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'payment_list' or request.resolver_match.url_name == 'payment_create' %}active{% endif %}">
-                            <i class="nav-icon bi bi-wallet2"></i>
-                            <p>Payments</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'rentals:vehicle_return_list' %}"
-                           class="nav-link {% if request.resolver_match.url_name == 'vehicle_return_list' or request.resolver_match.url_name == 'vehicle_return_create' %}active{% endif %}">
-                            <i class="nav-icon bi bi-arrow-return-left"></i>
-                            <p>Vehicle Returns</p>
-                        </a>
-                    </li>
-
-                    <!-- Administration -->
-                    <li class="nav-header">ADMINISTRATION</li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin:index' %}" class="nav-link">
-                            <i class="nav-icon bi bi-sliders2"></i>
-                            <p>System Admin</p>
-                        </a>
-                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post"
+                                  action="{% url 'logout' %}"
+                                  class="logout-form">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="logout-button"
+                                        title="Sign out">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </li>
+                    {% endif %}
 
                 </ul>
-            </nav>
+            </div>
+        </nav>
 
-            <div class="sidebar-bottom">
-                <div class="sidebar-status-dot"></div>
+        <aside class="app-sidebar" data-bs-theme="dark">
 
-                <div>
-                    <span class="sidebar-status-title">FleetManager</span>
-                    <span class="sidebar-status-caption">
-                        Operations workspace
+            <div class="sidebar-brand">
+                <a href="{% url 'dashboard:home' %}"
+                   class="brand-link text-decoration-none">
+                    <span class="brand-symbol">
+                        <i class="bi bi-car-front-fill"></i>
                     </span>
+                    <span class="brand-text">
+                        Fleet<span class="brand-accent">Manager</span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="sidebar-wrapper">
+
+                <nav class="sidebar-navigation">
+                    <ul class="nav sidebar-menu flex-column"
+                        data-lte-toggle="treeview"
+                        role="menu">
+
+                        <li class="nav-header">OVERVIEW</li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard:home' %}"
+                               class="nav-link {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}">
+                                <i class="nav-icon bi bi-grid-1x2"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">FLEET MANAGEMENT</li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'fleet:vehicle_list' %}"
+                               class="nav-link {% if request.resolver_match.namespace == 'fleet' and request.resolver_match.url_name == 'vehicle_list' %}active{% endif %}">
+                                <i class="nav-icon bi bi-car-front"></i>
+                                <p>Vehicles</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'fleet:driver_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'driver_list' %}active{% endif %}">
+                                <i class="nav-icon bi bi-person-badge"></i>
+                                <p>Drivers</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'fleet:maintenance_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'maintenance_list' %}active{% endif %}">
+                                <i class="nav-icon bi bi-wrench-adjustable"></i>
+                                <p>Maintenance</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">RENTAL BUSINESS</li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'rentals:booking_list' %}"
+                               class="nav-link {% if request.resolver_match.namespace == 'rentals' and 'booking' in request.resolver_match.url_name %}active{% endif %}">
+                                <i class="nav-icon bi bi-calendar2-check"></i>
+                                <p>Bookings</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'customers:customer_list' %}"
+                               class="nav-link {% if request.resolver_match.namespace == 'customers' %}active{% endif %}">
+                                <i class="nav-icon bi bi-people"></i>
+                                <p>Customers</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'rentals:agreement_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'agreement_list' or request.resolver_match.url_name == 'agreement_create' %}active{% endif %}">
+                                <i class="nav-icon bi bi-file-earmark-text"></i>
+                                <p>Rental Agreements</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'rentals:payment_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'payment_list' or request.resolver_match.url_name == 'payment_create' %}active{% endif %}">
+                                <i class="nav-icon bi bi-wallet2"></i>
+                                <p>Payments</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'rentals:vehicle_return_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'vehicle_return_list' or request.resolver_match.url_name == 'vehicle_return_create' %}active{% endif %}">
+                                <i class="nav-icon bi bi-arrow-return-left"></i>
+                                <p>Vehicle Returns</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">ADMINISTRATION</li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}" class="nav-link">
+                                <i class="nav-icon bi bi-sliders2"></i>
+                                <p>System Admin</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+                <div class="sidebar-bottom">
+                    <div class="sidebar-status-dot"></div>
+                    <div>
+                        <span class="sidebar-status-title">FleetManager</span>
+                        <span class="sidebar-status-caption">Operations workspace</span>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <main class="app-main">
+
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="page-heading-row">
+
+                        <div class="page-heading-copy">
+                            <div class="page-overline">
+                                {% block page_overline %}FLEET MANAGEMENT{% endblock %}
+                            </div>
+
+                            <h1 class="page-heading">
+                                {% block page_title %}Dashboard{% endblock %}
+                            </h1>
+
+                            <p class="page-description">
+                                {% block page_description %}
+                                    Manage your fleet and rental operations.
+                                {% endblock %}
+                            </p>
+                        </div>
+
+                        <div class="page-heading-actions">
+                            {% block page_actions %}{% endblock %}
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </aside>
+            <div class="app-content">
+                <div class="container-fluid">
 
-    <!-- Main Content -->
-    <main class="app-main">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                                 role="alert">
+                                {{ message }}
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
-        <div class="app-content-header">
-            <div class="container-fluid">
+{% endif %}
 
-                <div class="page-heading-row">
+        {% block content %}{% endblock %}
 
-                    <div class="page-heading-copy">
-                        <div class="page-overline">
-                            {% block page_overline %}FLEET MANAGEMENT{% endblock %}
-                        </div>
-
-                        <h1 class="page-heading">
-                            {% block page_title %}Dashboard{% endblock %}
-                        </h1>
-
-                        <p class="page-description">
-                            {% block page_description %}
-                                Manage your fleet and rental operations.
-                            {% endblock %}
-                        </p>
-                    </div>
-
-                    <div class="page-heading-actions">
-                        {% block page_actions %}{% endblock %}
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="app-content">
-            <div class="container-fluid">
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
-                             role="alert">
-                            {{ message }}
-
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="alert"
-                                    aria-label="Close">
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                {% block content %}{% endblock %}
-
-            </div>
-        </div>
+{% if request.resolver_match.namespace == 'website' or not request.resolver_match.namespace and request.resolver_match.url_name == 'home' or not request.resolver_match.namespace and request.resolver_match.url_name == 'vehicle_list' or not request.resolver_match.namespace and request.resolver_match.url_name == 'public_booking' or not request.resolver_match.namespace and request.resolver_match.url_name == 'booking_success' %}
 
     </main>
 
-    <!-- Footer -->
-    <footer class="app-footer">
-        <div class="footer-inner">
-            <span>
-                &copy; {% now "Y" %} <strong>FleetManager</strong>
-            </span>
+    <footer class="site-footer">
+        <div class="container">
 
-            <span class="footer-note">
-                Fleet &amp; rental operations
-            </span>
+            <div class="row g-4">
+                <div class="col-lg-5 col-md-6">
+                    <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}{% else %}{% url 'home' %}{% endif %}"
+                       class="brand text-white">
+                        <span class="brand-icon" style="background:rgba(255,255,255,.13);">
+                            <i class="bi bi-car-front-fill"></i>
+                        </span>
+                        <span>
+                            <span class="brand-name text-white">FleetManager</span>
+                            <span class="brand-caption" style="color:#B8CCC0;">
+                                Your journey, our priority
+                            </span>
+                        </span>
+                    </a>
+
+                    <p class="footer-description">
+                        Find a vehicle for your next journey with our simple
+                        rental browsing and booking request experience.
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="footer-heading">Explore</h3>
+                    <div class="footer-links">
+                        <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}{% else %}{% url 'home' %}{% endif %}">Home</a>
+                        <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:vehicle_list' %}{% else %}{% url 'vehicle_list' %}{% endif %}">Our Vehicles</a>
+                        <a href="{% if request.resolver_match.namespace == 'website' %}{% url 'website:home' %}#why-choose-us{% else %}{% url 'home' %}#why-choose-us{% endif %}">Why Choose Us</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h3 class="footer-heading">Rental Information</h3>
+                    <div class="footer-links">
+                        <span>
+                            <i class="bi bi-cash-coin me-2"></i>
+                            Prices displayed in Rwandan francs (RWF)
+                        </span>
+                        <span>
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Booking requests require confirmation
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; {% now "Y" %} FleetManager. All rights reserved.</span>
+                <span>Fleet &amp; rental operations</span>
+            </div>
+
         </div>
     </footer>
 
-</div>
+{% else %}
 
-<script src="{% static 'dist/js/adminlte.js' %}"></script>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <span>&copy; {% now "Y" %} <strong>FleetManager</strong></span>
+            <span class="footer-note">Fleet &amp; rental operations</span>
+        </div>
+    </footer>
+
+    </div>
+
+{% endif %}
+
+{% if request.resolver_match.namespace == 'website' or not request.resolver_match.namespace and request.resolver_match.url_name == 'home' or not request.resolver_match.namespace and request.resolver_match.url_name == 'vehicle_list' or not request.resolver_match.namespace and request.resolver_match.url_name == 'public_booking' or not request.resolver_match.namespace and request.resolver_match.url_name == 'booking_success' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.getElementById("publicMenuToggle");
+            const menu = document.getElementById("publicMobileNav");
+
+            if (toggle && menu) {
+                toggle.addEventListener("click", function () {
+                    const isOpen = menu.classList.toggle("open");
+                    toggle.setAttribute("aria-expanded", String(isOpen));
+                    toggle.setAttribute(
+                        "aria-label",
+                        isOpen ? "Close navigation menu" : "Open navigation menu"
+                    );
+                });
+            }
+        });
+    </script>
+{% else %}
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+{% endif %}
+
 {% block extra_js %}{% endblock %}
 
 </body>

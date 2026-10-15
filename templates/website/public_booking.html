@@ -1,816 +1,891 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Request a Booking | Fleet Car Rental</title>
+{% extends "base.html" %}
+{% load static %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+{% block title %}Request a Booking | Fleet Car Rental{% endblock %}
 
-    <style>
-        :root {
-            --green: #0B4936;
-            --green-dark: #073629;
-            --green-light: #EAF2ED;
-            --ivory: #F7F6F0;
-            --border: #E2E8E3;
-            --muted: #68766F;
-            --text: #26372F;
+{% block extra_css %}
+<style>
+    :root {
+        --booking-green: #0B4936;
+        --booking-green-dark: #073629;
+        --booking-green-light: #EAF2ED;
+        --booking-ivory: #F7F6F0;
+        --booking-border: #E2E8E3;
+        --booking-muted: #68766F;
+        --booking-text: #26372F;
+    }
+
+    .booking-page {
+        padding: 0 0 64px;
+        background: var(--booking-ivory);
+        color: var(--booking-text);
+    }
+
+    .booking-page *,
+    .booking-page *::before,
+    .booking-page *::after {
+        box-sizing: border-box;
+    }
+
+    .booking-intro {
+        padding: 42px 0 32px;
+    }
+
+    .booking-eyebrow {
+        display: inline-block;
+        margin-bottom: 10px;
+        color: var(--booking-green);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+
+    .booking-intro h1 {
+        margin: 0 0 12px;
+        color: var(--booking-green);
+        font-size: clamp(1.9rem, 4vw, 2.65rem);
+        font-weight: 700;
+        letter-spacing: -1.1px;
+        line-height: 1.2;
+    }
+
+    .booking-intro p {
+        max-width: 670px;
+        margin: 0;
+        color: var(--booking-muted);
+        font-size: 0.95rem;
+        line-height: 1.8;
+    }
+
+    .booking-layout {
+        align-items: flex-start;
+    }
+
+    .booking-card,
+    .booking-vehicle-card {
+        overflow: hidden;
+        background: #FFFFFF;
+        border: 1px solid var(--booking-border);
+        border-radius: 12px;
+        box-shadow: 0 6px 24px rgba(24, 48, 36, 0.045);
+    }
+
+    .booking-card-header {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--booking-border);
+    }
+
+    .booking-card-header h2 {
+        margin: 0 0 6px;
+        color: var(--booking-text);
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .booking-card-header p {
+        margin: 0;
+        color: var(--booking-muted);
+        font-size: 0.87rem;
+        line-height: 1.6;
+    }
+
+    .booking-form-content {
+        padding: 28px;
+    }
+
+    .booking-form-section + .booking-form-section {
+        margin-top: 28px;
+        padding-top: 28px;
+        border-top: 1px solid var(--booking-border);
+    }
+
+    .booking-section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 21px;
+    }
+
+    .booking-section-number {
+        display: inline-flex;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: var(--booking-green-light);
+        color: var(--booking-green);
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .booking-section-heading h3 {
+        margin: 2px 0 5px;
+        color: var(--booking-text);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .booking-section-heading p {
+        margin: 0;
+        color: var(--booking-muted);
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    .booking-page .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--booking-text);
+        font-size: 0.86rem;
+        font-weight: 600;
+    }
+
+    .booking-page .form-control,
+    .booking-page .form-select {
+        width: 100%;
+        min-height: 47px;
+        padding: 11px 13px;
+        border: 1px solid #D8E0DA;
+        border-radius: 7px;
+        background-color: #FFFFFF;
+        color: var(--booking-text);
+        font-family: inherit;
+        font-size: 0.9rem;
+        box-shadow: none;
+    }
+
+    .booking-page .form-control:focus,
+    .booking-page .form-select:focus {
+        border-color: var(--booking-green);
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(11, 73, 54, 0.1);
+    }
+
+    .booking-page .form-control::placeholder {
+        color: #929C95;
+        opacity: 1;
+    }
+
+    .booking-page textarea.form-control {
+        min-height: 112px;
+        resize: vertical;
+    }
+
+    .booking-field-help {
+        display: block;
+        margin-top: 8px;
+        color: var(--booking-muted);
+        font-size: 0.8rem;
+        line-height: 1.65;
+    }
+
+    .booking-chauffeur-option {
+        padding: 18px;
+        border: 1px solid var(--booking-border);
+        border-radius: 9px;
+        background: #FCFDFC;
+    }
+
+    .booking-chauffeur-option .form-check {
+        min-height: auto;
+        margin: 0;
+        padding-left: 1.8rem;
+    }
+
+    .booking-chauffeur-option .form-check-input {
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-top: 0.15rem;
+        margin-left: -1.8rem;
+        border-color: #B8C7BC;
+        cursor: pointer;
+    }
+
+    .booking-chauffeur-option .form-check-input:checked {
+        background-color: var(--booking-green);
+        border-color: var(--booking-green);
+    }
+
+    .booking-chauffeur-option .form-check-label {
+        color: var(--booking-text);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .booking-driver-panel {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--booking-border);
+    }
+
+    .booking-driver-panel[hidden] {
+        display: none !important;
+    }
+
+    .booking-driver-status {
+        display: inline-block;
+        margin-bottom: 11px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        background: var(--booking-green-light);
+        color: var(--booking-green);
+        font-size: 0.74rem;
+        font-weight: 700;
+    }
+
+    .booking-submit-button {
+        display: inline-flex;
+        width: 100%;
+        min-height: 50px;
+        align-items: center;
+        justify-content: center;
+        padding: 13px 20px;
+        border: 1px solid var(--booking-green);
+        border-radius: 7px;
+        background: var(--booking-green);
+        color: #FFFFFF;
+        font-family: inherit;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .booking-submit-button:hover {
+        border-color: var(--booking-green-dark);
+        background: var(--booking-green-dark);
+        color: #FFFFFF;
+    }
+
+    .booking-submit-button:focus-visible {
+        outline: 3px solid rgba(11, 73, 54, 0.25);
+        outline-offset: 3px;
+    }
+
+    .booking-submit-note {
+        margin: 12px 0 0;
+        color: var(--booking-muted);
+        font-size: 0.79rem;
+        line-height: 1.7;
+        text-align: center;
+    }
+
+    .booking-alert {
+        margin-bottom: 20px;
+        padding: 13px 15px;
+        border-radius: 7px;
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    .booking-vehicle-card {
+        position: sticky;
+        top: 24px;
+    }
+
+    .booking-vehicle-card-header {
+        padding: 23px;
+        background: var(--booking-green);
+        color: #FFFFFF;
+    }
+
+    .booking-vehicle-card-header .booking-eyebrow {
+        margin-bottom: 7px;
+        color: #D0E4D8;
+    }
+
+    .booking-vehicle-card-header h2 {
+        margin: 0;
+        color: #FFFFFF;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }
+
+    .booking-vehicle-card-body {
+        padding: 23px;
+    }
+
+    .booking-vehicle-details {
+        margin-bottom: 23px;
+        color: var(--booking-muted);
+        font-size: 0.85rem;
+        line-height: 1.85;
+        overflow-wrap: anywhere;
+    }
+
+    .booking-price-label {
+        margin-bottom: 6px;
+        color: var(--booking-muted);
+        font-size: 0.82rem;
+    }
+
+    .booking-daily-price {
+        color: var(--booking-green);
+        font-size: 1.55rem;
+        font-weight: 700;
+        letter-spacing: -0.6px;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }
+
+    .booking-price-unit {
+        color: var(--booking-muted);
+        font-size: 0.82rem;
+        font-weight: 400;
+        letter-spacing: 0;
+    }
+
+    .booking-summary-divider {
+        margin: 20px 0;
+        border: 0;
+        border-top: 1px solid var(--booking-border);
+        opacity: 1;
+    }
+
+    .booking-summary-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 15px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+
+    .booking-summary-row span {
+        color: var(--booking-muted);
+    }
+
+    .booking-summary-row strong {
+        color: var(--booking-text);
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .booking-total-row {
+        margin-bottom: 0;
+        font-size: 0.92rem;
+    }
+
+    .booking-total-row strong {
+        color: var(--booking-green);
+        font-size: 1.23rem;
+        font-weight: 700;
+    }
+
+    .booking-summary-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--booking-muted);
+        font-size: 0.8rem;
+        line-height: 1.65;
+    }
+
+    .booking-summary-check {
+        flex: 0 0 auto;
+        color: var(--booking-green);
+        font-weight: 700;
+    }
+
+    .booking-back-link {
+        display: inline-flex;
+        width: 100%;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border: 1px solid #C8D5CB;
+        border-radius: 7px;
+        background: #FFFFFF;
+        color: var(--booking-green);
+        font-size: 0.86rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .booking-back-link:hover {
+        background: var(--booking-green-light);
+        color: var(--booking-green-dark);
+    }
+
+    @media (max-width: 991.98px) {
+        .booking-vehicle-card {
+            position: static;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .booking-intro {
+            padding: 30px 0 25px;
         }
 
-        * {
-            box-sizing: border-box;
+        .booking-intro h1 {
+            letter-spacing: -0.6px;
         }
 
-        body {
-            margin: 0;
-            background: var(--ivory);
-            color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .navbar {
-            background: var(--green);
-            padding: 17px 0;
-        }
-
-        .brand {
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        .brand:hover,
-        .nav-link-custom:hover {
-            color: #DCEAE1;
-        }
-
-        .nav-link-custom {
-            color: #fff;
-            text-decoration: none;
-            font-size: .9rem;
-        }
-
-        .page-intro {
-            padding: 38px 0 25px;
-        }
-
-        .eyebrow {
-            color: var(--green);
-            font-size: .76rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .page-intro h1 {
-            margin: 9px 0;
-            font-size: clamp(1.9rem, 4vw, 2.5rem);
-            font-weight: 800;
-            letter-spacing: -.8px;
-        }
-
-        .page-intro p {
-            max-width: 650px;
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .booking-layout {
-            padding-bottom: 65px;
-        }
-
-        .booking-card,
-        .vehicle-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(24, 48, 36, .045);
+        .booking-form-content {
+            padding: 22px 17px;
         }
 
         .booking-card-header {
-            padding: 25px 28px;
-            border-bottom: 1px solid var(--border);
+            padding: 21px 17px;
         }
 
-        .booking-card-header h2 {
-            margin: 0 0 6px;
-            font-size: 1.1rem;
-            font-weight: 800;
+        .booking-vehicle-card-body {
+            padding: 20px;
         }
+    }
 
-        .booking-card-header p {
-            margin: 0;
-            color: var(--muted);
-            font-size: .88rem;
-            line-height: 1.5;
+    @media (prefers-reduced-motion: reduce) {
+        .booking-submit-button,
+        .booking-back-link {
+            transition: none;
         }
+    }
+</style>
+{% endblock %}
 
-        .form-content {
-            padding: 28px;
-        }
+{% block content %}
+<div class="booking-page">
 
-        .form-section + .form-section {
-            margin-top: 28px;
-            padding-top: 28px;
-            border-top: 1px solid var(--border);
-        }
-
-        .section-heading {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section-number {
-            display: inline-flex;
-            flex: 0 0 34px;
-            width: 34px;
-            height: 34px;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9px;
-            background: var(--green-light);
-            color: var(--green);
-            font-size: .86rem;
-            font-weight: 800;
-        }
-
-        .section-heading h3 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 800;
-        }
-
-        .section-heading p {
-            margin: 4px 0 0;
-            color: var(--muted);
-            font-size: .82rem;
-            line-height: 1.5;
-        }
-
-        .form-label {
-            margin-bottom: 8px;
-            font-size: .88rem;
-            font-weight: 700;
-        }
-
-        .form-control,
-        .form-select {
-            width: 100%;
-            min-height: 48px;
-            padding: 11px 13px;
-            border: 1px solid #D8E0DA;
-            border-radius: 9px;
-            background-color: #fff;
-            color: var(--text);
-            font-size: .93rem;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 .2rem rgba(11, 73, 54, .10);
-        }
-
-        textarea.form-control {
-            min-height: 112px;
-            resize: vertical;
-        }
-
-        .field-help {
-            display: block;
-            margin-top: 7px;
-            color: var(--muted);
-            font-size: .8rem;
-            line-height: 1.55;
-        }
-
-        .chauffeur-option {
-            padding: 18px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: #FCFDFC;
-        }
-
-        .chauffeur-option .form-check {
-            min-height: auto;
-            margin: 0;
-            padding-left: 1.8rem;
-        }
-
-        .chauffeur-option .form-check-input {
-            width: 1.1rem;
-            height: 1.1rem;
-            margin-top: .15rem;
-            margin-left: -1.8rem;
-            cursor: pointer;
-        }
-
-        .chauffeur-option .form-check-input:checked {
-            background-color: var(--green);
-            border-color: var(--green);
-        }
-
-        .chauffeur-option .form-check-label {
-            font-size: .94rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .driver-panel {
-            margin-top: 18px;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-        }
-
-        .driver-panel[hidden] {
-            display: none !important;
-        }
-
-        .driver-status {
-            display: inline-block;
-            margin-bottom: 12px;
-            padding: 5px 9px;
-            border-radius: 20px;
-            background: var(--green-light);
-            color: var(--green);
-            font-size: .76rem;
-            font-weight: 700;
-        }
-
-        .vehicle-card {
-            position: sticky;
-            top: 24px;
-        }
-
-        .vehicle-card-header {
-            padding: 23px;
-            background: var(--green);
-            color: #fff;
-        }
-
-        .vehicle-card-header .eyebrow {
-            color: #D0E4D8;
-        }
-
-        .vehicle-card-header h2 {
-            margin: 8px 0 0;
-            font-size: 1.25rem;
-            font-weight: 800;
-            line-height: 1.4;
-        }
-
-        .vehicle-card-body {
-            padding: 23px;
-        }
-
-        .vehicle-details {
-            margin-bottom: 20px;
-            color: var(--muted);
-            font-size: .88rem;
-            line-height: 1.8;
-        }
-
-        .price-label {
-            margin-bottom: 5px;
-            color: var(--muted);
-            font-size: .83rem;
-        }
-
-        .vehicle-price {
-            color: var(--green);
-            font-size: 1.7rem;
-            font-weight: 800;
-            letter-spacing: -.5px;
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        .price-unit {
-            color: var(--muted);
-            font-size: .85rem;
-            font-weight: 400;
-            letter-spacing: 0;
-        }
-
-        .summary-divider {
-            margin: 20px 0;
-            border: 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .summary-row {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 15px;
-            font-size: .88rem;
-        }
-
-        .summary-row span {
-            color: var(--muted);
-        }
-
-        .summary-row strong {
-            text-align: right;
-        }
-
-        .total-row {
-            margin-bottom: 0;
-            font-size: .96rem;
-        }
-
-        .total-row strong {
-            color: var(--green);
-            font-size: 1.35rem;
-            font-weight: 800;
-        }
-
-        .summary-note {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 13px;
-            color: var(--muted);
-            font-size: .83rem;
-            line-height: 1.6;
-        }
-
-        .summary-icon {
-            color: var(--green);
-            font-weight: 800;
-        }
-
-        .btn-green {
-            width: 100%;
-            min-height: 51px;
-            padding: 13px 20px;
-            border: 1px solid var(--green);
-            border-radius: 9px;
-            background: var(--green);
-            color: #fff;
-            font-size: .96rem;
-            font-weight: 800;
-            transition: background .2s ease;
-        }
-
-        .btn-green:hover {
-            border-color: var(--green-dark);
-            background: var(--green-dark);
-            color: #fff;
-        }
-
-        .submit-note {
-            margin: 13px 0 0;
-            color: var(--muted);
-            font-size: .79rem;
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        .alert {
-            border-radius: 10px;
-            font-size: .9rem;
-        }
-
-        .site-footer {
-            padding: 24px 0;
-            background: #073629;
-            color: #E2EBE5;
-            font-size: .84rem;
-        }
-
-        @media (max-width: 991px) {
-            .vehicle-card {
-                position: static;
-            }
-        }
-
-        @media (max-width: 575px) {
-            .page-intro {
-                padding-top: 28px;
-            }
-
-            .form-content {
-                padding: 21px 17px;
-            }
-
-            .booking-card-header {
-                padding: 21px 17px;
-            }
-
-            .vehicle-card-body {
-                padding: 19px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<nav class="navbar">
     <div class="container">
-        <div class="d-flex w-100 justify-content-between align-items-center">
-            <a class="brand" href="{% url 'website:home' %}">
-                Fleet Car Rental
-            </a>
 
-            <a class="nav-link-custom" href="{% url 'website:vehicle_list' %}">
-                &larr; Browse vehicles
-            </a>
-        </div>
-    </div>
-</nav>
+        <header class="booking-intro">
+            <div class="booking-eyebrow">
+                Your next journey starts here
+            </div>
 
-<main class="container">
+            <h1>Request your booking</h1>
 
-    <header class="page-intro">
-        <div class="eyebrow">Your next journey starts here</div>
-        <h1>Request your booking</h1>
-        <p>
-            Enter your contact details and rental dates. You can also request
-            a chauffeur and select a driver if one is available.
-        </p>
-    </header>
+            <p>
+                Enter your contact details and preferred rental dates.
+                You can also request a chauffeur and select an available driver.
+                Our team will review your request before confirming your reservation.
+            </p>
+        </header>
 
-    <div class="row g-4 booking-layout">
+        <div class="row g-4 booking-layout">
 
-        <div class="col-lg-8">
-            <section class="booking-card">
+            <div class="col-lg-8">
 
-                <div class="booking-card-header">
-                    <h2>Booking details</h2>
-                    <p>Complete each section to submit your rental request.</p>
-                </div>
+                <section class="booking-card">
 
-                <div class="form-content">
+                    <div class="booking-card-header">
+                        <h2>Booking details</h2>
+                        <p>Complete each section to submit your rental request.</p>
+                    </div>
 
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert
-                                {% if message.tags == 'error' %}
-                                    alert-danger
-                                {% else %}
-                                    alert-success
-                                {% endif %}
-                                alert-dismissible fade show"
-                                role="alert">
-                                {{ message }}
-                                <button type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    <div class="booking-form-content">
 
-                    <form method="post" id="publicBookingForm">
-                        {% csrf_token %}
-
-                        <section class="form-section">
-                            <div class="section-heading">
-                                <span class="section-number">01</span>
-                                <div>
-                                    <h3>Your contact details</h3>
-                                    <p>How can our team reach you?</p>
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="first_name">
-                                        First name
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        id="first_name"
-                                        name="first_name"
-                                        autocomplete="given-name"
-                                        value="{{ form_data.first_name|default:'' }}"
-                                        required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="last_name">
-                                        Last name
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        id="last_name"
-                                        name="last_name"
-                                        autocomplete="family-name"
-                                        value="{{ form_data.last_name|default:'' }}"
-                                        required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="email">
-                                        Email address
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        autocomplete="email"
-                                        placeholder="you@example.com"
-                                        value="{{ form_data.email|default:'' }}"
-                                        required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="phone">
-                                        Phone number
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        autocomplete="tel"
-                                        placeholder="Enter your phone number"
-                                        value="{{ form_data.phone|default:'' }}"
-                                        required>
-                                </div>
-
-                            </div>
-                        </section>
-
-                        <section class="form-section">
-                            <div class="section-heading">
-                                <span class="section-number">02</span>
-                                <div>
-                                    <h3>Your rental dates</h3>
-                                    <p>Select your pickup and return dates.</p>
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="start_at">
-                                        Pickup date and time
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="datetime-local"
-                                        id="start_at"
-                                        name="start_at"
-                                        value="{{ form_data.start_at|default:'' }}"
-                                        required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="end_at">
-                                        Return date and time
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="datetime-local"
-                                        id="end_at"
-                                        name="end_at"
-                                        value="{{ form_data.end_at|default:'' }}"
-                                        required>
-                                </div>
-
-                            </div>
-
-                            <div class="field-help">
-                                The price estimate updates automatically when
-                                you change your rental dates. Availability is
-                                checked before the booking request is saved.
-                            </div>
-                        </section>
-
-                        <section class="form-section">
-                            <div class="section-heading">
-                                <span class="section-number">03</span>
-                                <div>
-                                    <h3>Additional services</h3>
-                                    <p>Choose whether you need a chauffeur.</p>
-                                </div>
-                            </div>
-
-                            <div class="chauffeur-option">
-
-                                <div class="form-check">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        id="chauffeur_required"
-                                        name="chauffeur_required"
-                                        {% if form_data.chauffeur_required %}checked{% endif %}>
-
-                                    <label
-                                        class="form-check-label"
-                                        for="chauffeur_required">
-                                        I would like a chauffeur
-                                    </label>
-                                </div>
-
-                                <div class="field-help">
-                                    Request a driver for your rental. Driver
-                                    availability depends on your selected dates.
-                                </div>
-
+                        {% if messages %}
+                            {% for message in messages %}
                                 <div
-                                    class="driver-panel"
-                                    id="driverPanel"
-                                    {% if not form_data.chauffeur_required %}hidden{% endif %}>
+                                    class="alert booking-alert
+                                    {% if message.tags == 'error' %}
+                                        alert-danger
+                                    {% else %}
+                                        alert-success
+                                    {% endif %}"
+                                    role="alert"
+                                >
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
-                                    <label class="form-label" for="driver">
-                                        Select a driver
-                                    </label>
+                        <form
+                            method="post"
+                            id="publicBookingForm"
+                        >
+                            {% csrf_token %}
 
-                                    <div class="driver-status">
-                                        Available drivers
-                                    </div>
+                            <section class="booking-form-section">
 
-                                    <select
-                                        class="form-select"
-                                        id="driver"
-                                        name="driver"
-                                        {% if form_data.chauffeur_required %}required{% endif %}>
+                                <div class="booking-section-heading">
+                                    <span class="booking-section-number">01</span>
 
-                                        <option value="">
-                                            Choose an available driver
-                                        </option>
-
-                                        {% for driver_option in available_drivers %}
-                                            <option
-                                                value="{{ driver_option.pk }}"
-                                                {% if form_data.driver == driver_option.pk|stringformat:"s" %}selected{% endif %}>
-                                                {{ driver_option }}
-                                            </option>
-                                        {% empty %}
-                                            <option value="" disabled>
-                                                No available drivers are currently listed
-                                            </option>
-                                        {% endfor %}
-
-                                    </select>
-
-                                    <div class="field-help">
-                                        Select a driver from the list. The
-                                        system will validate availability before
-                                        saving your request.
+                                    <div>
+                                        <h3>Your contact details</h3>
+                                        <p>How can our team reach you?</p>
                                     </div>
                                 </div>
 
-                            </div>
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="first_name">
+                                            First name
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            id="first_name"
+                                            name="first_name"
+                                            autocomplete="given-name"
+                                            value="{{ form_data.first_name|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="last_name">
+                                            Last name
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            id="last_name"
+                                            name="last_name"
+                                            autocomplete="family-name"
+                                            value="{{ form_data.last_name|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="email">
+                                            Email address
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            autocomplete="email"
+                                            placeholder="you@example.com"
+                                            value="{{ form_data.email|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="phone">
+                                            Phone number
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            autocomplete="tel"
+                                            placeholder="Enter your phone number"
+                                            value="{{ form_data.phone|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            <section class="booking-form-section">
+
+                                <div class="booking-section-heading">
+                                    <span class="booking-section-number">02</span>
+
+                                    <div>
+                                        <h3>Your rental dates</h3>
+                                        <p>Select your pickup and return date and time.</p>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="start_at">
+                                            Pickup date and time
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="datetime-local"
+                                            id="start_at"
+                                            name="start_at"
+                                            value="{{ form_data.start_at|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="end_at">
+                                            Return date and time
+                                        </label>
+
+                                        <input
+                                            class="form-control"
+                                            type="datetime-local"
+                                            id="end_at"
+                                            name="end_at"
+                                            value="{{ form_data.end_at|default:'' }}"
+                                            required
+                                        >
+                                    </div>
+
+                                </div>
+
+                                <span class="booking-field-help">
+                                    The estimated rental cost updates automatically
+                                    when you change your dates. Your requested dates
+                                    must still be checked against existing bookings
+                                    and vehicle maintenance.
+                                </span>
+
+                            </section>
+
+                            <section class="booking-form-section">
+
+                                <div class="booking-section-heading">
+                                    <span class="booking-section-number">03</span>
+
+                                    <div>
+                                        <h3>Additional services</h3>
+                                        <p>Choose whether you need a chauffeur.</p>
+                                    </div>
+                                </div>
+
+                                <div class="booking-chauffeur-option">
+
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="chauffeur_required"
+                                            name="chauffeur_required"
+                                            {% if form_data.chauffeur_required %}checked{% endif %}
+                                        >
+
+                                        <label
+                                            class="form-check-label"
+                                            for="chauffeur_required"
+                                        >
+                                            I would like a chauffeur
+                                        </label>
+                                    </div>
+
+                                    <span class="booking-field-help">
+                                        Request a driver for your rental.
+                                        Driver availability depends on your selected dates.
+                                    </span>
+
+                                    <div
+                                        class="booking-driver-panel"
+                                        id="driverPanel"
+                                        {% if not form_data.chauffeur_required %}hidden{% endif %}
+                                    >
+
+                                        <label class="form-label" for="driver">
+                                            Select a driver
+                                        </label>
+
+                                        <div class="booking-driver-status">
+                                            Available drivers
+                                        </div>
+
+                                        <select
+                                            class="form-select"
+                                            id="driver"
+                                            name="driver"
+                                            {% if form_data.chauffeur_required %}required{% endif %}
+                                        >
+                                            <option value="">
+                                                Choose an available driver
+                                            </option>
+
+                                            {% for driver_option in available_drivers %}
+                                                <option
+                                                    value="{{ driver_option.pk }}"
+                                                    {% if form_data.driver == driver_option.pk|stringformat:"s" %}selected{% endif %}
+                                                >
+                                                    {{ driver_option }}
+                                                </option>
+                                            {% empty %}
+                                                <option value="" disabled>
+                                                    No available drivers are currently listed
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+
+                                        <span class="booking-field-help">
+                                            Select a driver from the list.
+                                            The system should verify driver availability
+                                            before accepting the request.
+                                        </span>
+
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="form-label" for="special_requests">
+                                        Additional requests
+                                        <span class="text-secondary fw-normal">
+                                            (optional)
+                                        </span>
+                                    </label>
+
+                                    <textarea
+                                        class="form-control"
+                                        id="special_requests"
+                                        name="special_requests"
+                                        rows="4"
+                                        placeholder="Tell us about any special requirements"
+                                    >{{ form_data.special_requests|default:'' }}</textarea>
+                                </div>
+
+                            </section>
 
                             <div class="mt-4">
-                                <label class="form-label" for="special_requests">
-                                    Additional requests
-                                    <span class="text-secondary fw-normal">
-                                        (optional)
-                                    </span>
-                                </label>
 
-                                <textarea
-                                    class="form-control"
-                                    id="special_requests"
-                                    name="special_requests"
-                                    rows="4"
-                                    placeholder="Tell us about any special requirements">{{ form_data.special_requests|default:'' }}</textarea>
+                                <button
+                                    class="booking-submit-button"
+                                    type="submit"
+                                >
+                                    Submit booking request
+                                </button>
+
+                                <p class="booking-submit-note">
+                                    Submitting this form does not confirm your
+                                    reservation or require payment. Our team will
+                                    review your request and confirm availability.
+                                </p>
+
                             </div>
-                        </section>
 
-                        <div class="mt-4">
-                            <button class="btn-green" type="submit">
-                                Submit booking request
-                            </button>
+                        </form>
+                    </div>
+                </section>
 
-                            <p class="submit-note">
-                                Submitting this form does not confirm your
-                                reservation or require payment. Our team will
-                                review your request.
-                            </p>
+            </div>
+
+            <aside class="col-lg-4">
+
+                <section class="booking-vehicle-card">
+
+                    <div class="booking-vehicle-card-header">
+                        <div class="booking-eyebrow">
+                            Your selected vehicle
                         </div>
 
-                    </form>
-                </div>
-            </section>
-        </div>
-
-        <aside class="col-lg-4">
-            <section class="vehicle-card">
-
-                <div class="vehicle-card-header">
-                    <div class="eyebrow">Your selected vehicle</div>
-                    <h2>{{ vehicle.make }} {{ vehicle.model }}</h2>
-                </div>
-
-                <div class="vehicle-card-body">
-
-                    <div class="vehicle-details">
-                        {% if vehicle.year %}
-                            <span>{{ vehicle.year }}</span>
-                        {% endif %}
-
-                        {% if vehicle.color %}
-                            {% if vehicle.year %} · {% endif %}
-                            <span>{{ vehicle.color }}</span>
-                        {% endif %}
-
-                        {% if vehicle.registration_number %}
-                            <div>
-                                Vehicle reference: {{ vehicle.registration_number }}
-                            </div>
-                        {% endif %}
+                        <h2>
+                            {{ vehicle.make }} {{ vehicle.model }}
+                        </h2>
                     </div>
 
-                    <div class="price-label">Daily rental rate</div>
+                    <div class="booking-vehicle-card-body">
 
-                    <div
-                        class="vehicle-price"
-                        id="dailyRate"
-                        data-rate="{{ vehicle.daily_rate }}">
-                        RWF {{ vehicle.daily_rate|floatformat:0 }}
-                        <span class="price-unit">/ day</span>
-                    </div>
+                        <div class="booking-vehicle-details">
 
-                    <hr class="summary-divider">
+                            {% if vehicle.year %}
+                                <span>{{ vehicle.year }}</span>
+                            {% endif %}
 
-                    <div class="summary-row">
-                        <span>Rental duration</span>
-                        <strong id="rentalDuration">Select your dates</strong>
-                    </div>
+                            {% if vehicle.color %}
+                                {% if vehicle.year %} · {% endif %}
+                                <span>{{ vehicle.color }}</span>
+                            {% endif %}
 
-                    <div class="summary-row">
-                        <span>Daily rate</span>
-                        <strong id="rateSummary">
+                            {% if vehicle.registration_number %}
+                                <div>
+                                    Vehicle reference:
+                                    {{ vehicle.registration_number }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="booking-price-label">
+                            Daily rental rate
+                        </div>
+
+                        <div
+                            class="booking-daily-price"
+                            id="dailyRate"
+                            data-rate="{{ vehicle.daily_rate }}"
+                        >
                             RWF {{ vehicle.daily_rate|floatformat:0 }}
-                        </strong>
-                    </div>
+                            <span class="booking-price-unit">/ day</span>
+                        </div>
 
-                    <hr class="summary-divider">
+                        <hr class="booking-summary-divider">
 
-                    <div class="summary-row total-row">
-                        <span>Estimated total</span>
-                        <strong id="estimatedTotal">—</strong>
-                    </div>
+                        <div class="booking-summary-row">
+                            <span>Rental duration</span>
+                            <strong id="rentalDuration">Select your dates</strong>
+                        </div>
 
-                    <div class="field-help">
-                        Calculated using the selected rental duration and
-                        vehicle daily rate.
-                    </div>
+                        <div class="booking-summary-row">
+                            <span>Daily rate</span>
+                            <strong id="rateSummary">
+                                RWF {{ vehicle.daily_rate|floatformat:0 }}
+                            </strong>
+                        </div>
 
-                    <hr class="summary-divider">
+                        <hr class="booking-summary-divider">
 
-                    <div class="summary-note">
-                        <span class="summary-icon">&#10003;</span>
-                        <span>
-                            Your rental dates will be checked against existing
-                            bookings and vehicle maintenance.
+                        <div class="booking-summary-row booking-total-row">
+                            <span>Estimated total</span>
+                            <strong id="estimatedTotal">—</strong>
+                        </div>
+
+                        <span class="booking-field-help">
+                            The estimate uses the selected rental duration and
+                            vehicle daily rate. Additional charges, if applicable,
+                            must be confirmed by the rental team.
                         </span>
+
+                        <hr class="booking-summary-divider">
+
+                        <div class="booking-summary-note">
+                            <span class="booking-summary-check">&#10003;</span>
+                            <span>
+                                Requested dates must be checked against existing
+                                bookings and vehicle maintenance.
+                            </span>
+                        </div>
+
+                        <div class="booking-summary-note">
+                            <span class="booking-summary-check">&#10003;</span>
+                            <span>
+                                You can request a chauffeur using the option in the form.
+                            </span>
+                        </div>
+
+                        <div class="booking-summary-note">
+                            <span class="booking-summary-check">&#10003;</span>
+                            <span>
+                                No payment is required to submit this request.
+                            </span>
+                        </div>
+
+                        <hr class="booking-summary-divider">
+
+                        <a
+                            href="{% url 'website:vehicle_list' %}"
+                            class="booking-back-link"
+                        >
+                            Choose another vehicle
+                        </a>
+
                     </div>
+                </section>
 
-                    <div class="summary-note">
-                        <span class="summary-icon">&#10003;</span>
-                        <span>
-                            You can request a chauffeur using the option in the form.
-                        </span>
-                    </div>
+            </aside>
 
-                    <div class="summary-note">
-                        <span class="summary-icon">&#10003;</span>
-                        <span>
-                            No payment is required to submit this request.
-                        </span>
-                    </div>
-
-                    <hr class="summary-divider">
-
-                    <a
-                        href="{% url 'website:vehicle_list' %}"
-                        class="btn btn-outline-secondary w-100">
-                        Choose another vehicle
-                    </a>
-
-                </div>
-            </section>
-        </aside>
-
+        </div>
     </div>
-</main>
-
-<footer class="site-footer">
-    <div class="container d-flex flex-wrap justify-content-between gap-2">
-        <span>Fleet Car Rental</span>
-        <span>Reliable vehicles. A smoother journey.</span>
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -827,6 +902,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const durationElement = document.getElementById("rentalDuration");
     const totalElement = document.getElementById("estimatedTotal");
 
+    if (
+        !chauffeurCheckbox ||
+        !driverPanel ||
+        !driverSelect ||
+        !startInput ||
+        !endInput ||
+        !bookingForm ||
+        !dailyRateElement
+    ) {
+        return;
+    }
+
     const dailyRate = Number(dailyRateElement.dataset.rate || 0);
 
     const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -840,11 +927,13 @@ document.addEventListener("DOMContentLoaded", function () {
     function localDateTimeValue(date) {
         const pad = value => String(value).padStart(2, "0");
 
-        return date.getFullYear() + "-" +
+        return (
+            date.getFullYear() + "-" +
             pad(date.getMonth() + 1) + "-" +
             pad(date.getDate()) + "T" +
             pad(date.getHours()) + ":" +
-            pad(date.getMinutes());
+            pad(date.getMinutes())
+        );
     }
 
     function getCurrentMinimum() {
@@ -865,16 +954,56 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function updateEstimate() {
+        rateSummaryElement.textContent = formatRWF(dailyRate);
+
+        if (!startInput.value || !endInput.value) {
+            durationElement.textContent = "Select your dates";
+            totalElement.textContent = "—";
+            return;
+        }
+
+        const pickup = new Date(startInput.value);
+        const returned = new Date(endInput.value);
+        const now = new Date();
+
+        if (
+            isNaN(pickup.getTime()) ||
+            isNaN(returned.getTime()) ||
+            pickup <= now ||
+            returned <= pickup
+        ) {
+            durationElement.textContent = "Check your dates";
+            totalElement.textContent = "—";
+            return;
+        }
+
+        // Each started 24-hour period counts as one rental day,
+        // with a minimum of one day.
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+        const rentalDays = Math.max(
+            1,
+            Math.ceil(
+                (returned.getTime() - pickup.getTime()) /
+                millisecondsPerDay
+            )
+        );
+
+        const estimatedTotal = dailyRate * rentalDays;
+
+        durationElement.textContent =
+            rentalDays + (rentalDays === 1 ? " day" : " days");
+
+        totalElement.textContent = formatRWF(estimatedTotal);
+    }
+
     function updateDatesAndEstimate() {
         const minimumPickup = getCurrentMinimum();
 
         startInput.min = minimumPickup;
 
-        if (startInput.value) {
-            endInput.min = startInput.value;
-        } else {
-            endInput.min = minimumPickup;
-        }
+        endInput.min = startInput.value || minimumPickup;
 
         startInput.setCustomValidity("");
         endInput.setCustomValidity("");
@@ -899,9 +1028,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const pickup = new Date(startInput.value);
             const returned = new Date(endInput.value);
 
-            if (!isNaN(pickup.getTime()) &&
+            if (
+                !isNaN(pickup.getTime()) &&
                 !isNaN(returned.getTime()) &&
-                returned <= pickup) {
+                returned <= pickup
+            ) {
                 endInput.setCustomValidity(
                     "Return must be later than pickup."
                 );
@@ -909,45 +1040,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         updateEstimate();
-    }
-
-    function updateEstimate() {
-        rateSummaryElement.textContent = formatRWF(dailyRate);
-
-        if (!startInput.value || !endInput.value) {
-            durationElement.textContent = "Select your dates";
-            totalElement.textContent = "—";
-            return;
-        }
-
-        const pickup = new Date(startInput.value);
-        const returned = new Date(endInput.value);
-        const now = new Date();
-
-        if (isNaN(pickup.getTime()) ||
-            isNaN(returned.getTime()) ||
-            pickup <= now ||
-            returned <= pickup) {
-            durationElement.textContent = "Check your dates";
-            totalElement.textContent = "—";
-            return;
-        }
-
-        // Charge for each started 24-hour period, with a minimum of one day.
-        // This matches the estimate used by the current confirmation view.
-        const millisecondsPerDay = 24 * 60 * 60 * 1000;
-        const rentalDays = Math.max(
-            1,
-            Math.ceil((returned.getTime() - pickup.getTime()) /
-                      millisecondsPerDay)
-        );
-
-        const total = dailyRate * rentalDays;
-
-        durationElement.textContent =
-            rentalDays + (rentalDays === 1 ? " day" : " days");
-
-        totalElement.textContent = formatRWF(total);
     }
 
     chauffeurCheckbox.addEventListener("change", updateDriverPanel);
@@ -971,6 +1063,4 @@ document.addEventListener("DOMContentLoaded", function () {
     updateDatesAndEstimate();
 });
 </script>
-
-</body>
-</html>
+{% endblock %}

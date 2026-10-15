@@ -1,203 +1,247 @@
+
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Dashboard | Fleet Manager{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb %}Overview{% endblock %}
+{% block page_overline %}FLEET INTELLIGENCE{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_description %}A clear overview of your fleet, rentals, and financial performance.{% endblock %}
 
-{% block content %}
+{% block page_actions %}
+<div class="dash-date">
+    <i class="bi bi-calendar3"></i>
+    {{ today|date:"D, d M Y" }}
+</div>
+{% endblock %}
 
+
+{% block extra_css %}
 <style>
+/* -------------------------------------------------------
+   FLEETMANAGER DASHBOARD
+   Inter typography + forest green #0B4936
+-------------------------------------------------------- */
+
 .dashboard-page {
     --dash-green: #0B4936;
-    --dash-emerald: #16865f;
+    --dash-green-light: #167354;
     --dash-mint: #37b984;
-    --dash-ink: #20372d;
-    --dash-muted: #84958b;
+    --dash-ink: #263b30;
+    --dash-muted: #819087;
     --dash-border: #e8ede8;
+    --dash-surface: #ffffff;
+
     color: var(--dash-ink);
-    padding: 8px 2px 30px;
+    padding: 5px 1px 26px;
+    font-family: "Inter", sans-serif;
 }
 
-.dashboard-page * { box-sizing: border-box; }
-
-.dash-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 18px;
-    margin-bottom: 26px;
+.dashboard-page * {
+    box-sizing: border-box;
 }
 
-.dash-eyebrow {
-    color: #7c9487;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 10px;
-    font-weight: 700;
-    margin-bottom: 8px;
+/* Shared page heading from base.html */
+.page-heading {
+    font-family: "Inter", sans-serif !important;
+    font-size: 26px !important;
+    line-height: 1.3;
+    font-weight: 650 !important;
+    letter-spacing: -0.8px !important;
+    color: #22382c;
 }
 
-.dash-heading h1 {
-    margin: 0;
-    color: #1f3329;
-    font-size: clamp(25px, 2.4vw, 32px);
-    letter-spacing: -1px;
-    font-weight: 800;
+.page-overline {
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    letter-spacing: 1.8px;
 }
 
-.dash-heading p {
-    color: var(--dash-muted);
-    margin: 9px 0 0;
-    font-size: 13px;
+.page-description {
+    font-size: 12px !important;
+    line-height: 1.7;
+    color: #849188;
 }
 
 .dash-date {
-    padding: 12px 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
     border: 1px solid var(--dash-border);
-    border-radius: 11px;
-    background: white;
-    white-space: nowrap;
+    border-radius: 9px;
+    background: #fff;
+    color: #64766b;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
+/* Section headings */
 .dash-section-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    margin: 25px 0 13px;
+    gap: 12px;
+    margin: 24px 0 12px;
 }
 
 .dash-section-heading h2 {
     margin: 0;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--dash-green);
+    color: var(--dash-ink);
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 650;
+    letter-spacing: -.25px;
 }
 
-.dash-section-heading span {
-    color: var(--dash-muted);
-    font-size: 11px;
+.dash-section-heading > span {
+    color: #8b9990;
+    font-size: 10px;
+    font-weight: 400;
 }
 
+/* KPI cards */
 .dash-kpis {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
+    gap: 14px;
 }
 
 .dash-kpi {
     position: relative;
     min-width: 0;
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #e8ede8;
-    border-radius: 14px;
-    box-shadow: 0 4px 15px #183f2b05;
-    transition: transform .2s, box-shadow .2s;
+    padding: 18px 19px 17px;
+    background: var(--dash-surface);
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #183f2b03;
+    transition: border-color .2s ease, transform .2s ease,
+                box-shadow .2s ease;
 }
 
 .dash-kpi:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 23px #183f2b0b;
+    transform: translateY(-2px);
+    border-color: #d5e6db;
+    box-shadow: 0 7px 18px #183f2b08;
 }
 
 .dash-kpi-top {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
 }
 
 .dash-kpi-label {
-    font-size: 12px;
-    color: #718278;
-    font-weight: 500;
-}
-
-.dash-kpi-icon {
-    flex: 0 0 37px;
-    width: 37px;
-    height: 37px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    background: #e7f4ed;
-    color: var(--dash-green);
-    font-size: 17px;
-}
-
-.dash-kpi-icon.blue { background: #eaf1fb; color: #426ba9; }
-.dash-kpi-icon.gold { background: #fff1dd; color: #a56c22; }
-.dash-kpi-icon.purple { background: #f1eaff; color: #7954b5; }
-
-.dash-kpi-value {
-    margin-top: 17px;
-    font-size: clamp(23px, 2vw, 30px);
-    line-height: 1.1;
-    font-weight: 800;
-    letter-spacing: -.8px;
-    color: #183d2c;
-    overflow-wrap: anywhere;
-}
-
-.dash-kpi-value.currency { font-size: clamp(20px, 1.65vw, 26px); }
-
-.dash-kpi-note {
-    margin-top: 10px;
-    color: #8b9c91;
+    color: #728177;
     font-size: 11px;
+    font-weight: 500;
     line-height: 1.5;
 }
 
-.dash-kpi-note strong {
+.dash-kpi-icon {
+    flex: 0 0 33px;
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    border-radius: 10px;
+    background: #eaf4ed;
     color: var(--dash-green);
-    font-weight: 700;
+    font-size: 14px;
 }
 
-.dash-analytics-strip {
+.dash-kpi-icon.blue {
+    background: #edf2fa;
+    color: #5275ad;
+}
+
+.dash-kpi-icon.gold {
+    background: #fff4e5;
+    color: #ad7933;
+}
+
+.dash-kpi-icon.purple {
+    background: #f2edfb;
+    color: #8870b6;
+}
+
+.dash-kpi-value {
+    margin-top: 15px;
+    color: #214333;
+    font-size: 27px;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.dash-kpi-value.currency {
+    font-size: 23px;
+    letter-spacing: -.65px;
+}
+
+.dash-kpi-note {
+    margin-top: 8px;
+    color: #8b9990;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.55;
+}
+
+/* Compact performance metrics */
+.dash-metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin: 18px 0 25px;
-    border: 1px solid #e5ece5;
-    border-radius: 13px;
-    background: white;
+    margin-top: 15px;
     overflow: hidden;
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    background: #fff;
 }
 
 .dash-metric {
-    padding: 17px 20px;
+    min-width: 0;
+    padding: 15px 17px;
     border-right: 1px solid var(--dash-border);
 }
 
-.dash-metric:last-child { border-right: 0; }
+.dash-metric:last-child {
+    border-right: 0;
+}
 
 .dash-metric-title {
-    font-size: 11px;
-    color: var(--dash-muted);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    color: #819087;
+    font-size: 10px;
+    font-weight: 400;
 }
 
 .dash-metric-row {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 7px;
+    flex-wrap: wrap;
 }
 
 .dash-metric-value {
     color: var(--dash-green);
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 650;
+    letter-spacing: -.5px;
+    font-variant-numeric: tabular-nums;
 }
 
 .dash-metric-unit {
-    font-size: 11px;
-    color: #829489;
+    color: #8a9890;
+    font-size: 10px;
 }
 
 .dash-progress {
-    height: 5px;
-    margin-top: 13px;
+    height: 4px;
+    margin-top: 11px;
     overflow: hidden;
     border-radius: 10px;
     background: #edf2ed;
@@ -205,181 +249,205 @@
 
 .dash-progress > span {
     display: block;
-    height: 100%;
     width: var(--progress, 0%);
+    height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #0B4936, #38bd86);
+    background: linear-gradient(90deg, #0B4936, #37b984);
 }
 
+/* Chart layout */
 .dash-chart-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 17px;
-    margin-top: 16px;
-}
-
-.dash-chart-card {
-    min-width: 0;
-    padding: 21px;
-    border: 1px solid var(--dash-border);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 4px 18px #183f2b04;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 .dash-span-8 { grid-column: span 8; }
-.dash-span-7 { grid-column: span 7; }
 .dash-span-6 { grid-column: span 6; }
-.dash-span-5 { grid-column: span 5; }
 .dash-span-4 { grid-column: span 4; }
+
+.dash-chart-card {
+    min-width: 0;
+    padding: 19px;
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 9px #183f2b03;
+}
 
 .dash-chart-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 13px;
-    margin-bottom: 18px;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
 .dash-chart-title {
-    font-size: 14px;
-    font-weight: 800;
-    color: #294638;
     margin: 0;
+    color: #294638;
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: -.2px;
+    line-height: 1.5;
 }
 
 .dash-chart-description {
-    margin: 7px 0 0;
-    font-size: 11px;
-    line-height: 1.5;
-    color: #8b9a90;
+    margin: 5px 0 0;
+    color: #89968e;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.6;
 }
 
 .dash-chart-tag {
-    border: 1px solid #e3eee6;
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    border: 1px solid #e4ece5;
     border-radius: 7px;
-    padding: 7px 9px;
-    background: #f5faf6;
+    background: #f7faf7;
     color: var(--dash-green);
-    font-size: 10px;
-    font-weight: 700;
-    white-space: nowrap;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .4px;
 }
 
 .dash-chart-canvas {
     position: relative;
     width: 100%;
-    height: 270px;
+    height: 245px;
 }
 
-.dash-chart-canvas.short { height: 230px; }
+.dash-chart-canvas.short {
+    height: 215px;
+}
 
 .dash-chart-footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 17px;
-    margin-top: 15px;
-    padding-top: 14px;
+    gap: 22px;
+    margin-top: 14px;
+    padding-top: 13px;
     border-top: 1px solid #f0f3f0;
 }
 
-.dash-chart-footer div {
+.dash-chart-footer > div {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 
 .dash-chart-footer span {
-    color: #84958b;
+    color: #87958c;
     font-size: 10px;
 }
 
 .dash-chart-footer strong {
     color: #294638;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
+/* Tables */
 .dash-table-card {
-    margin-top: 18px;
+    margin-top: 16px;
     overflow: hidden;
     border: 1px solid var(--dash-border);
-    border-radius: 14px;
-    background: white;
-    box-shadow: 0 4px 18px #183f2b04;
+    border-radius: 12px;
+    background: #fff;
 }
 
 .dash-table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    padding: 20px 21px;
+    gap: 15px;
+    padding: 17px 19px;
     border-bottom: 1px solid #edf1ed;
 }
 
 .dash-table-header h3 {
     margin: 0;
-    font-size: 14px;
-    font-weight: 800;
     color: #294638;
+    font-size: 13px;
+    font-weight: 650;
 }
 
 .dash-table-header p {
-    margin: 6px 0 0;
-    color: #8b9a90;
-    font-size: 11px;
+    margin: 5px 0 0;
+    color: #89968e;
+    font-size: 10px;
+    line-height: 1.5;
 }
 
 .dash-table-link {
     color: var(--dash-green);
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
     text-decoration: none;
 }
 
-.dash-table-link:hover { text-decoration: underline; }
+.dash-table-link:hover {
+    color: var(--dash-green-light);
+    text-decoration: underline;
+}
 
-.dash-table-scroll { overflow-x: auto; }
+.dash-table-scroll {
+    overflow-x: auto;
+}
 
 .dash-table {
     width: 100%;
+    margin: 0;
     border-collapse: collapse;
     white-space: nowrap;
 }
 
 .dash-table th {
-    padding: 12px 20px;
-    color: #87978d;
+    padding: 12px 18px;
     background: #fafcf9;
-    text-align: left;
-    font-size: 10px;
+    color: #849188;
+    font-size: 9px;
+    letter-spacing: .5px;
     text-transform: uppercase;
-    letter-spacing: .7px;
-    font-weight: 700;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid #edf1ed;
 }
 
 .dash-table td {
-    padding: 15px 20px;
-    color: #4c6256;
-    border-top: 1px solid #f0f3f0;
-    font-size: 11px;
+    padding: 13px 18px;
+    color: #607065;
+    border-bottom: 1px solid #f0f3f0;
+    font-size: 10px;
+    font-weight: 400;
+    vertical-align: middle;
 }
 
-.dash-table tbody tr:hover { background: #fbfdfb; }
+.dash-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.dash-table tbody tr:hover {
+    background: #fbfdfb;
+}
 
 .dash-table strong {
-    color: #294638;
-    font-size: 11px;
+    color: #324c3d;
+    font-size: 10px;
+    font-weight: 600;
 }
 
 .dash-status {
     display: inline-block;
     padding: 5px 8px;
     border-radius: 6px;
-    background: #e8f5ec;
-    color: #216844;
-    font-size: 10px;
-    font-weight: 700;
+    background: #e9f5ec;
+    color: #286746;
+    font-size: 9px;
+    font-weight: 600;
 }
 
 .dash-status.pending,
@@ -400,160 +468,210 @@
     color: #335d9c;
 }
 
+.dash-empty {
+    padding: 25px 18px;
+    color: #87958c;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* Lower dashboard panels */
 .dash-bottom-grid {
     display: grid;
     grid-template-columns: 7fr 5fr;
-    gap: 17px;
-    margin-top: 18px;
+    gap: 15px;
+    margin-top: 16px;
 }
 
-.dash-alert-list {
-    display: flex;
-    flex-direction: column;
+.dash-bottom-grid .dash-table-card {
+    margin-top: 0;
 }
 
 .dash-alert {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 16px 20px;
+    gap: 11px;
+    padding: 14px 18px;
     border-bottom: 1px solid #f0f3f0;
 }
 
-.dash-alert:last-child { border-bottom: 0; }
-
-.dash-alert-icon {
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
-    display: grid;
-    place-items: center;
-    border-radius: 10px;
-    color: #a36b20;
-    background: #fff1dc;
+.dash-alert:last-child {
+    border-bottom: 0;
 }
 
-.dash-alert-body { flex: 1; min-width: 0; }
+.dash-alert-icon {
+    flex: 0 0 32px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    color: #a36b20;
+    background: #fff1dc;
+    font-size: 13px;
+}
+
+.dash-alert-body {
+    flex: 1;
+    min-width: 0;
+}
 
 .dash-alert-body strong {
     display: block;
-    color: #314b3c;
-    font-size: 12px;
-    margin-bottom: 5px;
+    color: #344d3e;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
 .dash-alert-body span {
     display: block;
-    color: #87978d;
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-.dash-empty {
-    padding: 27px 20px;
-    color: #86978c;
-    text-align: center;
-    font-size: 12px;
-    line-height: 1.7;
+    margin-top: 4px;
+    color: #87958c;
+    font-size: 10px;
+    line-height: 1.6;
 }
 
 .dash-shortcuts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    padding: 18px;
+    gap: 9px;
+    padding: 15px;
 }
 
 .dash-shortcut {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
     min-width: 0;
-    padding: 13px 12px;
+    padding: 11px;
     border: 1px solid #e8eee8;
-    border-radius: 10px;
+    border-radius: 9px;
     color: #355445;
     background: #fff;
     text-decoration: none;
-    transition: border-color .2s, background .2s, transform .2s;
+    transition: border-color .18s, background .18s;
 }
 
 .dash-shortcut:hover {
-    border-color: #aadbc2;
+    border-color: #acd9c0;
     background: #f7fcf8;
-    transform: translateY(-2px);
-}
-
-.dash-shortcut-icon {
-    flex: 0 0 30px;
-    height: 30px;
-    width: 30px;
-    display: grid;
-    place-items: center;
-    border-radius: 9px;
-    background: #eaf5ee;
     color: var(--dash-green);
 }
 
-.dash-shortcut span:last-child {
-    font-size: 11px;
-    font-weight: 700;
+.dash-shortcut-icon {
+    flex: 0 0 29px;
+    display: grid;
+    place-items: center;
+    width: 29px;
+    height: 29px;
+    border-radius: 8px;
+    background: #eaf5ee;
+    color: var(--dash-green);
+    font-size: 13px;
+}
+
+.dash-shortcut-label {
+    font-size: 10px;
+    line-height: 1.45;
+    font-weight: 550;
     overflow-wrap: anywhere;
 }
 
 .dash-footnote {
-    margin-top: 17px;
-    color: #91a096;
+    margin-top: 15px;
+    color: #929e96;
     font-size: 10px;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-@media (max-width: 1150px) {
-    .dash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dash-span-8, .dash-span-7, .dash-span-6,
-    .dash-span-5, .dash-span-4 { grid-column: span 12; }
+/* Responsive layout */
+@media (max-width: 1100px) {
+    .dash-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-span-8,
+    .dash-span-6,
+    .dash-span-4 {
+        grid-column: span 12;
+    }
 }
 
 @media (max-width: 700px) {
-    .dash-heading { align-items: flex-start; flex-direction: column; }
-    .dash-date { white-space: normal; }
-    .dash-kpis { gap: 10px; }
-    .dash-kpi { padding: 15px; }
-    .dash-kpi-label { font-size: 11px; }
-    .dash-analytics-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dash-metric:nth-child(2) { border-right: 0; }
-    .dash-metric:nth-child(n+3) { border-top: 1px solid var(--dash-border); }
-    .dash-bottom-grid { grid-template-columns: minmax(0, 1fr); }
-    .dash-chart-card { padding: 16px; }
-    .dash-chart-canvas { height: 240px; }
-    .dash-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dash-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-metric:nth-child(2) {
+        border-right: 0;
+    }
+
+    .dash-metric:nth-child(n+3) {
+        border-top: 1px solid var(--dash-border);
+    }
+
+    .dash-bottom-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-chart-card {
+        padding: 15px;
+    }
+
+    .dash-chart-canvas {
+        height: 225px;
+    }
+
+    .page-heading {
+        font-size: 23px !important;
+    }
+
+    .dash-date {
+        font-size: 10px;
+    }
 }
 
-@media (max-width: 380px) {
-    .dash-kpis { grid-template-columns: minmax(0, 1fr); }
-    .dash-shortcuts { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 420px) {
+    .dash-kpis {
+        gap: 9px;
+    }
+
+    .dash-kpi {
+        padding: 13px;
+    }
+
+    .dash-kpi-value {
+        font-size: 23px;
+    }
+
+    .dash-kpi-value.currency {
+        font-size: 19px;
+    }
+
+    .dash-shortcuts {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-section-heading > span {
+        display: none;
+    }
+
+    .dash-chart-footer {
+        gap: 15px;
+    }
 }
 </style>
+{% endblock %}
 
 
+{% block content %}
 <div class="dashboard-page">
 
-    <header class="dash-heading">
-        <div>
-            <div class="dash-eyebrow">Fleet Intelligence</div>
-            <h1>Dashboard</h1>
-            <p>Understand fleet performance, rental activity, and revenue in one place.</p>
-        </div>
-
-        <div class="dash-date">
-            {{ today|date:"l, d F Y" }}
-        </div>
-    </header>
-
-
-    <!-- PRIMARY KPIs -->
-    <div class="dash-section-heading">
-        <h2>Fleet Performance</h2>
+    <!-- Fleet KPIs -->
+    <div class="dash-section-heading" style="margin-top: 4px;">
+        <h2>Fleet performance</h2>
         <span>Current system totals</span>
     </div>
 
@@ -561,8 +679,10 @@
 
         <article class="dash-kpi">
             <div class="dash-kpi-top">
-                <span class="dash-kpi-label">Total Vehicles</span>
-                <span class="dash-kpi-icon">▣</span>
+                <span class="dash-kpi-label">Total vehicles</span>
+                <span class="dash-kpi-icon">
+                    <i class="bi bi-car-front"></i>
+                </span>
             </div>
             <div class="dash-kpi-value">{{ total_vehicles|default:0 }}</div>
             <div class="dash-kpi-note">
@@ -572,19 +692,23 @@
 
         <article class="dash-kpi">
             <div class="dash-kpi-top">
-                <span class="dash-kpi-label">Fleet Utilization</span>
-                <span class="dash-kpi-icon blue">↗</span>
+                <span class="dash-kpi-label">Fleet utilization</span>
+                <span class="dash-kpi-icon blue">
+                    <i class="bi bi-speedometer2"></i>
+                </span>
             </div>
             <div class="dash-kpi-value">{{ fleet_utilization|default:0 }}%</div>
             <div class="dash-kpi-note">
-                {{ rented_vehicles|default:0 }} currently rented or in use
+                {{ rented_vehicles|default:0 }} rented or in use
             </div>
         </article>
 
         <article class="dash-kpi">
             <div class="dash-kpi-top">
-                <span class="dash-kpi-label">Rental Bookings</span>
-                <span class="dash-kpi-icon purple">▤</span>
+                <span class="dash-kpi-label">Rental bookings</span>
+                <span class="dash-kpi-icon purple">
+                    <i class="bi bi-calendar2-check"></i>
+                </span>
             </div>
             <div class="dash-kpi-value">{{ total_bookings|default:0 }}</div>
             <div class="dash-kpi-note">
@@ -594,22 +718,24 @@
 
         <article class="dash-kpi">
             <div class="dash-kpi-top">
-                <span class="dash-kpi-label">Collected Revenue</span>
-                <span class="dash-kpi-icon gold">₣</span>
+                <span class="dash-kpi-label">Collected revenue</span>
+                <span class="dash-kpi-icon gold">
+                    <i class="bi bi-wallet2"></i>
+                </span>
             </div>
             <div class="dash-kpi-value currency">
-                {{ total_revenue|default:0|floatformat:0 }}
+                RWF {{ total_revenue|default:0|floatformat:0 }}
             </div>
             <div class="dash-kpi-note">
-                From recorded successful payments
+                Recorded successful payments
             </div>
         </article>
 
     </section>
 
 
-    <!-- ADDITIONAL PERFORMANCE INDICATORS -->
-    <div class="dash-analytics-strip">
+    <!-- Operational metrics -->
+    <section class="dash-metrics" aria-label="Operational performance">
 
         <div class="dash-metric">
             <div class="dash-metric-title">Fleet availability</div>
@@ -626,7 +752,7 @@
             <div class="dash-metric-title">Completed bookings</div>
             <div class="dash-metric-row">
                 <span class="dash-metric-value">{{ completed_booking_rate|default:0 }}%</span>
-                <span class="dash-metric-unit">of all bookings</span>
+                <span class="dash-metric-unit">of bookings</span>
             </div>
             <div class="dash-progress">
                 <span style="--progress: {{ completed_booking_rate|default:0 }}%"></span>
@@ -637,7 +763,7 @@
             <div class="dash-metric-title">Payment collection</div>
             <div class="dash-metric-row">
                 <span class="dash-metric-value">{{ payment_collection_rate|default:0 }}%</span>
-                <span class="dash-metric-unit">payments successful</span>
+                <span class="dash-metric-unit">successful</span>
             </div>
             <div class="dash-progress">
                 <span style="--progress: {{ payment_collection_rate|default:0 }}%"></span>
@@ -648,39 +774,39 @@
             <div class="dash-metric-title">Customer base</div>
             <div class="dash-metric-row">
                 <span class="dash-metric-value">{{ total_customers|default:0 }}</span>
-                <span class="dash-metric-unit">registered customers</span>
+                <span class="dash-metric-unit">registered</span>
             </div>
             <div class="dash-progress">
                 <span style="--progress: 100%"></span>
             </div>
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- CHARTS -->
+    <!-- Analytics -->
     <div class="dash-section-heading">
-        <h2>Business Analytics</h2>
+        <h2>Business analytics</h2>
         <span>Based on recorded system data</span>
     </div>
 
     <section class="dash-chart-grid">
 
-        <!-- Booking trend -->
         <article class="dash-chart-card dash-span-8">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Booking Activity</h3>
+                    <h3 class="dash-chart-title">Booking activity</h3>
                     <p class="dash-chart-description">
-                        Number of bookings recorded each month over the last six months.
+                        Bookings recorded per month over the last six months.
                     </p>
                 </div>
                 <span class="dash-chart-tag">6 MONTHS</span>
             </div>
 
             <div class="dash-chart-canvas">
-                <canvas id="bookingTrendChart" role="img"
-                        aria-label="Monthly booking activity chart"></canvas>
+                <canvas id="bookingTrendChart"
+                        aria-label="Monthly booking activity"
+                        role="img"></canvas>
             </div>
 
             <div class="dash-chart-footer">
@@ -700,45 +826,45 @@
         </article>
 
 
-        <!-- Booking status -->
         <article class="dash-chart-card dash-span-4">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Booking Status</h3>
+                    <h3 class="dash-chart-title">Booking status</h3>
                     <p class="dash-chart-description">
-                        How bookings are distributed by status.
+                        Distribution by booking status.
                     </p>
                 </div>
             </div>
 
             <div class="dash-chart-canvas short">
-                <canvas id="bookingStatusChart" role="img"
-                        aria-label="Booking status distribution chart"></canvas>
+                <canvas id="bookingStatusChart"
+                        aria-label="Booking status distribution"
+                        role="img"></canvas>
             </div>
         </article>
 
 
-        <!-- Revenue chart -->
         <article class="dash-chart-card dash-span-8">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Revenue Trend</h3>
+                    <h3 class="dash-chart-title">Revenue trend</h3>
                     <p class="dash-chart-description">
-                        Successful payment amounts recorded each month.
+                        Successful payment amounts recorded by month.
                     </p>
                 </div>
-                <span class="dash-chart-tag">REVENUE</span>
+                <span class="dash-chart-tag">RWF</span>
             </div>
 
             <div class="dash-chart-canvas">
-                <canvas id="revenueChart" role="img"
-                        aria-label="Monthly collected revenue chart"></canvas>
+                <canvas id="revenueChart"
+                        aria-label="Monthly collected revenue"
+                        role="img"></canvas>
             </div>
 
             <div class="dash-chart-footer">
                 <div>
-                    <span>Total collected</span>
-                    <strong>{{ total_revenue|default:0|floatformat:0 }}</strong>
+                    <span>Collected revenue</span>
+                    <strong>RWF {{ total_revenue|default:0|floatformat:0 }}</strong>
                 </div>
                 <div>
                     <span>Successful payments</span>
@@ -752,81 +878,82 @@
         </article>
 
 
-        <!-- Fleet status -->
         <article class="dash-chart-card dash-span-4">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Fleet Composition</h3>
+                    <h3 class="dash-chart-title">Fleet composition</h3>
                     <p class="dash-chart-description">
-                        Vehicle distribution by recorded status.
+                        Vehicles by recorded status.
                     </p>
                 </div>
             </div>
 
             <div class="dash-chart-canvas short">
-                <canvas id="fleetStatusChart" role="img"
-                        aria-label="Vehicle status distribution chart"></canvas>
+                <canvas id="fleetStatusChart"
+                        aria-label="Fleet status distribution"
+                        role="img"></canvas>
             </div>
 
             <div class="dash-chart-footer">
                 <div>
-                    <span>Under maintenance</span>
-                    <strong>{{ maintenance_vehicles|default:0 }}</strong>
-                </div>
-                <div>
                     <span>Available</span>
                     <strong>{{ available_vehicles|default:0 }}</strong>
                 </div>
+                <div>
+                    <span>Maintenance</span>
+                    <strong>{{ maintenance_vehicles|default:0 }}</strong>
+                </div>
             </div>
         </article>
 
 
-        <!-- Payment status -->
         <article class="dash-chart-card dash-span-6">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Payment Overview</h3>
+                    <h3 class="dash-chart-title">Payment overview</h3>
                     <p class="dash-chart-description">
-                        Distribution of payments by their recorded status.
+                        Recorded payments grouped by their status.
                     </p>
                 </div>
             </div>
 
             <div class="dash-chart-canvas short">
-                <canvas id="paymentStatusChart" role="img"
-                        aria-label="Payment status chart"></canvas>
+                <canvas id="paymentStatusChart"
+                        aria-label="Payment status overview"
+                        role="img"></canvas>
             </div>
         </article>
 
 
-        <!-- Booking stage bars -->
         <article class="dash-chart-card dash-span-6">
             <div class="dash-chart-header">
                 <div>
-                    <h3 class="dash-chart-title">Booking Pipeline</h3>
+                    <h3 class="dash-chart-title">Booking pipeline</h3>
                     <p class="dash-chart-description">
-                        Compare the main booking stages.
+                        Compare booking stages to understand current workload.
                     </p>
                 </div>
             </div>
 
             <div class="dash-chart-canvas short">
-                <canvas id="bookingPipelineChart" role="img"
-                        aria-label="Booking pipeline comparison chart"></canvas>
+                <canvas id="bookingPipelineChart"
+                        aria-label="Booking stages comparison"
+                        role="img"></canvas>
             </div>
         </article>
 
     </section>
 
 
-    <!-- RECENT BOOKINGS -->
+    <!-- Recent bookings -->
     <section class="dash-table-card">
         <div class="dash-table-header">
             <div>
-                <h3>Recent Bookings</h3>
+                <h3>Recent bookings</h3>
                 <p>The latest booking records in the system.</p>
             </div>
-            <a class="dash-table-link" href="/rentals/">View rentals →</a>
+            <a class="dash-table-link"
+               href="{% url 'rentals:booking_list' %}">View bookings →</a>
         </div>
 
         <div class="dash-table-scroll">
@@ -847,8 +974,12 @@
                         <td><strong>#{{ booking.pk }}</strong></td>
                         <td>{{ booking.customer|default:"—" }}</td>
                         <td>{{ booking.vehicle|default:"—" }}</td>
-                        <td>{{ booking.start_date|date:"d M Y"|default:"—" }}</td>
-                        <td>{{ booking.end_date|date:"d M Y"|default:"—" }}</td>
+                        <td>
+                            {% firstof booking.start_at|date:"d M Y" booking.start_date|date:"d M Y" "—" %}
+                        </td>
+                        <td>
+                            {% firstof booking.end_at|date:"d M Y" booking.end_date|date:"d M Y" "—" %}
+                        </td>
                         <td>
                             <span class="dash-status {{ booking.status|lower }}">
                                 {{ booking.status|default:"Unspecified" }}
@@ -870,30 +1001,33 @@
     </section>
 
 
-    <!-- MAINTENANCE AND SHORTCUTS -->
+    <!-- Maintenance and quick navigation -->
     <section class="dash-bottom-grid">
 
-        <article class="dash-table-card" style="margin-top:0">
+        <article class="dash-table-card">
             <div class="dash-table-header">
                 <div>
-                    <h3>Maintenance Alerts</h3>
+                    <h3>Maintenance alerts</h3>
                     <p>Scheduled and ongoing maintenance records.</p>
                 </div>
-                <a class="dash-table-link" href="/fleet/maintenance/">View maintenance →</a>
+                <a class="dash-table-link"
+                   href="{% url 'fleet:maintenance_list' %}">View all →</a>
             </div>
 
-            <div class="dash-alert-list">
+            <div>
                 {% for item in maintenance_alerts %}
                 <div class="dash-alert">
-                    <div class="dash-alert-icon">⚙</div>
+                    <div class="dash-alert-icon">
+                        <i class="bi bi-wrench-adjustable"></i>
+                    </div>
                     <div class="dash-alert-body">
-                        <strong>
-                            {{ item.vehicle|default:"Vehicle maintenance" }}
-                        </strong>
+                        <strong>{{ item.vehicle|default:"Vehicle maintenance" }}</strong>
                         <span>
                             Status: {{ item.status|default:"Not specified" }}
                             {% if item.start_date %}
                                 · {{ item.start_date|date:"d M Y" }}
+                            {% elif item.scheduled_date %}
+                                · {{ item.scheduled_date|date:"d M Y" }}
                             {% endif %}
                         </span>
                     </div>
@@ -907,79 +1041,77 @@
         </article>
 
 
-        <article class="dash-table-card" style="margin-top:0">
+        <article class="dash-table-card">
             <div class="dash-table-header">
                 <div>
-                    <h3>Quick Actions</h3>
-                    <p>Jump directly to an operational module.</p>
+                    <h3>Quick actions</h3>
+                    <p>Shortcuts to your operational modules.</p>
                 </div>
             </div>
 
             <div class="dash-shortcuts">
-                <a class="dash-shortcut" href="/fleet/">
-                    <span class="dash-shortcut-icon">▣</span>
-                    <span>Vehicles</span>
+
+                <a class="dash-shortcut" href="{% url 'fleet:vehicle_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-car-front"></i></span>
+                    <span class="dash-shortcut-label">Vehicles</span>
                 </a>
 
-                <a class="dash-shortcut" href="/fleet/drivers/">
-                    <span class="dash-shortcut-icon">♙</span>
-                    <span>Drivers</span>
+                <a class="dash-shortcut" href="{% url 'fleet:driver_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-person-badge"></i></span>
+                    <span class="dash-shortcut-label">Drivers</span>
                 </a>
 
-                <a class="dash-shortcut" href="/rentals/">
-                    <span class="dash-shortcut-icon">▤</span>
-                    <span>Bookings</span>
+                <a class="dash-shortcut" href="{% url 'customers:customer_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-people"></i></span>
+                    <span class="dash-shortcut-label">Customers</span>
                 </a>
 
-                <a class="dash-shortcut" href="/customers/">
-                    <span class="dash-shortcut-icon">♧</span>
-                    <span>Customers</span>
+                <a class="dash-shortcut" href="{% url 'rentals:agreement_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-file-earmark-text"></i></span>
+                    <span class="dash-shortcut-label">Agreements</span>
                 </a>
 
-                <a class="dash-shortcut" href="/rentals/payments/">
-                    <span class="dash-shortcut-icon">₣</span>
-                    <span>Payments</span>
+                <a class="dash-shortcut" href="{% url 'rentals:payment_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-wallet2"></i></span>
+                    <span class="dash-shortcut-label">Payments</span>
                 </a>
 
-                <a class="dash-shortcut" href="/rentals/returns/">
-                    <span class="dash-shortcut-icon">↩</span>
-                    <span>Vehicle returns</span>
+                <a class="dash-shortcut" href="{% url 'rentals:vehicle_return_list' %}">
+                    <span class="dash-shortcut-icon"><i class="bi bi-arrow-return-left"></i></span>
+                    <span class="dash-shortcut-label">Vehicle returns</span>
                 </a>
+
             </div>
         </article>
 
     </section>
 
-    <div class="dash-footnote">
-        Analytics are derived from records currently stored in your system.
-        Monthly trends use available booking and payment dates; historical months
-        without matching records appear as zero.
-    </div>
+    
 
 </div>
 
-
-<!-- Pass Django-generated data safely to JavaScript -->
+<!-- Safe transfer of Django values into JavaScript -->
 {{ month_labels|json_script:"month-labels-data" }}
 {{ booking_monthly_counts|json_script:"booking-monthly-data" }}
 {{ revenue_monthly_values|json_script:"revenue-monthly-data" }}
-
 {{ booking_status_labels|json_script:"booking-status-labels-data" }}
 {{ booking_status_values|json_script:"booking-status-values-data" }}
-
 {{ vehicle_status_labels|json_script:"vehicle-status-labels-data" }}
 {{ vehicle_status_values|json_script:"vehicle-status-values-data" }}
-
 {{ payment_status_labels|json_script:"payment-status-labels-data" }}
 {{ payment_status_values|json_script:"payment-status-values-data" }}
 
+{% endblock %}
+
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 (function () {
     "use strict";
 
-    const readData = function (id, fallback) {
+    const readData = (id, fallback = []) => {
         const element = document.getElementById(id);
 
         if (!element) return fallback;
@@ -987,83 +1119,126 @@
         try {
             return JSON.parse(element.textContent);
         } catch (error) {
-            console.error("Unable to read dashboard chart data:", id, error);
+            console.error("Could not read chart data:", id, error);
             return fallback;
         }
     };
 
-    const monthLabels = readData("month-labels-data", []);
-    const bookingMonthly = readData("booking-monthly-data", []);
-    const revenueMonthly = readData("revenue-monthly-data", []);
+    const monthLabels = readData("month-labels-data");
+    const bookingMonthly = readData("booking-monthly-data");
+    const revenueMonthly = readData("revenue-monthly-data");
 
-    const bookingStatusLabels = readData("booking-status-labels-data", []);
-    const bookingStatusValues = readData("booking-status-values-data", []);
+    const bookingStatusLabels = readData("booking-status-labels-data");
+    const bookingStatusValues = readData("booking-status-values-data");
 
-    const vehicleStatusLabels = readData("vehicle-status-labels-data", []);
-    const vehicleStatusValues = readData("vehicle-status-values-data", []);
+    const vehicleStatusLabels = readData("vehicle-status-labels-data");
+    const vehicleStatusValues = readData("vehicle-status-values-data");
 
-    const paymentStatusLabels = readData("payment-status-labels-data", []);
-    const paymentStatusValues = readData("payment-status-values-data", []);
+    const paymentStatusLabels = readData("payment-status-labels-data");
+    const paymentStatusValues = readData("payment-status-values-data");
 
     if (typeof Chart === "undefined") {
-        console.error("Chart.js failed to load. Dashboard charts cannot render.");
+        console.error("Chart.js did not load. Check the network connection.");
         return;
     }
 
-    Chart.defaults.font.family = "Inter, system-ui, sans-serif";
-    Chart.defaults.font.size = 11;
-    Chart.defaults.color = "#829187";
+    Chart.defaults.font.family = "Inter, sans-serif";
+    Chart.defaults.font.size = 10;
+    Chart.defaults.color = "#819087";
 
     const green = "#0B4936";
     const emerald = "#16865f";
-    const mint = "#45c994";
-    const blue = "#7199d5";
-    const gold = "#e9b76b";
-    const purple = "#a48add";
+    const mint = "#55c999";
+    const blue = "#7196d2";
+    const gold = "#e7b96f";
+    const purple = "#a491d1";
     const gridColor = "#edf1ed";
 
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            intersect: false,
-            mode: "index"
+    const tooltip = {
+        backgroundColor: "#153b29",
+        titleColor: "#fff",
+        bodyColor: "#e6f2e9",
+        padding: 11,
+        cornerRadius: 7,
+        displayColors: true
+    };
+
+    const baseScales = {
+        x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: { maxRotation: 0 }
         },
-        plugins: {
-            legend: {
-                labels: {
-                    usePointStyle: true,
-                    pointStyle: "circle",
-                    boxWidth: 8,
-                    padding: 18,
-                    color: "#75877b"
-                }
-            },
-            tooltip: {
-                backgroundColor: "#102c20",
-                titleColor: "#ffffff",
-                bodyColor: "#e5f3ea",
-                padding: 12,
-                cornerRadius: 8,
-                displayColors: true
-            }
-        },
-        scales: {
-            x: {
-                grid: { display: false },
-                border: { display: false },
-                ticks: { maxRotation: 0 }
-            },
-            y: {
-                beginAtZero: true,
-                grid: { color: gridColor },
-                border: { display: false },
-                ticks: { precision: 0 }
-            }
+        y: {
+            beginAtZero: true,
+            grid: { color: gridColor },
+            border: { display: false },
+            ticks: { precision: 0 }
         }
     };
 
-    // Monthly booking activity
+    const basePlugins = {
+        legend: {
+            labels: {
+                usePointStyle: true,
+                pointStyle: "circle",
+                boxWidth: 7,
+                boxHeight: 7,
+                padding: 16,
+                color: "#819087"
+            }
+        },
+        tooltip
+    };
+
+    const lineOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { intersect: false, mode: "index" },
+        plugins: basePlugins,
+        scales: baseScales
+    };
+
+    const palette = [green, mint, blue, gold, purple, "#8aafa0", "#c4d2c8"];
+
+    const makeDoughnut = (id, labels, values) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        new Chart(element, {
+            type: "doughnut",
+            data: {
+                labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: palette,
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    hoverOffset: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "70%",
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                            boxWidth: 7,
+                            boxHeight: 7,
+                            padding: 12
+                        }
+                    },
+                    tooltip
+                }
+            }
+        });
+    };
+
+    // Monthly booking trend
     new Chart(document.getElementById("bookingTrendChart"), {
         type: "line",
         data: {
@@ -1072,155 +1247,100 @@
                 label: "Bookings",
                 data: bookingMonthly,
                 borderColor: green,
-                backgroundColor: "rgba(22,134,95,0.10)",
+                backgroundColor: "rgba(22,134,95,0.09)",
                 pointBackgroundColor: mint,
-                pointBorderColor: "#ffffff",
+                pointBorderColor: "#fff",
                 pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                borderWidth: 2,
                 fill: true,
-                tension: 0.35,
-                borderWidth: 2.5
+                tension: .35
             }]
         },
-        options: commonOptions
+        options: lineOptions
     });
 
-    // Booking status distribution
-    new Chart(document.getElementById("bookingStatusChart"), {
-        type: "doughnut",
-        data: {
-            labels: bookingStatusLabels,
-            datasets: [{
-                data: bookingStatusValues,
-                backgroundColor: [green, mint, blue, gold, purple, "#d5dfd8", "#5e9e87"],
-                borderColor: "#ffffff",
-                borderWidth: 3,
-                hoverOffset: 7
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: "69%",
-            plugins: {
-                legend: {
-                    position: "bottom",
-                    labels: {
-                        usePointStyle: true,
-                        pointStyle: "circle",
-                        boxWidth: 8,
-                        padding: 13
-                    }
-                },
-                tooltip: commonOptions.plugins.tooltip
-            }
-        }
-    });
+    makeDoughnut(
+        "bookingStatusChart",
+        bookingStatusLabels,
+        bookingStatusValues
+    );
 
-    // Monthly revenue
+    // Monthly collected revenue
     new Chart(document.getElementById("revenueChart"), {
         type: "bar",
         data: {
             labels: monthLabels,
             datasets: [{
-                label: "Collected revenue",
+                label: "Collected revenue (RWF)",
                 data: revenueMonthly,
                 backgroundColor: [
-                    "#b4dcca",
-                    "#9fd2bb",
-                    "#85c7a8",
-                    "#65b990",
-                    "#369b6e",
-                    green
+                    "#bfded0", "#a6d3bc", "#8ac7a9",
+                    "#69b990", "#389b70", green
                 ],
-                borderRadius: 6,
+                borderRadius: 5,
                 borderSkipped: false,
-                maxBarThickness: 39
-            }]
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                ...commonOptions.scales,
-                y: {
-                    ...commonOptions.scales.y,
-                    ticks: {
-                        callback: function (value) {
-                            return new Intl.NumberFormat("en", {
-                                notation: "compact",
-                                maximumFractionDigits: 1
-                            }).format(value);
-                        }
-                    }
-                }
-            },
-            plugins: {
-                ...commonOptions.plugins,
-                tooltip: {
-                    ...commonOptions.plugins.tooltip,
-                    callbacks: {
-                        label: function (context) {
-                            return " Revenue: " +
-                                new Intl.NumberFormat("en", {
-                                    maximumFractionDigits: 2
-                                }).format(context.parsed.y);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Fleet status
-    new Chart(document.getElementById("fleetStatusChart"), {
-        type: "doughnut",
-        data: {
-            labels: vehicleStatusLabels,
-            datasets: [{
-                data: vehicleStatusValues,
-                backgroundColor: [green, blue, gold, purple, mint, "#c7d4cb"],
-                borderColor: "#ffffff",
-                borderWidth: 3,
-                hoverOffset: 7
+                maxBarThickness: 36
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "69%",
             plugins: {
-                legend: {
-                    position: "bottom",
-                    labels: {
-                        usePointStyle: true,
-                        pointStyle: "circle",
-                        boxWidth: 8,
-                        padding: 13
+                legend: { display: false },
+                tooltip: {
+                    ...tooltip,
+                    callbacks: {
+                        label: context => " RWF " +
+                            new Intl.NumberFormat("en").format(context.parsed.y)
                     }
-                },
-                tooltip: commonOptions.plugins.tooltip
+                }
+            },
+            scales: {
+                ...baseScales,
+                y: {
+                    ...baseScales.y,
+                    ticks: {
+                        callback: value =>
+                            new Intl.NumberFormat("en", {
+                                notation: "compact",
+                                maximumFractionDigits: 1
+                            }).format(value)
+                    }
+                }
             }
         }
     });
 
-    // Payments by their recorded status
+    makeDoughnut(
+        "fleetStatusChart",
+        vehicleStatusLabels,
+        vehicleStatusValues
+    );
+
+    // Payment distribution
     new Chart(document.getElementById("paymentStatusChart"), {
         type: "bar",
         data: {
             labels: paymentStatusLabels,
             datasets: [{
-                label: "Number of payments",
+                label: "Payments",
                 data: paymentStatusValues,
-                backgroundColor: [green, gold, blue, purple, mint, "#c7d4cb"],
-                borderRadius: 6,
+                backgroundColor: palette,
+                borderRadius: 5,
                 borderSkipped: false,
-                maxBarThickness: 46
+                maxBarThickness: 37
             }]
         },
         options: {
-            ...commonOptions,
+            responsive: true,
+            maintainAspectRatio: false,
             indexAxis: "y",
+            plugins: {
+                legend: { display: false },
+                tooltip
+            },
             scales: {
                 x: {
                     beginAtZero: true,
@@ -1232,15 +1352,11 @@
                     grid: { display: false },
                     border: { display: false }
                 }
-            },
-            plugins: {
-                ...commonOptions.plugins,
-                legend: { display: false }
             }
         }
     });
 
-    // Operational booking stages
+    // Booking pipeline
     new Chart(document.getElementById("bookingPipelineChart"), {
         type: "bar",
         data: {
@@ -1255,21 +1371,22 @@
                     {{ cancelled_bookings|default:0 }}
                 ],
                 backgroundColor: [gold, blue, mint, green, "#d58b83"],
-                borderRadius: 6,
+                borderRadius: 5,
                 borderSkipped: false,
-                maxBarThickness: 38
+                maxBarThickness: 34
             }]
         },
         options: {
-            ...commonOptions,
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                ...commonOptions.plugins,
-                legend: { display: false }
-            }
+                legend: { display: false },
+                tooltip
+            },
+            scales: baseScales
         }
     });
 
 })();
 </script>
-
 {% endblock %}
